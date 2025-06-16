@@ -13,7 +13,7 @@ namespace Vistas
         {
             if (Session["NameLogin"] != null)
             {
-                lblNameLogin.Text = "Usuario: " + Session["NameLogin"].ToString();
+                lblNameLogin.Text = "Usuario: " + Session["NameLogin"].ToString() + ", " + Session["RolLogin"].ToString();
             } else
             {
                 Response.Redirect("Login.aspx");
@@ -25,6 +25,11 @@ namespace Vistas
             Session.Remove("NameLogin");
             Response.Redirect("Login.aspx");
 
+        }
+
+        protected void btnHistorialReservas_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("HistorialReservas.aspx");
         }
     }
 }

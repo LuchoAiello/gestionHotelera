@@ -123,72 +123,27 @@ namespace Dao
             return user;
         }
 
-        private bool HasColumn (SqlDataReader reader, string columnName)
+        public DataTable SPHistorialReservasFilter(string nombreSP, string numeroHabitacion, string fechaDesde, string fechaHasta)
         {
-            return Enumerable.Range(0, reader.FieldCount)
-                             .Select(reader.GetName)
-                             .Any(n => n.Equals(columnName, StringComparison.InvariantCultureIgnoreCase));
-        }
-
-        public bool validarDniPaciente(string consulta)
-        {
-            bool validar = false;
-
-            DataSet ds = new DataSet();
-            SqlConnection conexion = ObtenerConexion();
-            SqlDataAdapter adp = ObtenerAdaptador(consulta, conexion);
-
-            adp.Fill(ds);
-            conexion.Close();
-
-            if (ds.Tables[0].Rows.Count > 0)
+            using (SqlConnection conexion = ObtenerConexion())
+            using (SqlCommand cmd = new SqlCommand(nombreSP, conexion))
             {
-               validar = true;
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@NumeroHabitacion",
+                    string.IsNullOrWhiteSpace(numeroHabitacion) ? (object)DBNull.Value : int.Parse(numeroHabitacion));
+
+                cmd.Parameters.AddWithValue("@FechaDesde",
+                    string.IsNullOrWhiteSpace(fechaDesde) ? (object)DBNull.Value : DateTime.Parse(fechaDesde));
+
+                cmd.Parameters.AddWithValue("@FechaHasta",
+                    string.IsNullOrWhiteSpace(fechaHasta) ? (object)DBNull.Value : DateTime.Parse(fechaHasta));
+
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataTable tabla = new DataTable();
+                adapter.Fill(tabla);
+                return tabla;
             }
-
-            return validar;
-        }
-
-        public bool BajaPaciente(string consulta)
-        {
-            bool dadoDeBaja = false;
-
-            using (SqlCommand comando = new SqlCommand())
-            {
-                try
-                {
-                    SqlConnection conexion = ObtenerConexion();
-                    comando.Connection = conexion;
-                    comando.CommandText = consulta;
-
-                    int filasAfectadas = comando.ExecuteNonQuery();
-                    dadoDeBaja = filasAfectadas > 0;
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Error al dar de baja el médico en la base de datos", ex);
-                }
-            }
-
-
-            return dadoDeBaja;
-        }
-
-        public DataTable ObtenerTablaConComando(SqlCommand comando)
-        {
-            DataSet ds = new DataSet();
-
-            SqlConnection Conexion = ObtenerConexion();
-
-            comando.Connection = Conexion;
-
-            SqlDataAdapter adp = new SqlDataAdapter(comando);
-
-            adp.Fill(ds);
-
-            Conexion.Close();
-
-            return ds.Tables[0]; 
         }
 
 
