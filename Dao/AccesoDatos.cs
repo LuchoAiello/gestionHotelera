@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
+﻿using Entidades;
+using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using Entidades;
 
 namespace Dao
 {
@@ -17,20 +11,25 @@ namespace Dao
         
         public SqlConnection ObtenerConexion()
         {
-            string rutaGestionHotelera =
-                "Data Source=localhost\\sqlexpress;Initial Catalog=GestionHotelera;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
+            //CADENA DE CONEXION PARA LUCHO
+            //string rutaGestionHotelera =
+            //    "Data Source=localhost\\sqlexpress;" + "Initial Catalog=GestionHotelera;" + "Integrated Security=True;" + "Encrypt=True;" + "TrustServerCertificate=True";
             
-                try
-                {
+            //CADENA DE CONEXION PARA CAMI
+            string rutaGestionHotelera =
+                "Data Source=CAMI;Initial Catalog=GestionHotelera;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
+
+            try
+            {
                 SqlConnection cn = new SqlConnection(rutaGestionHotelera);
-                    cn.Open();
-                    return cn;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Error al abrir la conexión: " + ex.Message);
-                    return null;
-                }
+                cn.Open();
+                return cn;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al abrir la conexión: " + ex.Message);
+                return null;
+            }
         }
 
         private SqlDataAdapter ObtenerAdaptador(string consultaSql, SqlConnection cn)
@@ -97,7 +96,7 @@ namespace Dao
         {
             loggedUser user = null;
 
-            string query = "SELECT Nombre, Rol FROM Usuarios WHERE Nombre = @usuario AND Contraseña = @password";
+            string query = "SELECT Nombre, Rol FROM Usuarios WHERE Nombre = @usuario AND Contrasenia = @password";
 
             using (SqlConnection conexion = ObtenerConexion())
             {

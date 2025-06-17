@@ -1,10 +1,5 @@
-﻿using System;
-using Negocio;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+﻿using Negocio;
+using System;
 using System.Data;
 
 namespace Vistas
@@ -17,7 +12,6 @@ namespace Vistas
             DataTable HistorialReservas = negocioHistorialReservas.GetHistorialReserva();
             grvHistorialReservas.DataSource = HistorialReservas;
             grvHistorialReservas.DataBind();
-
         }
 
         protected void btnBack_Click(object sender, EventArgs e)

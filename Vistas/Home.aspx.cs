@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace Vistas
 {
@@ -27,9 +22,32 @@ namespace Vistas
 
         }
 
+        protected void btnRegisterUser_Click(object sender, EventArgs e)
+        {
+            lblSeccionTitulo.Text = "Registrar Usuario";
+            // Aquí podés cambiar el DataSource si es necesario o mostrar otro contenido
+            //gvReservas.DataSource = null;
+            //gvReservas.DataBind();
+        }
+
         protected void btnHistorialReservas_Click(object sender, EventArgs e)
         {
-            Response.Redirect("HistorialReservas.aspx");
+            lblSeccionTitulo.Text = "Historial de Reservas";
+            //gvReservas.DataSource = ObtenerHistorialReservas(); 
+            //gvReservas.DataBind();
+        }
+        protected void btnRooms_Click(object sender, EventArgs e)
+        {
+            lblSeccionTitulo.Text = "Estado de Habitaciones";
+            //gvReservas.DataSource = ObtenerEstadoHabitaciones(); // método que trae habitaciones
+            //gvReservas.DataBind();
+        }
+
+        protected void btnReserv_Click(object sender, EventArgs e)
+        {
+            lblSeccionTitulo.Text = "Crear Reserva";
+            //gvReservas.DataSource = ObtenerDatosReserva(); // Método que devuelve una lista o DataTable
+            //gvReservas.DataBind();
         }
     }
 }
