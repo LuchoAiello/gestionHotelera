@@ -1,6 +1,7 @@
 ﻿using Negocio;
 using System;
 using System.Data;
+using System.Web.UI.WebControls;
 
 namespace Vistas
 {
@@ -11,6 +12,22 @@ namespace Vistas
         {
             if (!IsPostBack)
             {
+                string rol = Session["RolLogin"]?.ToString();
+
+                if (rol == "Administrador")
+                {
+                    btnRegisterUser.Visible = true;
+                }
+                else if (rol == "Recepcionista")
+                {
+                    btnRegisterUser.Visible = false;
+                }
+
+                btnRegisterHuesped.Visible = true;
+                btnReserv.Visible = true;
+                btnRooms.Visible = true;
+                btnHistorialReservas.Visible = true;
+
                 OcultarTodosLosPaneles();
                 panelReservas.Visible = true; // Mostrar sección inicial si querés
                 lblSeccionTitulo.Text = "Lista de Reservas del Hotel";
@@ -24,6 +41,22 @@ namespace Vistas
             {
                 Response.Redirect("Login.aspx");
             }
+        }
+
+        protected void grvHistorialReservas_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            grvHistorialReservas.PageIndex = e.NewPageIndex;
+
+            // Reobtener datos para mostrar en la nueva página
+            string numeroHabitacion = txtNumber.Text;
+            string fechaDesde = txtDateFrom.Text;
+            string fechaHasta = txtDateTo.Text;
+
+            DataTable HistorialReservas = negocioHistorialReservas.GetFilterHistorialReserva(
+                numeroHabitacion, fechaDesde, fechaHasta);
+
+            grvHistorialReservas.DataSource = HistorialReservas;
+            grvHistorialReservas.DataBind();
         }
 
         private void OcultarTodosLosPaneles()
@@ -45,6 +78,15 @@ namespace Vistas
         {
             OcultarTodosLosPaneles();
             lblSeccionTitulo.Text = "Registrar Usuario";
+            // Aquí podés cambiar el DataSource si es necesario o mostrar otro contenido
+            //gvReservas.DataSource = null;
+            //gvReservas.DataBind();
+        }
+
+        protected void btnRegisterHuesped_Click(object sender, EventArgs e)
+        {
+            OcultarTodosLosPaneles();
+            lblSeccionTitulo.Text = "Registrar Huesped";
             // Aquí podés cambiar el DataSource si es necesario o mostrar otro contenido
             //gvReservas.DataSource = null;
             //gvReservas.DataBind();

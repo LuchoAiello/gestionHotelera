@@ -25,6 +25,9 @@
                             <asp:LinkButton ID="btnRegisterUser" runat="server" CssClass="nav-link text-white" OnClick="btnRegisterUser_Click">Registrar Usuario</asp:LinkButton>
                         </li>
                         <li class="nav-item">
+                            <asp:LinkButton ID="btnRegisterHuesped" runat="server" CssClass="nav-link text-white" OnClick="btnRegisterHuesped_Click">Registrar Huesped</asp:LinkButton>
+                        </li>
+                        <li class="nav-item">
                             <asp:LinkButton ID="btnReserv" runat="server" CssClass="nav-link text-white" OnClick="btnReserv_Click">Crear Reserva</asp:LinkButton>
                         </li>
                         <li class="nav-item">
@@ -75,7 +78,9 @@
                     <asp:Button ID="btnSacarFiltro" runat="server" Text="Sacar Filtro" CssClass="btn btn-secondary w-10" OnClick="btnSacarFiltro_Click" />
                 </p>
                 <div style="overflow-x: auto; width: 100%;">
-                <asp:GridView ID="grvHistorialReservas" runat="server" AutoGenerateColumns="False" CssClass="table table-striped table-bordered w-100">
+                <asp:GridView ID="grvHistorialReservas" runat="server" AutoGenerateColumns="False"
+    CssClass="table table-striped table-bordered w-100"
+    AllowPaging="true" PageSize="10" OnPageIndexChanging="grvHistorialReservas_PageIndexChanging">
                     <Columns>
                          <asp:BoundField DataField="NumeroHabitacion" HeaderText="Habitación N°" />
                          <asp:BoundField DataField="NombreCompleto" HeaderText="Nombre del Huésped" />
