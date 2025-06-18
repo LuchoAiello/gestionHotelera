@@ -71,7 +71,6 @@
     <Content Include="Home.aspx" />
     <Content Include="Web.config" />
     <Content Include="Login.aspx" />
-    <Content Include="HistorialReservas.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Home.aspx.cs">
@@ -88,13 +87,6 @@
     </Compile>
     <Compile Include="Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="HistorialReservas.aspx.cs">
-      <DependentUpon>HistorialReservas.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="HistorialReservas.aspx.designer.cs">
-      <DependentUpon>HistorialReservas.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
