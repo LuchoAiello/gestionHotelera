@@ -12,12 +12,12 @@ namespace Dao
         public SqlConnection ObtenerConexion()
         {
             //CADENA DE CONEXION PARA LUCHO
-            string rutaGestionHotelera =
-                "Data Source=localhost\\sqlexpress;" + "Initial Catalog=GestionHotelera;" + "Integrated Security=True;" + "Encrypt=True;" + "TrustServerCertificate=True";
-            
-            //CADENA DE CONEXION PARA CAMI
             //string rutaGestionHotelera =
-            //    "Data Source=CAMI;Initial Catalog=GestionHotelera;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
+            //    "Data Source=localhost\\sqlexpress;" + "Initial Catalog=GestionHotelera;" + "Integrated Security=True;" + "Encrypt=True;" + "TrustServerCertificate=True";
+
+            //CADENA DE CONEXION PARA CAMI
+            string rutaGestionHotelera =
+                "Data Source=CAMI;Initial Catalog=GestionHotelera;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
 
             try
             {

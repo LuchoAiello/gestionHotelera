@@ -31,10 +31,10 @@
                             <asp:LinkButton ID="btnReserv" runat="server" CssClass="nav-link text-white" OnClick="btnReserv_Click">Crear Reserva</asp:LinkButton>
                         </li>
                         <li class="nav-item">
-                            <asp:LinkButton ID="btnRooms" runat="server" CssClass="nav-link text-white" OnClick="btnRooms_Click">Estado de habitaciones</asp:LinkButton>
+                            <asp:LinkButton ID="btnRooms" runat="server" CssClass="nav-link text-white" OnClick="btnRooms_Click">Habitaciones</asp:LinkButton>
                         </li>
                         <li class="nav-item">
-                            <asp:LinkButton ID="btnHistorialReservas" runat="server" CssClass="nav-link text-white" OnClick="btnHistorialReservas_Click">Historial de Reservas</asp:LinkButton>
+                            <asp:LinkButton ID="btnHistorialReservas" runat="server" CssClass="nav-link text-white" OnClick="btnHistorialReservas_Click">Reservas</asp:LinkButton>
                         </li>
                     </ul>
 
@@ -95,6 +95,71 @@
                 </div>  
             </asp:Panel>
 
+            <asp:Panel ID="panelHabitaciones" runat="server" Visible="false">
+
+            <asp:Button ID="btnNuevaHabitacion" runat="server" Text="Nueva Habitación" CssClass="btn btn-primary mb-3"
+                OnClick="btnNuevaHabitacion_Click" />
+
+            <!-- GridView listado de habitaciones -->
+            <asp:GridView ID="gvHabitaciones" runat="server" AutoGenerateColumns="False"
+                CssClass="table table-striped table-bordered"
+                OnRowCommand="gvHabitaciones_RowCommand"
+                DataKeyNames="Id_habitaciones">
+                <Columns>
+                    <asp:BoundField DataField="NumeroHabitacion" HeaderText="Número" />
+                    <asp:BoundField DataField="Tipo" HeaderText="Tipo" />
+                    <asp:BoundField DataField="Capacidad" HeaderText="Capacidad" />
+                    <asp:BoundField DataField="Estado" HeaderText="Estado" />
+                    <asp:BoundField DataField="Precio" HeaderText="Precio" />
+                    <asp:BoundField DataField="Descripcion" HeaderText="Descripción" />
+                    <asp:ButtonField ButtonType="Button" CommandName="Editar" Text="Editar" />
+                    <asp:ButtonField ButtonType="Button" CommandName="Desactivar" Text="Baja" />
+                </Columns>
+            </asp:GridView>
+
+            <!-- Formulario ABM Habitaciones (oculto inicialmente) -->
+            <asp:Panel ID="panelFormularioHabitacion" runat="server" Visible="false" CssClass="mt-4 p-3 border rounded">
+
+                <asp:HiddenField ID="hfIdHabitacion" runat="server" />
+
+                <div class="row mb-3">
+                    <div class="col-md-2">
+                        <label>Número</label>
+                        <asp:TextBox ID="txtNumero" runat="server" CssClass="form-control" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Tipo</label>
+                        <asp:TextBox ID="txtTipo" runat="server" CssClass="form-control" />
+                    </div>
+                    <div class="col-md-2">
+                        <label>Capacidad</label>
+                        <asp:TextBox ID="txtCapacidad" runat="server" CssClass="form-control" />
+                    </div>
+                    <div class="col-md-2">
+                        <label>Precio</label>
+                        <asp:TextBox ID="txtPrecio" runat="server" CssClass="form-control" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Estado</label>
+                        <asp:DropDownList ID="ddlEstado" runat="server" CssClass="form-select">
+                            <asp:ListItem Text="Activa" Value="Activa" />
+                            <asp:ListItem Text="Inactiva" Value="Inactiva" />
+                            <asp:ListItem Text="Mantenimiento" Value="Mantenimiento" />
+                        </asp:DropDownList>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label>Descripción</label>
+                    <asp:TextBox ID="txtDescripcion" runat="server" TextMode="MultiLine" Rows="3" CssClass="form-control" />
+                </div>
+
+                <asp:Button ID="btnGuardarHabitacion" runat="server" Text="Guardar" CssClass="btn btn-success"
+                    OnClick="btnGuardarHabitacion_Click" />
+                <asp:Button ID="btnCancelarHabitacion" runat="server" Text="Cancelar" CssClass="btn btn-secondary ms-2"
+                    OnClick="btnCancelarHabitacion_Click" />
+            </asp:Panel>
+
+            </asp:Panel>
         </div>
     </div>
 </div>

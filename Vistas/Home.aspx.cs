@@ -1,6 +1,9 @@
-﻿using Negocio;
+﻿using Entidades;
+using Negocio;
 using System;
+using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 using System.Web.UI.WebControls;
 
 namespace Vistas
@@ -63,6 +66,7 @@ namespace Vistas
         {
             panelReservas.Visible = false;
             panelHistorialReservas.Visible = false;
+            panelHabitaciones.Visible = false;
             // Agregá más paneles si sumás nuevas secciones
         }
 
@@ -106,6 +110,8 @@ namespace Vistas
         {
             OcultarTodosLosPaneles();
             lblSeccionTitulo.Text = "Estado de Habitaciones";
+            panelHabitaciones.Visible = true;
+            CargarHabitaciones();
             //gvReservas.DataSource = ObtenerEstadoHabitaciones(); // método que trae habitaciones
             //gvReservas.DataBind();
         }
@@ -139,6 +145,94 @@ namespace Vistas
             txtNumber.Text = "";
             txtDateFrom.Text = "";
             txtDateTo.Text = "";
+        }
+        protected void btnNuevaHabitacion_Click(object sender, EventArgs e)
+        {
+            LimpiarFormularioHabitacion();
+            panelFormularioHabitacion.Visible = true;
+        }
+        protected void btnCancelarHabitacion_Click(object sender, EventArgs e)
+        {
+            panelFormularioHabitacion.Visible = false;
+            LimpiarFormularioHabitacion();
+        }
+
+        protected void btnGuardarHabitacion_Click(object sender, EventArgs e)
+        {
+            Habitacion h = new Habitacion
+            {
+                Id_habitacion = string.IsNullOrEmpty(hfIdHabitacion.Value) ? 0 : Convert.ToInt32(hfIdHabitacion.Value),
+                NumeroHabitacion = int.Parse(txtNumero.Text),
+                Tipo = txtTipo.Text,
+                Capacidad = int.Parse(txtCapacidad.Text),
+                Estado = ddlEstado.SelectedValue,
+                Precio = decimal.Parse(txtPrecio.Text),
+                Descripcion = txtDescripcion.Text
+            };
+
+            HabitacionesService repo = new HabitacionesService();
+
+            if (h.Id_habitacion == 0)
+                repo.Insert(h);
+            else
+                repo.Update(h);
+
+            panelFormularioHabitacion.Visible = false;
+            LimpiarFormularioHabitacion();
+            CargarHabitaciones();
+        }
+
+        protected void gvHabitaciones_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            int index = Convert.ToInt32(e.CommandArgument);
+            int id = Convert.ToInt32(gvHabitaciones.DataKeys[index].Value);
+            GridViewRow row = gvHabitaciones.Rows[index];
+            var repo = new HabitacionesService();
+            if (e.CommandName == "Editar")
+            {
+                hfIdHabitacion.Value = id.ToString();
+                txtNumero.Text = row.Cells[0].Text;
+                txtTipo.Text = row.Cells[1].Text;
+                txtCapacidad.Text = row.Cells[2].Text;
+                string valor = row.Cells[3].Text.Trim();
+                ddlEstado.SelectedValue = ddlEstado.Items.FindByValue(valor) != null ? valor : "Activo";
+                txtPrecio.Text = row.Cells[4].Text;
+                txtDescripcion.Text = row.Cells[5].Text;
+            }
+            else if (e.CommandName == "Desactivar")
+            {
+                Habitacion h = new Habitacion
+                {
+                    Id_habitacion = id,
+                    NumeroHabitacion = int.Parse(row.Cells[0].Text),
+                    Tipo = row.Cells[1].Text,
+                    Capacidad = int.Parse(row.Cells[2].Text),
+                    Estado = "Inactiva",
+                    Precio = decimal.Parse(row.Cells[4].Text),
+                    Descripcion = row.Cells[5].Text
+                };
+
+                repo.Update(h);
+                CargarHabitaciones();
+            }
+        }
+        private void LimpiarFormularioHabitacion()
+        {
+            hfIdHabitacion.Value = "";
+            txtNumero.Text = "";
+            txtTipo.Text = "";
+            txtCapacidad.Text = "";
+            txtPrecio.Text = "";
+            txtDescripcion.Text = "";
+            ddlEstado.SelectedValue = "Activa";
+        }
+
+        private void CargarHabitaciones()
+        {
+            var habitacionesService = new HabitacionesService();
+            DataTable dt = habitacionesService.GetAll();
+            gvHabitaciones.DataSource = dt;
+            gvHabitaciones.DataBind();
         }
     }
 }
