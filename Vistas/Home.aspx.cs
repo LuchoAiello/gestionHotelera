@@ -10,6 +10,9 @@ namespace Vistas
     {
         NegocioHistorialReservas negocioHistorialReservas = new NegocioHistorialReservas();
         NegocioUsuario negocioUsuario = new NegocioUsuario();
+        NegocioMetodoPagos negocioMetodoPago = new NegocioMetodoPagos();
+        NegocioServicios negocioServicio = new NegocioServicios();
+       
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -41,7 +44,7 @@ namespace Vistas
             }
             else
             {
-                //Response.Redirect("Login.aspx");
+                Response.Redirect("Login.aspx");
             }
         }
 
@@ -67,6 +70,13 @@ namespace Vistas
             panelReservas.Visible = false;
             panelHistorialReservas.Visible = false;
             // Agregá más paneles si sumás nuevas secciones
+        }
+
+        private void OcultarTodosLosPanelesAdmin()
+        {
+            panelUsuario.Visible = false;
+            panelMetodoPago.Visible = false;
+            panelServicios.Visible = false;
         }
 
         protected void btnLogout_Click(object sender, EventArgs e)
@@ -145,13 +155,6 @@ namespace Vistas
         }
 
         // ---------- PANEL USUARIO ----------
-        private void OcultarTodosLosPanelesAdmin()
-        {
-            panelUsuario.Visible = false;
-            panelMetodoPago.Visible = false;
-            panelServicios.Visible = false;
-        }
-
         protected void btnUsuario_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPanelesAdmin();
@@ -267,13 +270,171 @@ namespace Vistas
         {
             OcultarTodosLosPanelesAdmin();
             panelMetodoPago.Visible = true;
+
+            getDataMetodoPago();
         }
+     
+        protected void grvMetodoPago_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            grvMetodoPago.EditIndex = e.NewEditIndex;
+            getDataMetodoPago();
+        }
+
+        protected void grvMetodoPago_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+            grvMetodoPago.EditIndex = -1;
+            getDataMetodoPago();
+        }
+
+        protected void grvMetodoPago_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+            int id = Convert.ToInt32(grvMetodoPago.DataKeys[e.RowIndex].Value);
+            string nombre = ((TextBox)grvMetodoPago.Rows[e.RowIndex].FindControl("txtEINombrePago")).Text;
+            bool estadoBool = ((CheckBox)grvMetodoPago.Rows[e.RowIndex].FindControl("chkEIEstadoPago")).Checked;
+            int estado = estadoBool ? 1 : 0;
+
+            Entidades.MetodoPago metodoPago = Entidades.MetodoPago.ModificarMetodoPago(id,nombre, estado);
+            negocioMetodoPago.ModificarMetodoPago(metodoPago);
+
+            grvMetodoPago.EditIndex = -1;
+            getDataMetodoPago();
+        }
+
+        protected void btnAgregarPago_Click(object sender, EventArgs e)
+        {
+            string nombre = txtNameMetodoPago.Text.Trim();
+
+            if (string.IsNullOrEmpty(nombre))
+            {
+                // Mostrar mensaje de error
+                lblNameMetodoPago.Text = "El campo Nombre es obligatorio.";
+                lblNameMetodoPago.CssClass = "text-danger";
+                return;
+            }
+
+            Entidades.MetodoPago crearMetodoPago = Entidades.MetodoPago.CrearMetodoPago(nombre);
+            negocioMetodoPago.CrearMetodoPago(crearMetodoPago);
+
+            getDataMetodoPago();
+
+
+            txtNameMetodoPago.Text = "";
+            lblNameMetodoPago.Text = "";
+        }
+
+        protected void btnLimpiarMetodoPago_Click(object sender, EventArgs e)
+        {
+            txtNameMetodoPago.Text = "";
+            lblNameMetodoPago.Text = "";
+        }
+
+        private void getDataMetodoPago()
+        {
+            DataTable MetodoPagos = negocioMetodoPago.GetMetodoPagos();
+            grvMetodoPago.DataSource = MetodoPagos;
+            grvMetodoPago.DataBind();
+        }
+
+      
 
         // ---------- PANEL SERVICIOS ----------
         protected void btnServicios_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPanelesAdmin();
             panelServicios.Visible = true;
+
+            getDataServicio();
         }
+
+  
+        protected void grvServicio_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            grvServicio.EditIndex = e.NewEditIndex;
+            getDataServicio();
+        }
+
+        protected void grvServicio_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+            grvServicio.EditIndex = -1;
+            getDataServicio();
+        }
+
+        protected void grvServicio_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+            int id = Convert.ToInt32(grvServicio.DataKeys[e.RowIndex].Value);
+            string nombre = ((TextBox)grvServicio.Rows[e.RowIndex].FindControl("txtEINombreServicio")).Text;
+            string precioTexto = ((TextBox)grvServicio.Rows[e.RowIndex].FindControl("txtEIPrecio")).Text.Trim();
+            decimal precio = Convert.ToDecimal(precioTexto);
+            bool estadoBool = ((CheckBox)grvServicio.Rows[e.RowIndex].FindControl("chkEIEstadoServicio")).Checked;
+            int estado = estadoBool ? 1 : 0;
+
+            Entidades.Servicios servicio = Entidades.Servicios.ModificarServicio(id, nombre, precio, estado);
+            negocioServicio.ModificarServicio(servicio);
+
+            grvServicio.EditIndex = -1;
+            getDataServicio();
+        }
+
+        protected void grvServicio_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            grvServicio.PageIndex = e.NewPageIndex;
+            getDataServicio();
+        }
+
+        protected void btnAgregarServicio_Click(object sender, EventArgs e)
+        {
+            string nombre = txtNameServicio.Text.Trim();
+            string precioTexto = txtPrecio.Text.Trim();
+
+            if (string.IsNullOrEmpty(nombre))
+            {
+                lblNameServicio.Text = "El campo Nombre es obligatorio.";
+                lblNamePrecio.Text = "";
+                lblNameServicio.CssClass = "text-danger";
+                return;
+            }
+
+            if (string.IsNullOrEmpty(precioTexto))
+            {
+                lblNamePrecio.Text = "El campo Precio es obligatorio.";
+                lblNameServicio.Text = "";
+                lblNamePrecio.CssClass = "text-danger";
+                return;
+            }
+
+            decimal precio;
+            if (!decimal.TryParse(precioTexto, out precio))
+            {
+                lblNamePrecio.Text = "El precio debe ser un número válido.";
+                lblNameServicio.Text = "";
+                lblNamePrecio.CssClass = "text-danger";
+                return;
+            }
+
+            Entidades.Servicios servicio = Entidades.Servicios.CrearServicios(nombre, precio);
+            negocioServicio.CrearServicio(servicio);
+
+            getDataServicio();
+
+            txtNameServicio.Text = "";
+            txtPrecio.Text = "";
+            lblNameServicio.Text = "";
+            lblNamePrecio.Text = "";
+        }
+
+        protected void btnLimpiarServicio_Click(object sender, EventArgs e)
+        {
+            txtNameServicio.Text = "";
+            txtPrecio.Text = "";
+            lblNameServicio.Text = "";
+            lblNamePrecio.Text = "";
+        }
+        private void getDataServicio()
+        {
+            DataTable Servicio = negocioServicio.GetServicios();
+            grvServicio.DataSource = Servicio;
+            grvServicio.DataBind();
+        }
+
     }
 }
