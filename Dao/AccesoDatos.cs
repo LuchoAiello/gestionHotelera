@@ -96,7 +96,7 @@ namespace Dao
         {
             loggedUser user = null;
 
-            string query = "SELECT Nombre, Rol FROM Usuarios WHERE Nombre = @usuario AND Contrasenia = @password";
+            string query = "SELECT Nombre, Rol FROM Usuarios WHERE Nombre = @usuario AND Contrasenia = @password AND Estado != 0";
 
             using (SqlConnection conexion = ObtenerConexion())
             {
