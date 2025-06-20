@@ -22,13 +22,13 @@
                 <div class="collapse navbar-collapse">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <asp:LinkButton ID="btnRegisterUser" runat="server" CssClass="nav-link text-white" OnClick="btnRegisterUser_Click">Registrar Usuario</asp:LinkButton>
+                            <asp:LinkButton ID="btnPanelAdministrativo" runat="server" CssClass="nav-link text-white" OnClick="btnPanelAdministrativo_Click">Panel Administrativo</asp:LinkButton>
                         </li>
                         <li class="nav-item">
-                            <asp:LinkButton ID="btnRegisterHuesped" runat="server" CssClass="nav-link text-white" OnClick="btnRegisterHuesped_Click">Registrar Huesped</asp:LinkButton>
+                            <asp:LinkButton ID="btnRegisterHuesped" runat="server" CssClass="nav-link text-white" OnClick="btnRegisterHuesped_Click">Huesped</asp:LinkButton>
                         </li>
                         <li class="nav-item">
-                            <asp:LinkButton ID="btnReserv" runat="server" CssClass="nav-link text-white" OnClick="btnReserv_Click">Crear Reserva</asp:LinkButton>
+                            <asp:LinkButton ID="btnReserv" runat="server" CssClass="nav-link text-white" OnClick="btnReserv_Click">Reservas</asp:LinkButton>
                         </li>
                         <li class="nav-item">
                             <asp:LinkButton ID="btnRooms" runat="server" CssClass="nav-link text-white" OnClick="btnRooms_Click">Habitaciones</asp:LinkButton>
@@ -47,53 +47,235 @@
             </div>
         </nav>
 
-       <!-- Contenido principal con sección dinámica -->
-<div class="container mt-5">
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-            <asp:Label ID="lblSeccionTitulo" runat="server" Text="Sección Actual"></asp:Label>
-        </div>
-        <div class="card-body">
+        <!-- Contenido principal con sección dinámica -->
+        <div class="container mt-5">
+            <div class="card shadow">
+                <div class="card-header bg-dark text-white">
+                    <asp:Label ID="lblSeccionTitulo" runat="server" Text="Sección Actual" class="fw-bold "></asp:Label>
+                </div>
+                <div class="card-body">
 
-            <!-- Panel para Reservas -->
-            <asp:Panel ID="panelReservas" runat="server" Visible="false">
-            </asp:Panel>
+                    <!-- Panel para Reservas -->
+                    <asp:Panel ID="panelReservas" runat="server" Visible="false">
+                    </asp:Panel>
 
-            <!-- Panel para Historial de Reservas -->
-            <asp:Panel ID="panelHistorialReservas" runat="server" Visible="false">
-                <p>
-                    <asp:Label ID="Label1" runat="server" Text="Número de Habitación:" />
-                    <asp:TextBox ID="txtNumber" runat="server" />
-                </p>
-                <p>
-                    <asp:Label ID="Label2" runat="server" Text="Fecha Desde:" />
-                    <asp:TextBox ID="txtDateFrom" runat="server" />
-                </p>
-                <p>
-                    <asp:Label ID="Label3" runat="server" Text="Fecha Hasta:" />
-                    <asp:TextBox ID="txtDateTo" runat="server" />
-                </p>
-                <p>
-                    <asp:Button ID="btnFilter" runat="server" Text="Filtrar" CssClass="btn btn-primary w-10" OnClick="btnFilter_Click" />
-                    <asp:Button ID="btnSacarFiltro" runat="server" Text="Sacar Filtro" CssClass="btn btn-secondary w-10" OnClick="btnSacarFiltro_Click" />
-                </p>
-                <div style="overflow-x: auto; width: 100%;">
-                <asp:GridView ID="grvHistorialReservas" runat="server" AutoGenerateColumns="False"
-    CssClass="table table-striped table-bordered w-100"
-    AllowPaging="true" PageSize="10" OnPageIndexChanging="grvHistorialReservas_PageIndexChanging">
-                    <Columns>
-                         <asp:BoundField DataField="NumeroHabitacion" HeaderText="Habitación N°" />
-                         <asp:BoundField DataField="NombreCompleto" HeaderText="Nombre del Huésped" />
-                         <asp:BoundField DataField="Documento" HeaderText="Documento" />
-                         <asp:BoundField DataField="FechaReserva" HeaderText="Reservado el" DataFormatString="{0:dd/MM/yyyy}" />
-                         <asp:BoundField DataField="FechaLlegada" HeaderText="Llegada" DataFormatString="{0:dd/MM/yyyy}" />
-                         <asp:BoundField DataField="FechaSalida" HeaderText="Salida" DataFormatString="{0:dd/MM/yyyy}" />
-                         <asp:BoundField DataField="ServiciosAdicionales" HeaderText="Servicios Extras" />
-                         <asp:BoundField DataField="PrecioFinal" HeaderText="Total" DataFormatString="{0:C}" />
-                    </Columns>
-                </asp:GridView>
-                </div>  
-            </asp:Panel>
+                    <!-- Panel para Panel Administrativo -->
+                    <asp:Panel ID="panelAdministrativo" runat="server" Visible="false">
+                        <div class="d-flex gap-2 mb-1">
+                            <asp:Button ID="btnUsuario" runat="server" Text="Usuario" CssClass="btn btn-primary" OnClick="btnUsuario_Click" />
+                            <asp:Button ID="btnMetodoPago" runat="server" Text="Metodo de Pago" CssClass="btn btn-primary" OnClick="btnMetodoPago_Click" />
+                            <asp:Button ID="btnServicios" runat="server" Text="Servicios" CssClass="btn btn-primary" OnClick="btnServicios_Click" />
+                        </div>
+
+                        <!-- Panel para Panel Usuario -->
+                        <asp:Panel ID="panelUsuario" runat="server" Visible="false">
+                            <div class="login-container text-start">
+                                <h6 class="mb-2 fw-bold">Registrar Usuario</h6>
+
+                                <div class="mb-3  p-0 d-flex align-items-center gap-2">
+                                    <label for="txtName" class="form-label me-2 mb-0" style="min-width: 90px;">Nombre: </label>
+                                    <asp:TextBox ID="txtName" runat="server" CssClass="form-control flex-grow-1" Style="max-width: 250px;" />
+                                    &nbsp;<asp:Label ID="lblMensajeNombre" runat="server"></asp:Label>
+                                </div>
+
+                                <div class="mb-3  p-0 d-flex align-items-center gap-2">
+                                    <label for="txtPassword" class="form-label me-2 mb-0" style="min-width: 90px;">Contraseña: </label>
+                                    <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" CssClass="form-control flex-grow-1" Style="max-width: 250px;" />
+                                    &nbsp;<asp:Label ID="lblMensajePassword" runat="server"></asp:Label>
+                                </div>
+
+                                <div class="mb-3 col-md-4 col-sm-6 p-0 d-flex align-items-center gap-2">
+                                    <label for="DropDownList1" class="form-label me-2 mb-0" style="min-width: 90px;">Rol: </label>
+                                    <asp:DropDownList ID="ddlRolUsuario" runat="server" CssClass="form-select w-auto flex-grow-1" Style="max-width: 250px;">
+                                        <asp:ListItem Text="Administrador" Value="Administrador" />
+                                        <asp:ListItem Text="Recepcionista" Value="Recepcionista" />
+                                    </asp:DropDownList>
+                                </div>
+
+                                <asp:Button ID="btnRegisterUser" runat="server" Text="Registrar" CssClass="btn btn-primary" OnClick="btnRegisterUser_Click" />
+                                <asp:Button ID="btnLimpiar" runat="server" Text="Limpiar" CssClass="btn btn-secondary w-10" OnClick="btnLimpiar_Click" />
+                            </div>
+
+                            <div class="mt-3" style="overflow-x: auto; width: 100%;">
+
+                                <asp:GridView ID="grvUsuario" runat="server" AutoGenerateColumns="False" AutoGenerateEditButton="True" DataKeyNames="Id_usuario" CssClass="table table-striped table-bordered w-100"
+                                    AllowPaging="true" PageSize="10" OnRowCancelingEdit="grvUsuario_RowCancelingEdit" OnRowEditing="grvUsuario_RowEditing" OnRowUpdating="grvUsuario_RowUpdating" OnRowDataBound="grvUsuario_RowDataBound">
+                                    <Columns>
+                                        <asp:TemplateField HeaderText="Nombre">
+                                            <EditItemTemplate>
+                                                <asp:TextBox ID="txtEINombre" runat="server" Text='<%# Bind("Nombre") %>'></asp:TextBox>
+                                            </EditItemTemplate>
+                                            <ItemTemplate>
+                                                <asp:Label ID="txtNombre" runat="server" Text='<%# Bind("Nombre") %>'></asp:Label>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField HeaderText="Contraseña">
+                                            <EditItemTemplate>
+                                                <asp:TextBox ID="txtEIContrasenia" runat="server" Text='<%# Bind("Contrasenia") %>' Width="100px"></asp:TextBox>
+                                            </EditItemTemplate>
+                                            <ItemTemplate>
+                                                <asp:Label ID="txtContrasenia" runat="server" Text='<%# Bind("Contrasenia") %>'></asp:Label>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField HeaderText="Rol">
+                                            <EditItemTemplate>
+                                                <asp:DropDownList ID="ddpEIRol" runat="server">
+                                                </asp:DropDownList>
+                                            </EditItemTemplate>
+                                            <ItemTemplate>
+                                                <asp:Label ID="txtRol" runat="server" Text='<%# Bind("Rol") %>'></asp:Label>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField HeaderText="Estado">
+                                            <EditItemTemplate>
+                                                <asp:CheckBox ID="chkEIEstado" runat="server" Checked='<%# Convert.ToBoolean(Eval("Estado")) %>' />
+                                            </EditItemTemplate>
+                                            <ItemTemplate>
+                                                <asp:Label ID="txtEstado" runat="server" Text='<%# Convert.ToBoolean(Eval("Estado")) ? "Activo" : "Inactivo" %>'></asp:Label>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                    </Columns>
+                                </asp:GridView>
+
+                            </div>
+                        </asp:Panel>
+
+                        <!-- Panel para Panel Metodo de Pago -->
+                        <asp:Panel ID="panelMetodoPago" runat="server" Visible="false">
+                            <div class="login-container text-start">
+                                <h6 class="mb-2 fw-bold">Agregar Metodo de Pago</h6>
+
+                                <div class="mb-3  p-0 d-flex align-items-center gap-2">
+                                    <label for="txtNameMetodoPago" class="form-label me-2 mb-0" style="min-width: 90px;">Nombre: </label>
+                                    <asp:TextBox ID="txtNameMetodoPago" runat="server" CssClass="form-control flex-grow-1" Style="max-width: 250px;" />
+                                    &nbsp;<asp:Label ID="lblNameMetodoPago" runat="server"></asp:Label>
+                                </div>
+
+                                <asp:Button ID="btnAgregarPago" runat="server" Text="Registrar" CssClass="btn btn-primary" OnClick="btnAgregarPago_Click" />
+                                <asp:Button ID="btnLimpiarMetodoPago" runat="server" Text="Limpiar" CssClass="btn btn-secondary w-10" OnClick="btnLimpiarMetodoPago_Click" />
+                            </div>
+
+                            <div class="mt-3" style="overflow-x: auto; width: 100%;">
+
+                                <asp:GridView ID="grvMetodoPago" runat="server" AutoGenerateColumns="False" AutoGenerateEditButton="True" DataKeyNames="Id_metodoPago" CssClass="table table-striped table-bordered w-100"
+                                    AllowPaging="true" PageSize="10" OnRowCancelingEdit="grvMetodoPago_RowCancelingEdit" OnRowEditing="grvMetodoPago_RowEditing" OnRowUpdating="grvMetodoPago_RowUpdating">
+                                    <Columns>
+                                        <asp:TemplateField HeaderText="Nombre">
+                                            <EditItemTemplate>
+                                                <asp:TextBox ID="txtEINombrePago" runat="server" Text='<%# Bind("Nombre") %>'></asp:TextBox>
+                                            </EditItemTemplate>
+                                            <ItemTemplate>
+                                                <asp:Label ID="txtNombrePago" runat="server" Text='<%# Bind("Nombre") %>'></asp:Label>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField HeaderText="Estado">
+                                            <EditItemTemplate>
+                                                <asp:CheckBox ID="chkEIEstadoPago" runat="server" Checked='<%# Convert.ToBoolean(Eval("Estado")) %>' />
+                                            </EditItemTemplate>
+                                            <ItemTemplate>
+                                                <asp:Label ID="txtEstadoPago" runat="server" Text='<%# Convert.ToBoolean(Eval("Estado")) ? "Activo" : "Inactivo" %>'></asp:Label>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                    </Columns>
+                                </asp:GridView>
+
+                            </div>
+                        </asp:Panel>
+
+                        <!-- Panel para Panel Servicios -->
+                        <asp:Panel ID="panelServicios" runat="server" Visible="false">
+                            <div class="login-container text-start">
+                                <h6 class="mb-2 fw-bold">Agregar Servicio adicional</h6>
+
+                                <div class="mb-3  p-0 d-flex align-items-center gap-2">
+                                    <label for="txtNameServicio" class="form-label me-2 mb-0" style="min-width: 90px;">Nombre: </label>
+                                    <asp:TextBox ID="txtNameServicio" runat="server" CssClass="form-control flex-grow-1" Style="max-width: 250px;" />
+                                    &nbsp;<asp:Label ID="lblNameServicio" runat="server"></asp:Label>
+                                </div>
+
+                                <div class="mb-3  p-0 d-flex align-items-center gap-2">
+                                    <label for="txtPrecio" class="form-label me-2 mb-0" style="min-width: 90px;">Precio: </label>
+                                    <asp:TextBox ID="txtPrecio" runat="server" CssClass="form-control flex-grow-1" Style="max-width: 250px;" />
+                                    &nbsp;<asp:Label ID="lblNamePrecio" runat="server"></asp:Label>
+                                </div>
+
+                                <asp:Button ID="btnAgregarServicio" runat="server" Text="Registrar" CssClass="btn btn-primary" OnClick="btnAgregarServicio_Click" />
+                                <asp:Button ID="btnLimpiarServicio" runat="server" Text="Limpiar" CssClass="btn btn-secondary w-10" OnClick="btnLimpiarServicio_Click" />
+                            </div>
+
+                            <div class="mt-3" style="overflow-x: auto; width: 100%;">
+
+                                <asp:GridView ID="grvServicio" runat="server" AutoGenerateColumns="False" AutoGenerateEditButton="True" DataKeyNames="Id_serviciosAdicionales" CssClass="table table-striped table-bordered w-100"
+                                    AllowPaging="true" PageSize="10" OnPageIndexChanging="grvServicio_PageIndexChanging" OnRowCancelingEdit="grvServicio_RowCancelingEdit" OnRowEditing="grvServicio_RowEditing" OnRowUpdating="grvServicio_RowUpdating">
+                                    <Columns>
+                                        <asp:TemplateField HeaderText="Nombre">
+                                            <EditItemTemplate>
+                                                <asp:TextBox ID="txtEINombreServicio" runat="server" Text='<%# Bind("NombreServicio") %>'></asp:TextBox>
+                                            </EditItemTemplate>
+                                            <ItemTemplate>
+                                                <asp:Label ID="txtNombreServicio" runat="server" Text='<%# Bind("NombreServicio") %>'></asp:Label>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField HeaderText="Precio">
+                                            <EditItemTemplate>
+                                                <asp:TextBox ID="txtEIPrecio" runat="server" Text='<%# Bind("Precio") %>'></asp:TextBox>
+                                            </EditItemTemplate>
+                                            <ItemTemplate>
+                                                <asp:Label ID="txtPrecio" runat="server" Text='<%# Bind("Precio") %>'></asp:Label>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField HeaderText="Estado">
+                                            <EditItemTemplate>
+                                                <asp:CheckBox ID="chkEIEstadoServicio" runat="server" Checked='<%# Convert.ToBoolean(Eval("Estado")) %>' />
+                                            </EditItemTemplate>
+                                            <ItemTemplate>
+                                                <asp:Label ID="txtEstadoServicio" runat="server" Text='<%# Convert.ToBoolean(Eval("Estado")) ? "Activo" : "Inactivo" %>'></asp:Label>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                    </Columns>
+                                </asp:GridView>
+
+                            </div>
+                        </asp:Panel>
+                    </asp:Panel>
+
+
+
+                    <!-- Panel para Historial de Reservas -->
+                    <asp:Panel ID="panelHistorialReservas" runat="server" Visible="false">
+                        <p>
+                            <asp:Label ID="Label1" runat="server" Text="Número de Habitación:" />
+                            <asp:TextBox ID="txtNumber" runat="server" />
+                        </p>
+                        <p>
+                            <asp:Label ID="Label2" runat="server" Text="Fecha Desde:" />
+                            <asp:TextBox ID="txtDateFrom" runat="server" />
+                        </p>
+                        <p>
+                            <asp:Label ID="Label3" runat="server" Text="Fecha Hasta:" />
+                            <asp:TextBox ID="txtDateTo" runat="server" />
+                        </p>
+                        <p>
+                            <asp:Button ID="btnFilter" runat="server" Text="Filtrar" CssClass="btn btn-primary w-10" OnClick="btnFilter_Click" />
+                            <asp:Button ID="btnSacarFiltro" runat="server" Text="Sacar Filtro" CssClass="btn btn-secondary w-10" OnClick="btnSacarFiltro_Click" />
+                        </p>
+                        <div style="overflow-x: auto; width: 100%;">
+                            <asp:GridView ID="grvHistorialReservas" runat="server" AutoGenerateColumns="False"
+                                CssClass="table table-striped table-bordered w-100"
+                                AllowPaging="true" PageSize="10" OnPageIndexChanging="grvHistorialReservas_PageIndexChanging">
+                                <Columns>
+                                    <asp:BoundField DataField="NumeroHabitacion" HeaderText="Habitación N°" />
+                                    <asp:BoundField DataField="NombreCompleto" HeaderText="Nombre del Huésped" />
+                                    <asp:BoundField DataField="Documento" HeaderText="Documento" />
+                                    <asp:BoundField DataField="FechaReserva" HeaderText="Reservado el" DataFormatString="{0:dd/MM/yyyy}" />
+                                    <asp:BoundField DataField="FechaLlegada" HeaderText="Llegada" DataFormatString="{0:dd/MM/yyyy}" />
+                                    <asp:BoundField DataField="FechaSalida" HeaderText="Salida" DataFormatString="{0:dd/MM/yyyy}" />
+                                    <asp:BoundField DataField="ServiciosAdicionales" HeaderText="Servicios Extras" />
+                                    <asp:BoundField DataField="PrecioFinal" HeaderText="Total" DataFormatString="{0:C}" />
+                                </Columns>
+                            </asp:GridView>
+                        </div>
+                    </asp:Panel>
 
             <asp:Panel ID="panelHabitaciones" runat="server" Visible="false">
 
@@ -137,7 +319,7 @@
                     </div>
                     <div class="col-md-2">
                         <label>Precio</label>
-                        <asp:TextBox ID="txtPrecio" runat="server" CssClass="form-control" />
+                        <asp:TextBox ID="txtPrecioHabitacion" runat="server" CssClass="form-control" />
                     </div>
                     <div class="col-md-3">
                         <label>Estado</label>

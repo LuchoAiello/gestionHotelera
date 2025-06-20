@@ -3,6 +3,7 @@ using Negocio;
 using System;
 using System.Configuration;
 using System.Data;
+using System.Web.UI;
 using System.Data.SqlClient;
 using System.Web.UI.WebControls;
 
@@ -11,6 +12,10 @@ namespace Vistas
     public partial class Home : System.Web.UI.Page
     {
         NegocioHistorialReservas negocioHistorialReservas = new NegocioHistorialReservas();
+        NegocioUsuario negocioUsuario = new NegocioUsuario();
+        NegocioMetodoPagos negocioMetodoPago = new NegocioMetodoPagos();
+        NegocioServicios negocioServicio = new NegocioServicios();
+       
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -19,11 +24,11 @@ namespace Vistas
 
                 if (rol == "Administrador")
                 {
-                    btnRegisterUser.Visible = true;
+                    btnPanelAdministrativo.Visible = true;
                 }
                 else if (rol == "Recepcionista")
                 {
-                    btnRegisterUser.Visible = false;
+                    btnPanelAdministrativo.Visible = false;
                 }
 
                 btnRegisterHuesped.Visible = true;
@@ -64,12 +69,19 @@ namespace Vistas
 
         private void OcultarTodosLosPaneles()
         {
+            panelAdministrativo.Visible = false;
             panelReservas.Visible = false;
             panelHistorialReservas.Visible = false;
             panelHabitaciones.Visible = false;
             // Agregá más paneles si sumás nuevas secciones
         }
 
+        private void OcultarTodosLosPanelesAdmin()
+        {
+            panelUsuario.Visible = false;
+            panelMetodoPago.Visible = false;
+            panelServicios.Visible = false;
+        }
 
         protected void btnLogout_Click(object sender, EventArgs e)
         {
@@ -78,10 +90,11 @@ namespace Vistas
 
         }
 
-        protected void btnRegisterUser_Click(object sender, EventArgs e)
+        protected void btnPanelAdministrativo_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPaneles();
-            lblSeccionTitulo.Text = "Registrar Usuario";
+            panelAdministrativo.Visible = true;
+            lblSeccionTitulo.Text = "Panel Administrativo";
             // Aquí podés cambiar el DataSource si es necesario o mostrar otro contenido
             //gvReservas.DataSource = null;
             //gvReservas.DataBind();
@@ -90,7 +103,7 @@ namespace Vistas
         protected void btnRegisterHuesped_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPaneles();
-            lblSeccionTitulo.Text = "Registrar Huesped";
+            lblSeccionTitulo.Text = "Huesped";
             // Aquí podés cambiar el DataSource si es necesario o mostrar otro contenido
             //gvReservas.DataSource = null;
             //gvReservas.DataBind();
@@ -146,6 +159,289 @@ namespace Vistas
             txtDateFrom.Text = "";
             txtDateTo.Text = "";
         }
+
+        // ---------- PANEL USUARIO ----------
+        protected void btnUsuario_Click(object sender, EventArgs e)
+        {
+            OcultarTodosLosPanelesAdmin();
+            panelUsuario.Visible = true;
+
+            getDataUser();
+
+        }
+
+        protected void grvUsuario_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow &&
+                (e.Row.RowState & DataControlRowState.Edit) > 0)
+            {
+                DropDownList ddlRol = (DropDownList)e.Row.FindControl("ddpEIRol");
+                if (ddlRol != null)
+                {         
+                    ddlRol.Items.Add(new ListItem("Administrador", "Administrador"));
+                    ddlRol.Items.Add(new ListItem("Recepcionista", "Recepcionista"));
+
+                    string rolActual = DataBinder.Eval(e.Row.DataItem, "Rol").ToString();
+
+                    ListItem item = ddlRol.Items.FindByValue(rolActual);
+                    if (item != null)
+                    {
+                        ddlRol.ClearSelection();
+                        item.Selected = true;
+                    }
+                }
+            }
+        }
+
+        protected void grvUsuario_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            grvUsuario.EditIndex = e.NewEditIndex;
+            getDataUser();
+        }
+
+        protected void grvUsuario_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+            grvUsuario.EditIndex = -1;
+            getDataUser();
+        }
+
+        protected void grvUsuario_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+            int id = Convert.ToInt32(grvUsuario.DataKeys[e.RowIndex].Value);
+            string nombre = ((TextBox)grvUsuario.Rows[e.RowIndex].FindControl("txtEINombre")).Text;
+            string contrasenia = ((TextBox)grvUsuario.Rows[e.RowIndex].FindControl("txtEIContrasenia")).Text;
+            string rol = ((DropDownList)grvUsuario.Rows[e.RowIndex].FindControl("ddpEIRol")).SelectedValue;
+            bool estadoBool = ((CheckBox)grvUsuario.Rows[e.RowIndex].FindControl("chkEIEstado")).Checked;
+            int estado = estadoBool ? 1 : 0;
+
+            Entidades.Usuario userMod = Entidades.Usuario.ModificarUsuario(id, nombre, contrasenia, rol, estado);
+            negocioUsuario.ModificarUsuario(userMod);
+
+            grvUsuario.EditIndex = -1;
+            getDataUser();
+        }
+
+        protected void btnRegisterUser_Click(object sender, EventArgs e)
+        {
+            string nombre = txtName.Text.Trim();
+            string contrasenia = txtPassword.Text.Trim();
+            string rol = ddlRolUsuario.SelectedValue.Trim();
+
+            if (string.IsNullOrEmpty(nombre))
+            {
+                // Mostrar mensaje de error
+                lblMensajeNombre.Text = "El campo Nombre es obligatorio.";
+                lblMensajePassword.Text = "";
+                lblMensajeNombre.CssClass = "text-danger";
+                return;
+            }
+
+            if (string.IsNullOrEmpty(contrasenia))
+            {
+                // Mostrar mensaje de error
+                lblMensajePassword.Text = "El campo Contraseña es obligatorio.";
+                lblMensajeNombre.Text = "";
+                lblMensajePassword.CssClass = "text-danger";
+                return;
+            }
+
+            Entidades.Usuario userCreate = Entidades.Usuario.CrearUsuario(nombre, contrasenia, rol);
+            negocioUsuario.CrearUsuario(userCreate);
+
+            getDataUser();
+
+
+            txtName.Text = "";
+            txtPassword.Text = "";
+        }
+
+        protected void btnLimpiar_Click(object sender, EventArgs e)
+        {
+            txtName.Text = "";
+            txtPassword.Text = "";
+            lblMensajePassword.Text = "";
+            lblMensajeNombre.Text = "";
+        }
+
+        private void getDataUser()
+        {
+            DataTable Usuarios = negocioUsuario.GetUser();
+            grvUsuario.DataSource = Usuarios;
+            grvUsuario.DataBind();
+        }
+
+        // ---------- PANEL METODO DE PAGO ----------
+
+        protected void btnMetodoPago_Click(object sender, EventArgs e)
+        {
+            OcultarTodosLosPanelesAdmin();
+            panelMetodoPago.Visible = true;
+
+            getDataMetodoPago();
+        }
+     
+        protected void grvMetodoPago_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            grvMetodoPago.EditIndex = e.NewEditIndex;
+            getDataMetodoPago();
+        }
+
+        protected void grvMetodoPago_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+            grvMetodoPago.EditIndex = -1;
+            getDataMetodoPago();
+        }
+
+        protected void grvMetodoPago_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+            int id = Convert.ToInt32(grvMetodoPago.DataKeys[e.RowIndex].Value);
+            string nombre = ((TextBox)grvMetodoPago.Rows[e.RowIndex].FindControl("txtEINombrePago")).Text;
+            bool estadoBool = ((CheckBox)grvMetodoPago.Rows[e.RowIndex].FindControl("chkEIEstadoPago")).Checked;
+            int estado = estadoBool ? 1 : 0;
+
+            Entidades.MetodoPago metodoPago = Entidades.MetodoPago.ModificarMetodoPago(id,nombre, estado);
+            negocioMetodoPago.ModificarMetodoPago(metodoPago);
+
+            grvMetodoPago.EditIndex = -1;
+            getDataMetodoPago();
+        }
+
+        protected void btnAgregarPago_Click(object sender, EventArgs e)
+        {
+            string nombre = txtNameMetodoPago.Text.Trim();
+
+            if (string.IsNullOrEmpty(nombre))
+            {
+                // Mostrar mensaje de error
+                lblNameMetodoPago.Text = "El campo Nombre es obligatorio.";
+                lblNameMetodoPago.CssClass = "text-danger";
+                return;
+            }
+
+            Entidades.MetodoPago crearMetodoPago = Entidades.MetodoPago.CrearMetodoPago(nombre);
+            negocioMetodoPago.CrearMetodoPago(crearMetodoPago);
+
+            getDataMetodoPago();
+
+
+            txtNameMetodoPago.Text = "";
+            lblNameMetodoPago.Text = "";
+        }
+
+        protected void btnLimpiarMetodoPago_Click(object sender, EventArgs e)
+        {
+            txtNameMetodoPago.Text = "";
+            lblNameMetodoPago.Text = "";
+        }
+
+        private void getDataMetodoPago()
+        {
+            DataTable MetodoPagos = negocioMetodoPago.GetMetodoPagos();
+            grvMetodoPago.DataSource = MetodoPagos;
+            grvMetodoPago.DataBind();
+        }
+
+      
+
+        // ---------- PANEL SERVICIOS ----------
+        protected void btnServicios_Click(object sender, EventArgs e)
+        {
+            OcultarTodosLosPanelesAdmin();
+            panelServicios.Visible = true;
+
+            getDataServicio();
+        }
+
+  
+        protected void grvServicio_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            grvServicio.EditIndex = e.NewEditIndex;
+            getDataServicio();
+        }
+
+        protected void grvServicio_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+            grvServicio.EditIndex = -1;
+            getDataServicio();
+        }
+
+        protected void grvServicio_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+            int id = Convert.ToInt32(grvServicio.DataKeys[e.RowIndex].Value);
+            string nombre = ((TextBox)grvServicio.Rows[e.RowIndex].FindControl("txtEINombreServicio")).Text;
+            string precioTexto = ((TextBox)grvServicio.Rows[e.RowIndex].FindControl("txtEIPrecio")).Text.Trim();
+            decimal precio = Convert.ToDecimal(precioTexto);
+            bool estadoBool = ((CheckBox)grvServicio.Rows[e.RowIndex].FindControl("chkEIEstadoServicio")).Checked;
+            int estado = estadoBool ? 1 : 0;
+
+            Entidades.Servicios servicio = Entidades.Servicios.ModificarServicio(id, nombre, precio, estado);
+            negocioServicio.ModificarServicio(servicio);
+
+            grvServicio.EditIndex = -1;
+            getDataServicio();
+        }
+
+        protected void grvServicio_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            grvServicio.PageIndex = e.NewPageIndex;
+            getDataServicio();
+        }
+
+        protected void btnAgregarServicio_Click(object sender, EventArgs e)
+        {
+            string nombre = txtNameServicio.Text.Trim();
+            string precioTexto = txtPrecio.Text.Trim();
+
+            if (string.IsNullOrEmpty(nombre))
+            {
+                lblNameServicio.Text = "El campo Nombre es obligatorio.";
+                lblNamePrecio.Text = "";
+                lblNameServicio.CssClass = "text-danger";
+                return;
+            }
+
+            if (string.IsNullOrEmpty(precioTexto))
+            {
+                lblNamePrecio.Text = "El campo Precio es obligatorio.";
+                lblNameServicio.Text = "";
+                lblNamePrecio.CssClass = "text-danger";
+                return;
+            }
+
+            decimal precio;
+            if (!decimal.TryParse(precioTexto, out precio))
+            {
+                lblNamePrecio.Text = "El precio debe ser un número válido.";
+                lblNameServicio.Text = "";
+                lblNamePrecio.CssClass = "text-danger";
+                return;
+            }
+
+            Entidades.Servicios servicio = Entidades.Servicios.CrearServicios(nombre, precio);
+            negocioServicio.CrearServicio(servicio);
+
+            getDataServicio();
+
+            txtNameServicio.Text = "";
+            txtPrecio.Text = "";
+            lblNameServicio.Text = "";
+            lblNamePrecio.Text = "";
+        }
+
+        protected void btnLimpiarServicio_Click(object sender, EventArgs e)
+        {
+            txtNameServicio.Text = "";
+            txtPrecio.Text = "";
+            lblNameServicio.Text = "";
+            lblNamePrecio.Text = "";
+        }
+        private void getDataServicio()
+        {
+            DataTable Servicio = negocioServicio.GetServicios();
+            grvServicio.DataSource = Servicio;
+            grvServicio.DataBind();
+        }
+
         protected void btnNuevaHabitacion_Click(object sender, EventArgs e)
         {
             LimpiarFormularioHabitacion();
