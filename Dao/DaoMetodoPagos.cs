@@ -14,12 +14,13 @@ namespace Dao
     {
         AccesoDatos ds = new AccesoDatos();
 
-        private void ArmarParametrosMetodoPago(SqlCommand Comando, MetodoPago pago)
+        private void ArmarParametrosMetodoPago(SqlCommand comando, MetodoPago pago)
         {
-            Comando.Parameters.AddWithValue("@Nombre", pago.getNombre());
-            Comando.Parameters.AddWithValue("@Estado", pago.getEstado());
-            Comando.Parameters.AddWithValue("@Id_metodoPago", pago.getIdMetodoPago());
+            comando.Parameters.AddWithValue("@Id_metodoPago", pago.IdMetodoPago);
+            comando.Parameters.AddWithValue("@Nombre", pago.Nombre);
+            comando.Parameters.AddWithValue("@Estado", pago.Estado);
         }
+
         public DataTable GetMetodoPagos()
         {
             string query = "SELECT * FROM MetodoPago";

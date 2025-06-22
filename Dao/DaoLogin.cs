@@ -12,7 +12,7 @@ namespace Dao
     {
         AccesoDatos ds = new AccesoDatos();
 
-        public loggedUser Login(string user, string password)
+        public LoggedUser Login(string user, string password)
         {
             return ds.VerifyLogin(user, password);
         }

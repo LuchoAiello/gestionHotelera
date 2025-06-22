@@ -9,7 +9,7 @@ namespace Negocio
     {
         DaoLogin dao = new DaoLogin();
 
-        public loggedUser Login(string user, string password)
+        public LoggedUser Login(string user, string password)
         {
             return dao.Login(user, password);
         }

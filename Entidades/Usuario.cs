@@ -6,82 +6,40 @@ using System.Threading.Tasks;
 
 namespace Entidades
 {
-    public class loggedUser
+    public class LoggedUser
     {
         public string Nombre { get; set; }
         public string Rol { get; set; }
     }
+
     public class Usuario
     {
-        private int Id_usuario;
-        private string Nombre;
-        private string Contrasenia;
-        private string Rol;
-        private int Estado;
+        public int IdUsuario { get; set; }
+        public string Nombre { get; set; }
+        public string Contrasenia { get; set; }
+        public string Rol { get; set; }
+        public int Estado { get; set; }
 
-        public static Usuario CrearUsuario(string nombre, string Contrasenia, string rol)
+        public static Usuario CrearUsuario(string nombre, string contrasenia, string rol)
         {
-            Usuario user = new Usuario();
-            user.setNombre(nombre);
-            user.setPassword(Contrasenia);
-            user.setRol(rol);
-            return user;
-        }
-
-        public static Usuario ModificarUsuario(int id, string nombre, string Contrasenia, string rol, int estado)
-        {
-            Usuario user = new Usuario();
-            user.setIdUsuario(id);
-            user.setNombre(nombre);
-            user.setPassword(Contrasenia);
-            user.setRol(rol);
-            user.setEstado(estado);
-            return user;
+            return new Usuario
+            {
+                Nombre = nombre,
+                Contrasenia = contrasenia,
+                Rol = rol
+            };
         }
 
-
-        public int getIdUsuario()
+        public static Usuario ModificarUsuario(int id, string nombre, string contrasenia, string rol, int estado)
         {
-            return Id_usuario;
-        }
-        public string getNombre()
-        {
-            return Nombre;
-        }
-
-        public string getContrasenia()
-        {
-            return Contrasenia;
-        }
-        public string getRol()
-        {
-            return Rol;
-        }
-        public int getEstado()
-        {
-            return Estado;
-        }
-
-        public void setIdUsuario(int id)
-        {
-            Id_usuario = id;
-        }
-        public void setNombre(string nombre)
-        {
-            Nombre = nombre;
-        }
-
-        public void setPassword(string password)
-        {
-            Contrasenia = password;
-        }
-        public void setRol(string rol)
-        {
-            Rol = rol;
-        }
-        public void setEstado(int estado)
-        {
-            Estado = estado;
+            return new Usuario
+            {
+                IdUsuario = id,
+                Nombre = nombre,
+                Contrasenia = contrasenia,
+                Rol = rol,
+                Estado = estado
+            };
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Vistas
 
         protected void btnLogin_Click(object sender, EventArgs e)
         {
-            loggedUser login = negocioLogin.Login(txtNameLogin.Text, txtPasswordLogin.Text);
+            LoggedUser login = negocioLogin.Login(txtNameLogin.Text, txtPasswordLogin.Text);
 
             if (login != null)
             {
