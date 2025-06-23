@@ -1,14 +1,10 @@
 ﻿using Entidades;
 using Negocio;
+using Negocio.Negocio;
 using System;
-using System.Configuration;
 using System.Data;
 using System.Web.UI;
-using System.Data.SqlClient;
 using System.Web.UI.WebControls;
-using Negocio.Negocio;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
-using System.Xml.Linq;
 
 namespace Vistas
 {
