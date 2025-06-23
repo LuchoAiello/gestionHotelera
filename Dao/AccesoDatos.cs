@@ -91,9 +91,9 @@ namespace Dao
             }
         }
 
-        public loggedUser VerifyLogin(string usuario, string password)
+        public LoggedUser VerifyLogin(string usuario, string password)
         {
-            loggedUser user = null;
+            LoggedUser user = null;
 
             string query = "SELECT Nombre, Rol FROM Usuarios WHERE Nombre = @usuario AND Contrasenia = @password AND Estado != 0";
 
@@ -108,7 +108,7 @@ namespace Dao
                     {
                         if (reader.Read())
                         {
-                            user = new loggedUser
+                            user = new LoggedUser
                             {
                                 Nombre = reader["Nombre"].ToString(),
                                 Rol = reader["Rol"].ToString(),

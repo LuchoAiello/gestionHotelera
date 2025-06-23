@@ -8,14 +8,18 @@ namespace Dao
     {
         AccesoDatos ds = new AccesoDatos();
 
-        private void ArmarParametroServicio(SqlCommand Comando, Servicios servicio)
+        private void ArmarParametroServicio(SqlCommand comando, Servicios servicio)
         {
-            Comando.Parameters.AddWithValue("@Id_servicioAdicional", servicio.getIdServicio());
-            Comando.Parameters.AddWithValue("@NombreServicio", servicio.getNombre());
-            Comando.Parameters.AddWithValue("@Precio", servicio.getPrecio());
-            Comando.Parameters.AddWithValue("@Estado", servicio.getEstado());
-
+            comando.Parameters.AddWithValue("@Id_servicioAdicional", servicio.IdServicio);
+            comando.Parameters.AddWithValue("@NombreServicio", servicio.NombreServicio);
+            comando.Parameters.AddWithValue("@Precio", servicio.Precio);
+            comando.Parameters.AddWithValue("@Estado", servicio.Estado);
+            comando.Parameters.AddWithValue("@Id_serviciosAdicionales", servicio.IdServicio);
+            comando.Parameters.AddWithValue("@NombreServicio", servicio.NombreServicio);
+            comando.Parameters.AddWithValue("@Precio", servicio.Precio);
+            comando.Parameters.AddWithValue("@Estado", servicio.Estado);
         }
+
         public DataTable GetServicios()
         {
             string query = "SELECT * FROM ServiciosAdicionales";

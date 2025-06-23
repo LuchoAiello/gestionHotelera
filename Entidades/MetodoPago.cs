@@ -2,53 +2,26 @@
 {
     public class MetodoPago
     {
-        private int Id_metodoPago;
-        private string Nombre;
-        private int Estado;
+        public int IdMetodoPago { get; set; }
+        public string Nombre { get; set; }
+        public int Estado { get; set; }
 
         public static MetodoPago CrearMetodoPago(string nombre)
         {
-            MetodoPago pago = new MetodoPago();
-            pago.setNombre(nombre);
-            return pago;
+            return new MetodoPago
+            {
+                Nombre = nombre
+            };
         }
+
         public static MetodoPago ModificarMetodoPago(int id, string nombre, int estado)
         {
-            MetodoPago pago = new MetodoPago();
-            pago.setIdMetodoPago(id);
-            pago.setNombre(nombre);
-            pago.setEstado(estado);
-            return pago;
+            return new MetodoPago
+            {
+                IdMetodoPago = id,
+                Nombre = nombre,
+                Estado = estado
+            };
         }
-
-        public int getIdMetodoPago()
-        {
-            return Id_metodoPago;
-        }
-        public string getNombre()
-        {
-            return Nombre;
-        }
-
-        public int getEstado()
-        {
-            return Estado;
-        }
-
-        public void setIdMetodoPago(int id)
-        {
-            Id_metodoPago = id;
-        }
-
-        public void setNombre(string nombre)
-        {
-            Nombre = nombre;
-        }
-
-        public void setEstado(int estado)
-        {
-            Estado = estado;
-        }
-
     }
 }

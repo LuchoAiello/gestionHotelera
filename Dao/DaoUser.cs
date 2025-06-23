@@ -10,11 +10,11 @@ namespace Dao
 
         private void ArmarParametrosUsuario(SqlCommand Comando, Usuario user)
         {
-            Comando.Parameters.AddWithValue("@Nombre", user.getNombre());
-            Comando.Parameters.AddWithValue("@Contrasenia", user.getContrasenia());
-            Comando.Parameters.AddWithValue("@Rol", user.getRol());
-            Comando.Parameters.AddWithValue("@Estado", user.getEstado());
-            Comando.Parameters.AddWithValue("@Id_usuario", user.getIdUsuario());
+            Comando.Parameters.AddWithValue("@Nombre", user.Nombre);
+            Comando.Parameters.AddWithValue("@Contrasenia", user.Contrasenia);
+            Comando.Parameters.AddWithValue("@Rol", user.Rol);
+            Comando.Parameters.AddWithValue("@Estado", user.Estado);
+            Comando.Parameters.AddWithValue("@Id_usuario", user.IdUsuario);
         }
         public DataTable GetUser()
         {

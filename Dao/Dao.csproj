@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="AccesoDatos.cs" />
     <Compile Include="DaoHistorialReservas.cs" />
+    <Compile Include="DaoHuespedes.cs" />
     <Compile Include="DaoLogin.cs" />
     <Compile Include="DaoMetodoPagos.cs" />
     <Compile Include="DaoServicios.cs" />

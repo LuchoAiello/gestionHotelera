@@ -2,65 +2,30 @@
 {
     public class Servicios
     {
-        private int Id_servicioAdicional;
-        private string NombreServicio;
-        private decimal Precio;
-        private int Estado;
+        public int IdServicio { get; set; }
+        public string NombreServicio { get; set; }
+        public decimal Precio { get; set; }
+        public int Estado { get; set; }
 
         public static Servicios CrearServicios(string nombre, decimal precio)
         {
-            Servicios servicio = new Servicios();
-            servicio.setNombre(nombre);
-            servicio.setPrecio(precio);
-            return servicio;
-        }
-        public static Servicios ModificarServicio(int id, string nombre,decimal precio, int estado)
-        {
-            Servicios servicio = new Servicios();
-            servicio.setIdServicio(id);
-            servicio.setNombre(nombre);
-            servicio.setPrecio(precio);
-            servicio.setEstado(estado);
-            return servicio;
+            return new Servicios
+            {
+                NombreServicio = nombre,
+                Precio = precio
+            };
         }
 
-        public int getIdServicio()
+        public static Servicios ModificarServicio(int id, string nombre, decimal precio, int estado)
         {
-            return Id_servicioAdicional;
-        }
-        public string getNombre()
-        {
-            return NombreServicio;
-        }
-
-        public decimal getPrecio()
-        {
-            return Precio;
-        }
-
-        public int getEstado()
-        {
-            return Estado;
-        }
-
-        public void setIdServicio(int id)
-        {
-            Id_servicioAdicional = id;
-        }
-
-        public void setNombre(string nombre)
-        {
-            NombreServicio = nombre;
-        }
-
-        public void setPrecio(decimal precio)
-        {
-            Precio = precio;
-        }
-
-        public void setEstado(int estado)
-        {
-            Estado = estado;
+            return new Servicios
+            {
+                IdServicio = id,
+                NombreServicio = nombre,
+                Precio = precio,
+                Estado = estado
+            };
         }
     }
 }
+

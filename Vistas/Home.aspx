@@ -48,189 +48,232 @@
         <!-- Contenido principal con sección dinámica -->
         <div class="container mt-5">
             <div class="card shadow">
-                <div class="card-header bg-dark text-white">
-                    <asp:Label ID="lblSeccionTitulo" runat="server" Text="Sección Actual" class="fw-bold "></asp:Label>
+                <div class="card-header bg-dark text-white d-flex align-items-center gap-3">
+                    <!-- Título -->
+                    <asp:Label ID="lblSeccionTitulo" runat="server" Text="Panel Administrativo" CssClass="fw-bold mb-0" />
+
+                    <!-- Panel para ocultar/mostrar los botones -->
+                    <asp:Panel ID="panelAdministrativo" runat="server" CssClass="d-flex gap-3">
+                        <asp:LinkButton ID="btnUsuario" runat="server" CssClass="nav-link text-white px-2" OnClick="btnUsuario_Click">Usuario</asp:LinkButton>
+                        <asp:LinkButton ID="btnMetodoPago" runat="server" CssClass="nav-link text-white px-2" OnClick="btnMetodoPago_Click">Método de Pago</asp:LinkButton>
+                        <asp:LinkButton ID="btnServicios" runat="server" CssClass="nav-link text-white px-2" OnClick="btnServicios_Click">Servicios</asp:LinkButton>
+                    </asp:Panel>
                 </div>
+
                 <div class="card-body">
 
-                    <!-- Panel para Panel Administrativo -->
-                    <asp:Panel ID="panelAdministrativo" runat="server" Visible="false">
-                        <div class="d-flex gap-2 mb-1">
-                            <asp:Button ID="btnUsuario" runat="server" Text="Usuario" CssClass="btn btn-primary" OnClick="btnUsuario_Click" />
-                            <asp:Button ID="btnMetodoPago" runat="server" Text="Metodo de Pago" CssClass="btn btn-primary" OnClick="btnMetodoPago_Click" />
-                            <asp:Button ID="btnServicios" runat="server" Text="Servicios" CssClass="btn btn-primary" OnClick="btnServicios_Click" />
+                    <!-- Panel para Reservas -->
+                    <asp:Panel ID="panelReservas" runat="server" Visible="false">
+                    </asp:Panel>
+
+                    <!-- Panel para Panel Usuario -->
+                    <asp:Panel ID="panelUsuario" runat="server" Visible="false">
+                        <asp:Button ID="btnNuevoUsuario" runat="server" Text="Nuevo Usuario" CssClass="btn btn-primary" OnClick="btnNuevoUsuario_Click" />
+                        <div class="mt-3" style="overflow-x: auto; width: 100%;">
+                            <asp:GridView ID="grvUsuario" runat="server" AutoGenerateColumns="False" DataKeyNames="Id_usuario" CssClass="table table-striped table-bordered w-100"
+                                AllowPaging="true" PageSize="5" OnRowCancelingEdit="grvUsuario_RowCancelingEdit" OnRowEditing="grvUsuario_RowEditing" OnRowUpdating="grvUsuario_RowUpdating" OnRowDataBound="grvUsuario_RowDataBound" OnPageIndexChanging="grvUsuario_PageIndexChanging">
+                                <Columns>
+                                    <asp:TemplateField>
+                                        <ItemTemplate>
+                                            <asp:LinkButton ID="btnEditar" runat="server" CommandName="Edit" CssClass="btn btn-primary btn-sm">Editar</asp:LinkButton>
+                                        </ItemTemplate>
+                                        <EditItemTemplate>
+                                            <asp:LinkButton ID="btnActualizar" runat="server" CommandName="Update" CssClass="btn btn-success btn-sm">Guardar</asp:LinkButton>
+                                            <asp:LinkButton ID="btnCancelar" runat="server" CommandName="Cancel" CssClass="btn btn-danger btn-sm">Cancelar</asp:LinkButton>
+                                        </EditItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Nombre">
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtEINombre" runat="server" Text='<%# Bind("Nombre") %>'></asp:TextBox>
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="txtNombre" runat="server" Text='<%# Bind("Nombre") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Contraseña">
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtEIContrasenia" runat="server" Text='<%# Bind("Contrasenia") %>' Width="100px"></asp:TextBox>
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="txtContrasenia" runat="server" Text='<%# Bind("Contrasenia") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Rol">
+                                        <EditItemTemplate>
+                                            <asp:DropDownList ID="ddpEIRol" runat="server">
+                                            </asp:DropDownList>
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="txtRol" runat="server" Text='<%# Bind("Rol") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Estado">
+                                        <EditItemTemplate>
+                                            <asp:CheckBox ID="chkEIEstado" runat="server" Checked='<%# Convert.ToBoolean(Eval("Estado")) %>' />
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="txtEstado" runat="server" Text='<%# Convert.ToBoolean(Eval("Estado")) ? "Activo" : "Inactivo" %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                </Columns>
+                            </asp:GridView>
+
+                            <!-- Panel para Registrar Usuario Dinamico -->
+                            <asp:Panel ID="panelRegistrarUsuario" runat="server" Visible="false" CssClass="mt-4 p-3 border rounded">
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="txtName" class="form-label">Nombre</label>
+                                        <asp:TextBox ID="txtName" runat="server" CssClass="form-control" />
+                                        <asp:Label ID="lblMensajeNombre" runat="server" CssClass="text-danger small" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="txtPassword" class="form-label">Contraseña</label>
+                                        <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" CssClass="form-control" />
+                                        <asp:Label ID="lblMensajePassword" runat="server" CssClass="text-danger small" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="ddlRolUsuario" class="form-label">Rol</label>
+                                        <asp:DropDownList ID="ddlRolUsuario" runat="server" CssClass="form-select">
+                                            <asp:ListItem Text="Administrador" Value="Administrador" />
+                                            <asp:ListItem Text="Recepcionista" Value="Recepcionista" />
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <asp:Button ID="btnRegisterUser" runat="server" Text="Registrar" CssClass="btn btn-success" OnClick="btnRegisterUser_Click" />
+                                    <asp:Button ID="btnCancelarUser" runat="server" Text="Cancelar" CssClass="btn btn-secondary" OnClick="btnCancelarUser_Click" />
+                                </div>
+                            </asp:Panel>
+
+
                         </div>
+                    </asp:Panel>
 
-                        <!-- Panel para Panel Usuario -->
-                        <asp:Panel ID="panelUsuario" runat="server" Visible="false">
-                            <div class="login-container text-start">
-                                <h6 class="mb-2 fw-bold">Registrar Usuario</h6>
+                    <!-- Panel para Panel Metodo de Pago -->
+                    <asp:Panel ID="panelMetodoPago" runat="server" Visible="false">
+                        <asp:Button ID="btnNuevoMetodo" runat="server" Text="Nuevo Metodo" CssClass="btn btn-primary" OnClick="btnNuevoMetodo_Click" />
 
-                                <div class="mb-3  p-0 d-flex align-items-center gap-2">
-                                    <label for="txtName" class="form-label me-2 mb-0" style="min-width: 90px;">Nombre: </label>
-                                    <asp:TextBox ID="txtName" runat="server" CssClass="form-control flex-grow-1" Style="max-width: 250px;" />
-                                    &nbsp;<asp:Label ID="lblMensajeNombre" runat="server"></asp:Label>
+                        <div class="mt-3" style="overflow-x: auto; width: 100%;">
+
+                            <asp:GridView ID="grvMetodoPago" runat="server" AutoGenerateColumns="False" DataKeyNames="Id_metodoPago" CssClass="table table-striped table-bordered w-100"
+                                AllowPaging="true" PageSize="5" OnRowCancelingEdit="grvMetodoPago_RowCancelingEdit" OnRowEditing="grvMetodoPago_RowEditing" OnRowUpdating="grvMetodoPago_RowUpdating" OnPageIndexChanging="grvMetodoPago_PageIndexChanging">
+                                <Columns>
+                                    <asp:TemplateField>
+                                        <ItemTemplate>
+                                            <asp:LinkButton ID="btnEditar" runat="server" CommandName="Edit" CssClass="btn btn-primary btn-sm">Editar</asp:LinkButton>
+                                        </ItemTemplate>
+                                        <EditItemTemplate>
+                                            <asp:LinkButton ID="btnActualizar" runat="server" CommandName="Update" CssClass="btn btn-success btn-sm">Guardar</asp:LinkButton>
+                                            <asp:LinkButton ID="btnCancelar" runat="server" CommandName="Cancel" CssClass="btn btn-danger btn-sm">Cancelar</asp:LinkButton>
+                                        </EditItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Nombre">
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtEINombrePago" runat="server" Text='<%# Bind("Nombre") %>'></asp:TextBox>
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="txtNombrePago" runat="server" Text='<%# Bind("Nombre") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Estado">
+                                        <EditItemTemplate>
+                                            <asp:CheckBox ID="chkEIEstadoPago" runat="server" Checked='<%# Convert.ToBoolean(Eval("Estado")) %>' />
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="txtEstadoPago" runat="server" Text='<%# Convert.ToBoolean(Eval("Estado")) ? "Activo" : "Inactivo" %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                </Columns>
+                            </asp:GridView>
+
+                            <asp:Panel ID="panelRegistrarMetodo" runat="server" Visible="false" CssClass="mt-4 p-3 border rounded">
+                                <h6 class="fw-bold mb-3">Agregar Método de Pago</h6>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="txtNameMetodoPago" class="form-label">Nombre</label>
+                                        <asp:TextBox ID="txtNameMetodoPago" runat="server" CssClass="form-control" />
+                                        <asp:Label ID="lblNameMetodoPago" runat="server" CssClass="text-danger small" />
+                                    </div>
                                 </div>
 
-                                <div class="mb-3  p-0 d-flex align-items-center gap-2">
-                                    <label for="txtPassword" class="form-label me-2 mb-0" style="min-width: 90px;">Contraseña: </label>
-                                    <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" CssClass="form-control flex-grow-1" Style="max-width: 250px;" />
-                                    &nbsp;<asp:Label ID="lblMensajePassword" runat="server"></asp:Label>
+                                <div class="d-flex gap-2">
+                                    <asp:Button ID="btnAgregarPago" runat="server" Text="Registrar" CssClass="btn btn-success" OnClick="btnAgregarPago_Click" />
+                                    <asp:Button ID="btnCancelarMetodoPago" runat="server" Text="Cancelar" CssClass="btn btn-secondary" OnClick="btnCancelarMetodoPago_Click" />
+                                </div>
+                            </asp:Panel>
+                        </div>
+                    </asp:Panel>
+
+                    <!-- Panel para Panel Servicios -->
+                    <asp:Panel ID="panelServicios" runat="server" Visible="false">
+                        <asp:Button ID="btnNuevoServicio" runat="server" Text="Nuevo Servicio" CssClass="btn btn-primary" OnClick="btnNuevoServicio_Click" />
+
+                        <div class="mt-3" style="overflow-x: auto; width: 100%;">
+
+                            <asp:GridView ID="grvServicio" runat="server" AutoGenerateColumns="False" DataKeyNames="Id_serviciosAdicionales" CssClass="table table-striped table-bordered w-100"
+                                AllowPaging="true" PageSize="5" OnPageIndexChanging="grvServicio_PageIndexChanging" OnRowCancelingEdit="grvServicio_RowCancelingEdit" OnRowEditing="grvServicio_RowEditing" OnRowUpdating="grvServicio_RowUpdating">
+                                <Columns>
+                                    <asp:TemplateField>
+                                        <ItemTemplate>
+                                            <asp:LinkButton ID="btnEditar" runat="server" CommandName="Edit" CssClass="btn btn-primary btn-sm">Editar</asp:LinkButton>
+                                        </ItemTemplate>
+                                        <EditItemTemplate>
+                                            <asp:LinkButton ID="btnActualizar" runat="server" CommandName="Update" CssClass="btn btn-success btn-sm">Guardar</asp:LinkButton>
+                                            <asp:LinkButton ID="btnCancelar" runat="server" CommandName="Cancel" CssClass="btn btn-danger btn-sm">Cancelar</asp:LinkButton>
+                                        </EditItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Nombre">
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtEINombreServicio" runat="server" Text='<%# Bind("NombreServicio") %>'></asp:TextBox>
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="txtNombreServicio" runat="server" Text='<%# Bind("NombreServicio") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Precio">
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtEIPrecio" runat="server" Text='<%# Bind("Precio") %>'></asp:TextBox>
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="txtPrecio" runat="server" Text='<%# Bind("Precio") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Estado">
+                                        <EditItemTemplate>
+                                            <asp:CheckBox ID="chkEIEstadoServicio" runat="server" Checked='<%# Convert.ToBoolean(Eval("Estado")) %>' />
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="txtEstadoServicio" runat="server" Text='<%# Convert.ToBoolean(Eval("Estado")) ? "Activo" : "Inactivo" %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                </Columns>
+                            </asp:GridView>
+
+                            <asp:Panel ID="panelRegistrarServicio" runat="server" Visible="false" CssClass="mt-4 p-3 border rounded">
+                                <h6 class="fw-bold mb-3">Agregar Servicio Adicional</h6>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="txtNameServicio" class="form-label">Nombre</label>
+                                        <asp:TextBox ID="txtNameServicio" runat="server" CssClass="form-control" />
+                                        <asp:Label ID="lblNameServicio" runat="server" CssClass="text-danger small" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="txtPrecio" class="form-label">Precio</label>
+                                        <asp:TextBox ID="txtPrecio" runat="server" CssClass="form-control" />
+                                        <asp:Label ID="lblNamePrecio" runat="server" CssClass="text-danger small" />
+                                    </div>
                                 </div>
 
-                                <div class="mb-3 col-md-4 col-sm-6 p-0 d-flex align-items-center gap-2">
-                                    <label for="DropDownList1" class="form-label me-2 mb-0" style="min-width: 90px;">Rol: </label>
-                                    <asp:DropDownList ID="ddlRolUsuario" runat="server" CssClass="form-select w-auto flex-grow-1" Style="max-width: 250px;">
-                                        <asp:ListItem Text="Administrador" Value="Administrador" />
-                                        <asp:ListItem Text="Recepcionista" Value="Recepcionista" />
-                                    </asp:DropDownList>
+                                <div class="d-flex gap-2">
+                                    <asp:Button ID="btnAgregarServicio" runat="server" Text="Registrar" CssClass="btn btn-success" OnClick="btnAgregarServicio_Click" />
+                                    <asp:Button ID="btnCancelarServicio" runat="server" Text="Cancelar" CssClass="btn btn-secondary" OnClick="btnCancelarServicio_Click" />
                                 </div>
+                            </asp:Panel>
 
-                                <asp:Button ID="btnRegisterUser" runat="server" Text="Registrar" CssClass="btn btn-primary" OnClick="btnRegisterUser_Click" />
-                                <asp:Button ID="btnLimpiar" runat="server" Text="Limpiar" CssClass="btn btn-secondary w-10" OnClick="btnLimpiar_Click" />
-                            </div>
-
-                            <div class="mt-3" style="overflow-x: auto; width: 100%;">
-
-                                <asp:GridView ID="grvUsuario" runat="server" AutoGenerateColumns="False" AutoGenerateEditButton="True" DataKeyNames="Id_usuario" CssClass="table table-striped table-bordered w-100"
-                                    AllowPaging="true" PageSize="10" OnRowCancelingEdit="grvUsuario_RowCancelingEdit" OnRowEditing="grvUsuario_RowEditing" OnRowUpdating="grvUsuario_RowUpdating" OnRowDataBound="grvUsuario_RowDataBound">
-                                    <Columns>
-                                        <asp:TemplateField HeaderText="Nombre">
-                                            <EditItemTemplate>
-                                                <asp:TextBox ID="txtEINombre" runat="server" Text='<%# Bind("Nombre") %>'></asp:TextBox>
-                                            </EditItemTemplate>
-                                            <ItemTemplate>
-                                                <asp:Label ID="txtNombre" runat="server" Text='<%# Bind("Nombre") %>'></asp:Label>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                        <asp:TemplateField HeaderText="Contraseña">
-                                            <EditItemTemplate>
-                                                <asp:TextBox ID="txtEIContrasenia" runat="server" Text='<%# Bind("Contrasenia") %>' Width="100px"></asp:TextBox>
-                                            </EditItemTemplate>
-                                            <ItemTemplate>
-                                                <asp:Label ID="txtContrasenia" runat="server" Text='<%# Bind("Contrasenia") %>'></asp:Label>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                        <asp:TemplateField HeaderText="Rol">
-                                            <EditItemTemplate>
-                                                <asp:DropDownList ID="ddpEIRol" runat="server">
-                                                </asp:DropDownList>
-                                            </EditItemTemplate>
-                                            <ItemTemplate>
-                                                <asp:Label ID="txtRol" runat="server" Text='<%# Bind("Rol") %>'></asp:Label>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                        <asp:TemplateField HeaderText="Estado">
-                                            <EditItemTemplate>
-                                                <asp:CheckBox ID="chkEIEstado" runat="server" Checked='<%# Convert.ToBoolean(Eval("Estado")) %>' />
-                                            </EditItemTemplate>
-                                            <ItemTemplate>
-                                                <asp:Label ID="txtEstado" runat="server" Text='<%# Convert.ToBoolean(Eval("Estado")) ? "Activo" : "Inactivo" %>'></asp:Label>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                    </Columns>
-                                </asp:GridView>
-
-                            </div>
-                        </asp:Panel>
-
-                        <!-- Panel para Panel Metodo de Pago -->
-                        <asp:Panel ID="panelMetodoPago" runat="server" Visible="false">
-                            <div class="login-container text-start">
-                                <h6 class="mb-2 fw-bold">Agregar Metodo de Pago</h6>
-
-                                <div class="mb-3  p-0 d-flex align-items-center gap-2">
-                                    <label for="txtNameMetodoPago" class="form-label me-2 mb-0" style="min-width: 90px;">Nombre: </label>
-                                    <asp:TextBox ID="txtNameMetodoPago" runat="server" CssClass="form-control flex-grow-1" Style="max-width: 250px;" />
-                                    &nbsp;<asp:Label ID="lblNameMetodoPago" runat="server"></asp:Label>
-                                </div>
-
-                                <asp:Button ID="btnAgregarPago" runat="server" Text="Registrar" CssClass="btn btn-primary" OnClick="btnAgregarPago_Click" />
-                                <asp:Button ID="btnLimpiarMetodoPago" runat="server" Text="Limpiar" CssClass="btn btn-secondary w-10" OnClick="btnLimpiarMetodoPago_Click" />
-                            </div>
-
-                            <div class="mt-3" style="overflow-x: auto; width: 100%;">
-
-                                <asp:GridView ID="grvMetodoPago" runat="server" AutoGenerateColumns="False" AutoGenerateEditButton="True" DataKeyNames="Id_metodoPago" CssClass="table table-striped table-bordered w-100"
-                                    AllowPaging="true" PageSize="10" OnRowCancelingEdit="grvMetodoPago_RowCancelingEdit" OnRowEditing="grvMetodoPago_RowEditing" OnRowUpdating="grvMetodoPago_RowUpdating">
-                                    <Columns>
-                                        <asp:TemplateField HeaderText="Nombre">
-                                            <EditItemTemplate>
-                                                <asp:TextBox ID="txtEINombrePago" runat="server" Text='<%# Bind("Nombre") %>'></asp:TextBox>
-                                            </EditItemTemplate>
-                                            <ItemTemplate>
-                                                <asp:Label ID="txtNombrePago" runat="server" Text='<%# Bind("Nombre") %>'></asp:Label>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                        <asp:TemplateField HeaderText="Estado">
-                                            <EditItemTemplate>
-                                                <asp:CheckBox ID="chkEIEstadoPago" runat="server" Checked='<%# Convert.ToBoolean(Eval("Estado")) %>' />
-                                            </EditItemTemplate>
-                                            <ItemTemplate>
-                                                <asp:Label ID="txtEstadoPago" runat="server" Text='<%# Convert.ToBoolean(Eval("Estado")) ? "Activo" : "Inactivo" %>'></asp:Label>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                    </Columns>
-                                </asp:GridView>
-
-                            </div>
-                        </asp:Panel>
-
-                        <!-- Panel para Panel Servicios -->
-                        <asp:Panel ID="panelServicios" runat="server" Visible="false">
-                            <div class="login-container text-start">
-                                <h6 class="mb-2 fw-bold">Agregar Servicio adicional</h6>
-
-                                <div class="mb-3  p-0 d-flex align-items-center gap-2">
-                                    <label for="txtNameServicio" class="form-label me-2 mb-0" style="min-width: 90px;">Nombre: </label>
-                                    <asp:TextBox ID="txtNameServicio" runat="server" CssClass="form-control flex-grow-1" Style="max-width: 250px;" />
-                                    &nbsp;<asp:Label ID="lblNameServicio" runat="server"></asp:Label>
-                                </div>
-
-                                <div class="mb-3  p-0 d-flex align-items-center gap-2">
-                                    <label for="txtPrecio" class="form-label me-2 mb-0" style="min-width: 90px;">Precio: </label>
-                                    <asp:TextBox ID="txtPrecio" runat="server" CssClass="form-control flex-grow-1" Style="max-width: 250px;" />
-                                    &nbsp;<asp:Label ID="lblNamePrecio" runat="server"></asp:Label>
-                                </div>
-
-                                <asp:Button ID="btnAgregarServicio" runat="server" Text="Registrar" CssClass="btn btn-primary" OnClick="btnAgregarServicio_Click" />
-                                <asp:Button ID="btnLimpiarServicio" runat="server" Text="Limpiar" CssClass="btn btn-secondary w-10" OnClick="btnLimpiarServicio_Click" />
-                            </div>
-
-                            <div class="mt-3" style="overflow-x: auto; width: 100%;">
-
-                                <asp:GridView ID="grvServicio" runat="server" AutoGenerateColumns="False" AutoGenerateEditButton="True" DataKeyNames="Id_servicioAdicional" CssClass="table table-striped table-bordered w-100"
-                                    AllowPaging="true" PageSize="10" OnPageIndexChanging="grvServicio_PageIndexChanging" OnRowCancelingEdit="grvServicio_RowCancelingEdit" OnRowEditing="grvServicio_RowEditing" OnRowUpdating="grvServicio_RowUpdating">
-                                    <Columns>
-                                        <asp:TemplateField HeaderText="Nombre">
-                                            <EditItemTemplate>
-                                                <asp:TextBox ID="txtEINombreServicio" runat="server" Text='<%# Bind("NombreServicio") %>'></asp:TextBox>
-                                            </EditItemTemplate>
-                                            <ItemTemplate>
-                                                <asp:Label ID="txtNombreServicio" runat="server" Text='<%# Bind("NombreServicio") %>'></asp:Label>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                        <asp:TemplateField HeaderText="Precio">
-                                            <EditItemTemplate>
-                                                <asp:TextBox ID="txtEIPrecio" runat="server" Text='<%# Bind("Precio") %>'></asp:TextBox>
-                                            </EditItemTemplate>
-                                            <ItemTemplate>
-                                                <asp:Label ID="txtPrecio" runat="server" Text='<%# Bind("Precio") %>'></asp:Label>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                        <asp:TemplateField HeaderText="Estado">
-                                            <EditItemTemplate>
-                                                <asp:CheckBox ID="chkEIEstadoServicio" runat="server" Checked='<%# Convert.ToBoolean(Eval("Estado")) %>' />
-                                            </EditItemTemplate>
-                                            <ItemTemplate>
-                                                <asp:Label ID="txtEstadoServicio" runat="server" Text='<%# Convert.ToBoolean(Eval("Estado")) ? "Activo" : "Inactivo" %>'></asp:Label>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                    </Columns>
-                                </asp:GridView>
-
-                            </div>
-                        </asp:Panel>
+                        </div>
                     </asp:Panel>
 
                     <!-- Panel para Reservas -->
@@ -450,12 +493,155 @@
                         <asp:Label ID="lblMensaje" runat="server" CssClass="text-danger" />
                         
                     </asp:Panel>
-    
+    <!-- Panel para Huespedes -->
+                    <asp:Panel ID="panelHuespedes" runat="server" Visible="false">
+                        <asp:Button ID="btnNuevoHuesped" runat="server" Text="Nuevo Huesped" CssClass="btn btn-primary" OnClick="btnNuevoHuesped_Click" />
+
+                        <div class="mt-3" style="overflow-x: auto; width: 100%;">
+
+                            <asp:GridView ID="grvHuespedes" runat="server" AutoGenerateColumns="False" DataKeyNames="Id_huesped" CssClass="table table-striped table-bordered w-100"
+                                AllowPaging="true" PageSize="5" OnPageIndexChanging="grvHuespedes_PageIndexChanging" OnRowCancelingEdit="grvHuespedes_RowCancelingEdit" OnRowEditing="grvHuespedes_RowEditing" OnRowUpdating="grvHuespedes_RowUpdating">
+                                <Columns>
+                                    <asp:TemplateField>
+                                        <ItemTemplate>
+                                            <asp:LinkButton ID="btnEditar" runat="server" CommandName="Edit" CssClass="btn btn-primary btn-sm">Editar</asp:LinkButton>
+                                        </ItemTemplate>
+                                        <EditItemTemplate>
+                                            <asp:LinkButton ID="btnActualizar" runat="server" CommandName="Update" CssClass="btn btn-success btn-sm">Guardar</asp:LinkButton>
+                                            <asp:LinkButton ID="btnCancelar" runat="server" CommandName="Cancel" CssClass="btn btn-danger btn-sm">Cancelar</asp:LinkButton>
+                                        </EditItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Nombre">
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtEINombreHuesped" runat="server" Text='<%# Bind("Nombre") %>'></asp:TextBox>
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="txtNombreHuesped" runat="server" Text='<%# Bind("Nombre") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Apellido">
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtEIApellido" runat="server" Text='<%# Bind("Apellido") %>'></asp:TextBox>
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="txtApellido" runat="server" Text='<%# Bind("Apellido") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Documento">
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtEIDocumento" runat="server" Text='<%# Bind("Documento") %>'></asp:TextBox>
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="txtDocumento" runat="server" Text='<%# Bind("Documento") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Tipo Documento">
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtEITipoDocumento" runat="server" Text='<%# Bind("TipoDocumento") %>'></asp:TextBox>
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblTipoDocumento" runat="server" Text='<%# Bind("TipoDocumento") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Email">
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtEIEmail" runat="server" Text='<%# Bind("Email") %>'></asp:TextBox>
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblEmail" runat="server" Text='<%# Bind("Email") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Teléfono">
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtEITelefono" runat="server" Text='<%# Bind("Telefono") %>'></asp:TextBox>
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblTelefono" runat="server" Text='<%# Bind("Telefono") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Fecha Nacimiento">
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtEIFechaNacimiento" runat="server" Text='<%# Bind("FechaNacimiento", "{0:yyyy-MM-dd}") %>'></asp:TextBox>
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblFechaNacimiento" runat="server" Text='<%# Bind("FechaNacimiento", "{0:dd/MM/yyyy}") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Estado">
+                                        <EditItemTemplate>
+                                            <asp:CheckBox ID="chkEIEstadoServicio" runat="server" Checked='<%# Convert.ToBoolean(Eval("Estado")) %>' />
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="txtEstadoServicio" runat="server" Text='<%# Convert.ToBoolean(Eval("Estado")) ? "Activo" : "Inactivo" %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                </Columns>
+                            </asp:GridView>
+
+                            <!-- Panel para Registrar Huespedes -->
+                            <asp:Panel ID="panelRegistrarHuesped" runat="server" Visible="false" CssClass="mt-4 p-3 border rounded">
+                                <h6 class="fw-bold mb-3">Agregar Huésped</h6>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="txtNombreHuesped" class="form-label">Nombre</label>
+                                        <asp:TextBox ID="txtNombreHuesped" runat="server" CssClass="form-control" />
+                                        <asp:Label ID="lblNombreHuesped" runat="server" CssClass="text-danger small" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="txtApellidoHuesped" class="form-label">Apellido</label>
+                                        <asp:TextBox ID="txtApellidoHuesped" runat="server" CssClass="form-control" />
+                                        <asp:Label ID="lblApellidoHuesped" runat="server" CssClass="text-danger small" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="txtDocumentoHuesped" class="form-label">Documento</label>
+                                        <asp:TextBox ID="txtDocumentoHuesped" runat="server" CssClass="form-control" />
+                                        <asp:Label ID="lblDocumentoHuesped" runat="server" CssClass="text-danger small" />
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="ddlTipoDocumentoHuesped" class="form-label">Tipo de Documento</label>
+                                        <asp:DropDownList ID="ddlTipoDocumentoHuesped" runat="server" CssClass="form-select">
+                                            <asp:ListItem>Dni</asp:ListItem>
+                                            <asp:ListItem>Libreta Cívica</asp:ListItem>
+                                            <asp:ListItem>Libreta de Enrolamiento</asp:ListItem>
+                                            <asp:ListItem>Pasaporte</asp:ListItem>
+                                        </asp:DropDownList>
+                                        <asp:Label ID="lblTipoDocumentoHuesped" runat="server" CssClass="text-danger small" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="txtEmailHuesped" class="form-label">Email</label>
+                                        <asp:TextBox ID="txtEmailHuesped" runat="server" CssClass="form-control" />
+                                        <asp:Label ID="lblEmailHuesped" runat="server" CssClass="text-danger small" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="txtTelefonoHuesped" class="form-label">Teléfono</label>
+                                        <asp:TextBox ID="txtTelefonoHuesped" runat="server" CssClass="form-control" />
+                                        <asp:Label ID="lblTelefonoHuesped" runat="server" CssClass="text-danger small" />
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="txtFechaNacimientoHuesped" class="form-label">Fecha de Nacimiento</label>
+                                        <asp:TextBox ID="txtFechaNacimientoHuesped" runat="server" TextMode="Date" CssClass="form-control" />
+                                        <asp:Label ID="lblFechaNacimientoHuesped" runat="server" CssClass="text-danger small" />
+                                    </div>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <asp:Button ID="btnRegistrarHuesped" runat="server" Text="Registrar" CssClass="btn btn-success" OnClick="btnRegistrarHuesped_Click" />
+                                    <asp:Button ID="btnLimpiarHuesped" runat="server" Text="Cancelar" CssClass="btn btn-secondary" OnClick="btnLimpiarHuesped_Click" />
+                                </div>
+                            </asp:Panel>
+
+                        </div>
+                    </asp:Panel>
+                </div>
             </div>
         </div>
-    </div>
-
-
     </form>
 
     <!-- Bootstrap JS -->
