@@ -48,7 +48,7 @@
     <Compile Include="DaoMetodoPagos.cs" />
     <Compile Include="DaoServicios.cs" />
     <Compile Include="DaoUser.cs" />
-    <Compile Include="HabitacionesRepository.cs" />
+    <Compile Include="DaoHabitaciones.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

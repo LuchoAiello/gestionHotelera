@@ -37,7 +37,6 @@ namespace Dao
                        Estado = @Estado 
                    WHERE Id_servicioAdicional = @Id_servicioAdicional";
 
-
             return ds.EjecutarConsulta(consulta, comando);
         }
 

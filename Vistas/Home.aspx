@@ -278,6 +278,7 @@
 
                     <!-- Panel para Reservas -->
                     <asp:Panel ID="panelHistorialReservas" runat="server" Visible="false">
+                        <!-- Botón para iniciar registro de reserva -->
                         <div class="container" style="margin: 10px">
                             <div class="row mb-3">
                                 <div class="col-md-4">
@@ -296,12 +297,53 @@
 
                             <div class="row">
                                 <div class="col text-end">
-                                    <asp:Button ID="Button1" runat="server" Text="Crear" CssClass="btn btn-primary me-1" OnClick="btnCrearReserva_Click" />
+                                    <asp:Button ID="Button1" runat="server" Text="Crear" CssClass="btn btn-primary me-1" OnClick="btnMostrarFormularioReserva_Click" />
                                     <asp:Button ID="btnFilter" runat="server" Text="Filtrar" CssClass="btn btn-primary me-2" OnClick="btnFilter_Click" />
-                                    <asp:Button ID="btnSacarFiltro" runat="server" Text="Sacar Filtro" CssClass="btn btn-secondary" OnClick="btnSacarFiltro_Click" />
+                                    <asp:Button ID="btnSacarFiltro" runat="server" Text="Limpiar Filtro" CssClass="btn btn-secondary" OnClick="btnSacarFiltro_Click" />
                                 </div>
                             </div>
                         </div>
+                        <%--Aqui creare el formulario para ingresar una nueva reserva ↓--%>
+                     <%--   <asp:Panel ID="panel1" runat="server" Visible="false">
+                            <h6 class="mb-2 fw-bold">Registrar Reserva</h6>
+
+                            <div class="mb-3  p-0 d-flex align-items-center gap-2">
+                                <label for="txtNumeroHabReserva" class="form-label me-2 mb-0" style="min-width: 90px;">Numero Habitacion: </label>
+                                <asp:TextBox ID="txtNumeroHabReserva" runat="server" CssClass="form-control flex-grow-1" Style="max-width: 60px;" />
+                                &nbsp;<asp:Label ID="Label9" runat="server"></asp:Label>
+                            </div>
+                            <div class="mb-3  p-0 d-flex align-items-center gap-2">
+                                <label for="txtTipoHab" class="form-label me-2 mb-0" style="min-width: 90px;">Tipo: </label>
+                                <asp:TextBox ID="TextBox2" runat="server" CssClass="form-control flex-grow-1" Style="max-width: 250px;" />
+                                &nbsp;<asp:Label ID="Label10" runat="server"></asp:Label>
+                            </div>
+                            <div class="mb-3  p-0 d-flex align-items-center gap-2">
+                                <label for="txtCapacidad" class="form-label me-2 mb-0" style="min-width: 90px;">Capacidad: </label>
+                                <asp:TextBox ID="TextBox3" runat="server" CssClass="form-control flex-grow-1" Style="max-width: 250px;" />
+                                &nbsp;<asp:Label ID="Label11" runat="server"></asp:Label>
+                            </div>
+                            <div class="mb-3  p-0 d-flex align-items-center gap-2">
+                                <label for="txtPrecioHab" class="form-label me-2 mb-0" style="min-width: 90px;">Precio: </label>
+                                <asp:TextBox ID="TextBox4" runat="server" CssClass="form-control flex-grow-1" Style="max-width: 250px;" />
+                                &nbsp;<asp:Label ID="Label12" runat="server"></asp:Label>
+                            </div>
+                            <div class="mb-3  p-0 d-flex align-items-center gap-2">
+                                <label for="txtDescripcionHab" class="form-label me-2 mb-0" style="min-width: 90px;">Descripcion: </label>
+                                <asp:TextBox ID="TextBox5" runat="server" CssClass="form-control flex-grow-1" Style="max-width: 250px;" />
+                                &nbsp;<asp:Label ID="Label13" runat="server"></asp:Label>
+                            </div>
+                                <div class="mb-3 col-md-4 col-sm-6 p-0 d-flex align-items-center gap-2">
+                                    <label for="DropDownList1" class="form-label me-2 mb-0" style="min-width: 90px;">Estado: </label>
+                                    <asp:DropDownList ID="DropDownList1" runat="server" CssClass="form-select w-auto flex-grow-1" Style="max-width: 250px;">
+                                        <asp:ListItem Text="Activa" Value="Activa" />
+                                        <asp:ListItem Text="Inactiva" Value="Inactiva" />
+                                        <asp:ListItem Text="Mantenimiento" Value="Mantenimiento" />
+                                    </asp:DropDownList>
+                                </div>
+                            <asp:Label ID="Label14" runat="server" CssClass="alert alert-danger d-block" Visible="false" />
+                            <asp:Button ID="Button2" runat="server" Text="Guardar" CssClass="btn btn-success me-2" OnClick="btnRegistrarHabitacion_Click" />
+                            <asp:Button ID="Button3" runat="server" Text="Cancelar" CssClass="btn btn-secondary" OnClick="btnCancelarRegistroHabitacion_Click" />
+                        </asp:Panel>--%>
 
                         <div style="overflow-x: auto; width: 100%;">
                             <asp:GridView ID="grvHistorialReservas" runat="server" AutoGenerateColumns="False"

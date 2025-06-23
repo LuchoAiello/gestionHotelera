@@ -8,33 +8,33 @@ using System.Threading.Tasks;
 
 namespace Negocio
 {
-    public class HabitacionesService
+    public class NegocioHabitaciones
     {
 
         public DataTable GetAll()
         {
-            var repo = new Dao.HabitacionesRepository();
+            var repo = new Dao.DaoHabitaciones();
             return repo.GetAll();
         }
         public DataTable GetByFilter(string filtro)
         {
-            var repo = new Dao.HabitacionesRepository();
+            var repo = new Dao.DaoHabitaciones();
             var listaFiltrada = repo.GetByFilter(filtro);
             return listaFiltrada;
         }
         public bool Insert(Entidades.Habitacion h)
         {
-            Dao.HabitacionesRepository repo = new Dao.HabitacionesRepository();
+            Dao.DaoHabitaciones repo = new Dao.DaoHabitaciones();
             return repo.Insert(h);
         }
         public bool Update(Entidades.Habitacion h)
         {
-            Dao.HabitacionesRepository repo = new Dao.HabitacionesRepository();
+            Dao.DaoHabitaciones repo = new Dao.DaoHabitaciones();
             return repo.Update(h);
         }
         public bool Delete(int id)
         {
-            Dao.HabitacionesRepository repo = new Dao.HabitacionesRepository();
+            Dao.DaoHabitaciones repo = new Dao.DaoHabitaciones();
             return repo.Delete(id);
         }
     }

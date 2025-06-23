@@ -36,7 +36,10 @@ namespace Vistas
                 btnRooms.Visible = true;
 
                 OcultarTodosLosPaneles();
-                lblSeccionTitulo.Text = "Lista de Reservas del Hotel";
+
+                panelHistorialReservas.Visible = true;
+                lblSeccionTitulo.Text = "Historial de Reservas";
+                CargarReservas();
             }
 
             if (Session["NameLogin"] != null)
@@ -321,6 +324,12 @@ namespace Vistas
             //gvReservas.DataSource = ObtenerDatosReserva(); // Método que devuelve una lista o DataTable
             //gvReservas.DataBind();
         }
+        protected void btnMostrarFormularioReserva_Click(object sender, EventArgs e)
+        {
+            //LimpiarFormularioReservas();
+            //panelFormularioRegistroReservas.Visible = true;
+            //panelListadoReservas.Visible = false;
+        }
 
         protected void btnFilter_Click(object sender, EventArgs e)
         {
@@ -355,12 +364,19 @@ namespace Vistas
             grvHistorialReservas.DataSource = HistorialReservas;
             grvHistorialReservas.DataBind();
         }
+
+        private void CargarReservas()
+        {
+            DataTable reservas = negocioHistorialReservas.GetHistorialReserva();
+            grvHistorialReservas.DataSource = reservas;
+            grvHistorialReservas.DataBind();
+        }
         #endregion
 
         #region Panel de Habitaciones
         private void CargarHabitaciones()
         {
-            var habitacionesService = new HabitacionesService();
+            var habitacionesService = new NegocioHabitaciones();
             DataTable dt = habitacionesService.GetAll();
             gvHabitaciones.DataSource = dt;
             gvHabitaciones.DataBind();
@@ -380,7 +396,7 @@ namespace Vistas
                 Precio = decimal.Parse(((TextBox)row.FindControl("txtPrecioHab")).Text),
                 Descripcion = ((TextBox)row.FindControl("txtDescripcionHab")).Text
             };
-            var negocio = new HabitacionesService();
+            var negocio = new NegocioHabitaciones();
             negocio.Update(habitacion);
 
             gvHabitaciones.EditIndex = -1;
@@ -413,7 +429,7 @@ namespace Vistas
                 Estado = estado
             };
 
-            HabitacionesService service = new HabitacionesService();
+            NegocioHabitaciones service = new NegocioHabitaciones();
             service.Insert(nueva);
 
             LimpiarFormularioHabitacion();
@@ -510,7 +526,7 @@ namespace Vistas
         protected void txtBuscarHabitacion_TextChanged(object sender, EventArgs e)
         {
             string filtro = txtBuscarHabitacion.Text.Trim().ToLower();
-            HabitacionesService habitacionService = new HabitacionesService();
+            NegocioHabitaciones habitacionService = new NegocioHabitaciones();
             DataTable resultado = (string.IsNullOrEmpty(filtro)) ? habitacionService.GetAll() : habitacionService.GetByFilter(filtro);
             gvHabitaciones.DataSource = resultado;
             gvHabitaciones.DataBind();
@@ -519,7 +535,7 @@ namespace Vistas
         protected void btnHabitaciones_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPaneles();
-            lblSeccionTitulo.Text = "Estado de Habitaciones";
+            lblSeccionTitulo.Text = "Habitaciones";
             panelHabitaciones.Visible = true;
             CargarHabitaciones();
         }

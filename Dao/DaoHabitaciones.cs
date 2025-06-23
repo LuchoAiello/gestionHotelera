@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 
 namespace Dao
 {
-    public class HabitacionesRepository
+    public class DaoHabitaciones
     {
         private AccesoDatos datos = new AccesoDatos();
 
