@@ -105,7 +105,9 @@ namespace Vistas
             getDataUser();
         }
 
-        #region Panel Huesped
+        #region Panel Huesped 
+
+        //PANEL HUESPED
         protected void btnRegisterHuesped_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPaneles();
@@ -127,6 +129,40 @@ namespace Vistas
             DataTable Huesped = negocioHuesped.GetHuespedes();
             grvHuespedes.DataSource = Huesped;
             grvHuespedes.DataBind();
+        }
+
+        protected void grvHuespedes_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow && grvHuespedes.EditIndex == e.Row.RowIndex)
+            {
+                DropDownList ddlTipoDoc = (DropDownList)e.Row.FindControl("txtEITipoDocumento");
+                if (ddlTipoDoc != null)
+                {
+                    ddlTipoDoc.Items.Clear();
+                    ddlTipoDoc.Items.Add("DNI");
+                    ddlTipoDoc.Items.Add("Libreta Cívica");
+                    ddlTipoDoc.Items.Add("Libreta de Enrolamiento");
+                    ddlTipoDoc.Items.Add("Pasaporte");
+
+                    string tipoDocActual = DataBinder.Eval(e.Row.DataItem, "TipoDocumento").ToString();
+                    ddlTipoDoc.SelectedValue = tipoDocActual;
+                }
+
+                DropDownList ddlEstado = (DropDownList)e.Row.FindControl("ddlEIEstadoHuesped");
+                if (ddlEstado != null)
+                {
+                    ddlEstado.Items.Clear();
+                    ddlEstado.Items.Add(new ListItem("Activo", "1"));
+                    ddlEstado.Items.Add(new ListItem("Inactivo", "0"));
+
+                    bool estadoBool = Convert.ToBoolean(DataBinder.Eval(e.Row.DataItem, "Estado"));
+                    string estadoStr = estadoBool ? "1" : "0";
+
+                    if (ddlEstado.Items.FindByValue(estadoStr) != null)
+                        ddlEstado.SelectedValue = estadoStr;
+                }
+            }
+
         }
 
         protected void grvHuespedes_PageIndexChanging(object sender, GridViewPageEventArgs e)
@@ -153,12 +189,12 @@ namespace Vistas
             string nombre = ((TextBox)grvHuespedes.Rows[e.RowIndex].FindControl("txtEINombreHuesped")).Text;
             string apellido = ((TextBox)grvHuespedes.Rows[e.RowIndex].FindControl("txtEIApellido")).Text;
             string documento = ((TextBox)grvHuespedes.Rows[e.RowIndex].FindControl("txtEIDocumento")).Text;
-            string tipoDocumento = ((TextBox)grvHuespedes.Rows[e.RowIndex].FindControl("txtEITipoDocumento")).Text;
+            string tipoDocumento = ((DropDownList)grvHuespedes.Rows[e.RowIndex].FindControl("txtEITipoDocumento")).SelectedValue;
             string email = ((TextBox)grvHuespedes.Rows[e.RowIndex].FindControl("txtEIEmail")).Text;
             string telefono = ((TextBox)grvHuespedes.Rows[e.RowIndex].FindControl("txtEITelefono")).Text;
             DateTime fechaNacimiento = Convert.ToDateTime(((TextBox)grvHuespedes.Rows[e.RowIndex].FindControl("txtEIFechaNacimiento")).Text);
-            bool estadoBool = ((CheckBox)grvHuespedes.Rows[e.RowIndex].FindControl("chkEIEstadoServicio")).Checked;
-            int estado = estadoBool ? 1 : 0;
+            DropDownList ddlEstado = (DropDownList)grvHuespedes.Rows[e.RowIndex].FindControl("ddlEIEstadoHuesped");
+            int estado = Convert.ToInt32(ddlEstado.SelectedValue);
 
             Huespedes huesped = Huespedes.ModificarHuesped(id, nombre, apellido, documento, tipoDocumento, email, telefono, fechaNacimiento, estado);
             negocioHuesped.ModificarHuesped(huesped);
@@ -282,7 +318,7 @@ namespace Vistas
             txtNombreHuesped.Text = "";
             txtApellidoHuesped.Text = "";
             txtDocumentoHuesped.Text = "";
-            ddlTipoDocumentoHuesped.SelectedValue = "Dni";
+            ddlTipoDocumentoHuesped.SelectedValue = "DNI";
             txtEmailHuesped.Text = "";
             txtTelefonoHuesped.Text = "";
             txtFechaNacimientoHuesped.Text = "";
@@ -295,15 +331,16 @@ namespace Vistas
             txtNombreHuesped.Text = "";
             txtApellidoHuesped.Text = "";
             txtDocumentoHuesped.Text = "";
-            ddlTipoDocumentoHuesped.SelectedValue = "Dni";
+            ddlTipoDocumentoHuesped.SelectedValue = "DNI";
             txtEmailHuesped.Text = "";
             txtTelefonoHuesped.Text = "";
             txtFechaNacimientoHuesped.Text = "";
         }
-    
+
         #endregion
 
         #region Panel Reservas
+        // PANEL RESERVAS 
         protected void grvHistorialReservas_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName == "Editar")
@@ -374,6 +411,7 @@ namespace Vistas
         #endregion
 
         #region Panel de Habitaciones
+        // PANEL HABITACIONES
         private void CargarHabitaciones()
         {
             var habitacionesService = new NegocioHabitaciones();
@@ -542,6 +580,7 @@ namespace Vistas
         #endregion
 
         #region Panel Usuario
+        // PANEL USUARIO
         protected void btnUsuario_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPanelesAdmin();
@@ -560,8 +599,7 @@ namespace Vistas
 
         protected void grvUsuario_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-            if (e.Row.RowType == DataControlRowType.DataRow &&
-                (e.Row.RowState & DataControlRowState.Edit) > 0)
+            if (e.Row.RowType == DataControlRowType.DataRow && grvUsuario.EditIndex == e.Row.RowIndex)
             {
                 DropDownList ddlRol = (DropDownList)e.Row.FindControl("ddpEIRol");
                 if (ddlRol != null)
@@ -577,6 +615,20 @@ namespace Vistas
                         ddlRol.ClearSelection();
                         item.Selected = true;
                     }
+                }
+
+                DropDownList ddlEstado = (DropDownList)e.Row.FindControl("ddlEIEstado");
+                if (ddlEstado != null)
+                {
+                    ddlEstado.Items.Clear();
+                    ddlEstado.Items.Add(new ListItem("Activo", "1"));
+                    ddlEstado.Items.Add(new ListItem("Inactivo", "0"));
+
+                    bool estadoBool = Convert.ToBoolean(DataBinder.Eval(e.Row.DataItem, "Estado"));
+                    string estadoStr = estadoBool ? "1" : "0";
+
+                    if (ddlEstado.Items.FindByValue(estadoStr) != null)
+                        ddlEstado.SelectedValue = estadoStr;
                 }
             }
         }
@@ -599,8 +651,8 @@ namespace Vistas
             string nombre = ((TextBox)grvUsuario.Rows[e.RowIndex].FindControl("txtEINombre")).Text;
             string contrasenia = ((TextBox)grvUsuario.Rows[e.RowIndex].FindControl("txtEIContrasenia")).Text;
             string rol = ((DropDownList)grvUsuario.Rows[e.RowIndex].FindControl("ddpEIRol")).SelectedValue;
-            bool estadoBool = ((CheckBox)grvUsuario.Rows[e.RowIndex].FindControl("chkEIEstado")).Checked;
-            int estado = estadoBool ? 1 : 0;
+            DropDownList ddlEstado = (DropDownList)grvUsuario.Rows[e.RowIndex].FindControl("ddlEIEstado");
+            int estado = Convert.ToInt32(ddlEstado.SelectedValue);
 
             Usuario userMod = Usuario.ModificarUsuario(id, nombre, contrasenia, rol, estado);
             negocioUsuario.ModificarUsuario(userMod);
@@ -668,6 +720,7 @@ namespace Vistas
         #endregion
 
         #region Panel Metodo de Pago
+        //PANEL METODO DE PAGO
         protected void btnMetodoPago_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPanelesAdmin();
@@ -689,6 +742,27 @@ namespace Vistas
             getDataMetodoPago();
         }
 
+        protected void grvMetodoPago_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow && grvMetodoPago.EditIndex == e.Row.RowIndex)
+            {
+
+                DropDownList ddlEstado = (DropDownList)e.Row.FindControl("ddlEIEstadoPago");
+                if (ddlEstado != null)
+                {
+                    ddlEstado.Items.Clear();
+                    ddlEstado.Items.Add(new ListItem("Activo", "1"));
+                    ddlEstado.Items.Add(new ListItem("Inactivo", "0"));
+
+                    bool estadoBool = Convert.ToBoolean(DataBinder.Eval(e.Row.DataItem, "Estado"));
+                    string estadoStr = estadoBool ? "1" : "0";
+
+                    if (ddlEstado.Items.FindByValue(estadoStr) != null)
+                        ddlEstado.SelectedValue = estadoStr;
+                }
+            }
+        }
+
         protected void grvMetodoPago_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
             grvMetodoPago.EditIndex = -1;
@@ -699,8 +773,8 @@ namespace Vistas
         {
             int id = Convert.ToInt32(grvMetodoPago.DataKeys[e.RowIndex].Value);
             string nombre = ((TextBox)grvMetodoPago.Rows[e.RowIndex].FindControl("txtEINombrePago")).Text;
-            bool estadoBool = ((CheckBox)grvMetodoPago.Rows[e.RowIndex].FindControl("chkEIEstadoPago")).Checked;
-            int estado = estadoBool ? 1 : 0;
+            DropDownList ddlEstado = (DropDownList)grvMetodoPago.Rows[e.RowIndex].FindControl("ddlEIEstadoPago");
+            int estado = Convert.ToInt32(ddlEstado.SelectedValue);
 
             MetodoPago metodoPago = MetodoPago.ModificarMetodoPago(id, nombre, estado);
             negocioMetodoPago.ModificarMetodoPago(metodoPago);
@@ -755,6 +829,7 @@ namespace Vistas
         #endregion
 
         #region Panel Servicios
+        //PANEL SERVICIOS
         protected void btnServicios_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPanelesAdmin();
@@ -782,14 +857,35 @@ namespace Vistas
             getDataServicio();
         }
 
+        protected void grvServicio_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow && grvServicio.EditIndex == e.Row.RowIndex)
+            {
+              
+                DropDownList ddlEstado = (DropDownList)e.Row.FindControl("ddlEIEstadoServicio");
+                if (ddlEstado != null)
+                {
+                    ddlEstado.Items.Clear();
+                    ddlEstado.Items.Add(new ListItem("Activo", "1"));
+                    ddlEstado.Items.Add(new ListItem("Inactivo", "0"));
+
+                    bool estadoBool = Convert.ToBoolean(DataBinder.Eval(e.Row.DataItem, "Estado"));
+                    string estadoStr = estadoBool ? "1" : "0";
+
+                    if (ddlEstado.Items.FindByValue(estadoStr) != null)
+                        ddlEstado.SelectedValue = estadoStr;
+                }
+            }
+        }
+
         protected void grvServicio_RowUpdating(object sender, GridViewUpdateEventArgs e)
         {
             int id = Convert.ToInt32(grvServicio.DataKeys[e.RowIndex].Value);
             string nombre = ((TextBox)grvServicio.Rows[e.RowIndex].FindControl("txtEINombreServicio")).Text;
             string precioTexto = ((TextBox)grvServicio.Rows[e.RowIndex].FindControl("txtEIPrecio")).Text.Trim();
             decimal precio = Convert.ToDecimal(precioTexto);
-            bool estadoBool = ((CheckBox)grvServicio.Rows[e.RowIndex].FindControl("chkEIEstadoServicio")).Checked;
-            int estado = estadoBool ? 1 : 0;
+            DropDownList ddlEstado = (DropDownList)grvServicio.Rows[e.RowIndex].FindControl("ddlEIEstadoServicio");
+            int estado = Convert.ToInt32(ddlEstado.SelectedValue);
 
             Servicios servicio = Servicios.ModificarServicio(id, nombre, precio, estado);
             negocioServicio.ModificarServicio(servicio);
@@ -861,8 +957,7 @@ namespace Vistas
             grvServicio.DataSource = Servicio;
             grvServicio.DataBind();
         }
+
         #endregion
-
-
     }
 }

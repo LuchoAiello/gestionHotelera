@@ -14,10 +14,6 @@ namespace Dao
             comando.Parameters.AddWithValue("@NombreServicio", servicio.NombreServicio);
             comando.Parameters.AddWithValue("@Precio", servicio.Precio);
             comando.Parameters.AddWithValue("@Estado", servicio.Estado);
-            comando.Parameters.AddWithValue("@Id_servicioAdicional", servicio.IdServicio);
-            comando.Parameters.AddWithValue("@NombreServicio", servicio.NombreServicio);
-            comando.Parameters.AddWithValue("@Precio", servicio.Precio);
-            comando.Parameters.AddWithValue("@Estado", servicio.Estado);
         }
 
         public DataTable GetServicios()
