@@ -14,7 +14,7 @@ namespace Dao
             comando.Parameters.AddWithValue("@NombreServicio", servicio.NombreServicio);
             comando.Parameters.AddWithValue("@Precio", servicio.Precio);
             comando.Parameters.AddWithValue("@Estado", servicio.Estado);
-            comando.Parameters.AddWithValue("@Id_serviciosAdicionales", servicio.IdServicio);
+            comando.Parameters.AddWithValue("@Id_servicioAdicional", servicio.IdServicio);
             comando.Parameters.AddWithValue("@NombreServicio", servicio.NombreServicio);
             comando.Parameters.AddWithValue("@Precio", servicio.Precio);
             comando.Parameters.AddWithValue("@Estado", servicio.Estado);
@@ -35,7 +35,7 @@ namespace Dao
                    SET NombreServicio = @NombreServicio, 
                        Precio = @Precio,
                        Estado = @Estado 
-                   WHERE Id_servicioAdicional = @Id_serviciosAdicionales";
+                   WHERE Id_servicioAdicional = @Id_servicioAdicional";
 
 
             return ds.EjecutarConsulta(consulta, comando);

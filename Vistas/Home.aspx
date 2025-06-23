@@ -212,7 +212,7 @@
 
                         <div class="mt-3" style="overflow-x: auto; width: 100%;">
 
-                            <asp:GridView ID="grvServicio" runat="server" AutoGenerateColumns="False" DataKeyNames="Id_serviciosAdicionales" CssClass="table table-striped table-bordered w-100"
+                            <asp:GridView ID="grvServicio" runat="server" AutoGenerateColumns="False" DataKeyNames="Id_servicioAdicional" CssClass="table table-striped table-bordered w-100"
                                 AllowPaging="true" PageSize="5" OnPageIndexChanging="grvServicio_PageIndexChanging" OnRowCancelingEdit="grvServicio_RowCancelingEdit" OnRowEditing="grvServicio_RowEditing" OnRowUpdating="grvServicio_RowUpdating">
                                 <Columns>
                                     <asp:TemplateField>

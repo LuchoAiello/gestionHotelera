@@ -402,7 +402,7 @@ namespace Vistas
                 lblMensajeRegistro.Text = "Por favor, completá todos los campos obligatorios.";
                 return;
             }
-
+            //me falta agregar validaciones para los tipos de datos
             Habitacion nueva = new Habitacion
             {
                 NumeroHabitacion = int.Parse(numero),
