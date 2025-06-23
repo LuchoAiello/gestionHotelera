@@ -1,10 +1,8 @@
 ﻿using Entidades;
 using Negocio;
 using System;
-using System.Configuration;
 using System.Data;
 using System.Web.UI;
-using System.Data.SqlClient;
 using System.Web.UI.WebControls;
 
 namespace Vistas
@@ -32,12 +30,10 @@ namespace Vistas
                 }
 
                 btnRegisterHuesped.Visible = true;
-                btnReserv.Visible = true;
-                btnRooms.Visible = true;
                 btnHistorialReservas.Visible = true;
+                btnRooms.Visible = true;
 
                 OcultarTodosLosPaneles();
-                panelReservas.Visible = true; // Mostrar sección inicial si querés
                 lblSeccionTitulo.Text = "Lista de Reservas del Hotel";
             }
 
@@ -70,7 +66,6 @@ namespace Vistas
         private void OcultarTodosLosPaneles()
         {
             panelAdministrativo.Visible = false;
-            panelReservas.Visible = false;
             panelHistorialReservas.Visible = false;
             panelHabitaciones.Visible = false;
             // Agregá más paneles si sumás nuevas secciones
@@ -87,7 +82,6 @@ namespace Vistas
         {
             Session.Remove("NameLogin");
             Response.Redirect("Login.aspx");
-
         }
 
         protected void btnPanelAdministrativo_Click(object sender, EventArgs e)
@@ -95,11 +89,9 @@ namespace Vistas
             OcultarTodosLosPaneles();
             panelAdministrativo.Visible = true;
             lblSeccionTitulo.Text = "Panel Administrativo";
-            // Aquí podés cambiar el DataSource si es necesario o mostrar otro contenido
-            //gvReservas.DataSource = null;
-            //gvReservas.DataBind();
         }
 
+        #region Panel Huesped
         protected void btnRegisterHuesped_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPaneles();
@@ -108,28 +100,23 @@ namespace Vistas
             //gvReservas.DataSource = null;
             //gvReservas.DataBind();
         }
+        #endregion
 
-        protected void btnHistorialReservas_Click(object sender, EventArgs e)
+        #region Panel Reservas
+        protected void grvHistorialReservas_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            OcultarTodosLosPaneles();
-            panelHistorialReservas.Visible = true;
-            lblSeccionTitulo.Text = "Historial de Reservas";
-
-            DataTable HistorialReservas = negocioHistorialReservas.GetHistorialReserva();
-            grvHistorialReservas.DataSource = HistorialReservas;
-            grvHistorialReservas.DataBind();
+            if (e.CommandName == "Editar")
+            {
+                //int idReserva = Convert.ToInt32(e.CommandArgument);
+            }
+            else if (e.CommandName == "Eliminar")
+            {
+                //int idReserva = Convert.ToInt32(e.CommandArgument);
+                //EliminarReserva(idReserva); // Por ejemplo
+                //CargarReservas(); // Recargás la grilla
+            }
         }
-        protected void btnRooms_Click(object sender, EventArgs e)
-        {
-            OcultarTodosLosPaneles();
-            lblSeccionTitulo.Text = "Estado de Habitaciones";
-            panelHabitaciones.Visible = true;
-            CargarHabitaciones();
-            //gvReservas.DataSource = ObtenerEstadoHabitaciones(); // método que trae habitaciones
-            //gvReservas.DataBind();
-        }
-
-        protected void btnReserv_Click(object sender, EventArgs e)
+        protected void btnCrearReserva_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPaneles();
             lblSeccionTitulo.Text = "Crear Reserva";
@@ -159,8 +146,188 @@ namespace Vistas
             txtDateFrom.Text = "";
             txtDateTo.Text = "";
         }
+        
+        protected void btnHistorialReservas_Click(object sender, EventArgs e)
+        {
+            OcultarTodosLosPaneles();
+            panelHistorialReservas.Visible = true;
+            lblSeccionTitulo.Text = "Historial de Reservas";
 
-        // ---------- PANEL USUARIO ----------
+            DataTable HistorialReservas = negocioHistorialReservas.GetHistorialReserva();
+            grvHistorialReservas.DataSource = HistorialReservas;
+            grvHistorialReservas.DataBind();
+        }
+        #endregion
+
+        #region Panel de Habitaciones
+        private void CargarHabitaciones()
+        {
+            var habitacionesService = new HabitacionesService();
+            DataTable dt = habitacionesService.GetAll();
+            gvHabitaciones.DataSource = dt;
+            gvHabitaciones.DataBind();
+        }
+
+        protected void grvHabitaciones_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+            GridViewRow row = gvHabitaciones.Rows[e.RowIndex];
+
+            var habitacion = new Habitacion
+            {
+                Id_habitacion = Convert.ToInt32(gvHabitaciones.DataKeys[e.RowIndex].Value.ToString()),
+                NumeroHabitacion = int.Parse(((TextBox)row.FindControl("txtNumeroHab")).Text),
+                Tipo = ((TextBox)row.FindControl("txtTipoHab")).Text,
+                Capacidad = int.Parse(((TextBox)row.FindControl("txtCapacidad")).Text),
+                Estado = ((DropDownList)row.FindControl("ddlEIEstado")).SelectedValue,
+                Precio = decimal.Parse(((TextBox)row.FindControl("txtPrecioHab")).Text),
+                Descripcion = ((TextBox)row.FindControl("txtDescripcionHab")).Text
+            };
+            var negocio = new HabitacionesService();
+            negocio.Update(habitacion);
+
+            gvHabitaciones.EditIndex = -1;
+            CargarHabitaciones();
+        }
+        
+        protected void btnRegistrarHabitacion_Click(object sender, EventArgs e)
+        {
+            string numero = txtNumeroHab.Text.Trim();
+            string tipo = txtTipoHab.Text.Trim();
+            string capacidad = txtCapacidad.Text.Trim();
+            string precio = txtPrecioHab.Text.Trim();
+            string descripcion = txtDescripcionHab.Text.Trim();
+            string estado = ddlEstadoHab.SelectedValue;
+
+            if (string.IsNullOrEmpty(numero) || string.IsNullOrEmpty(tipo) || string.IsNullOrEmpty(capacidad) || string.IsNullOrEmpty(precio))
+            {
+                lblMensajeRegistro.Visible = true;
+                lblMensajeRegistro.Text = "Por favor, completá todos los campos obligatorios.";
+                return;
+            }
+
+            Habitacion nueva = new Habitacion
+            {
+                NumeroHabitacion = int.Parse(numero),
+                Tipo = tipo,
+                Capacidad = int.Parse(capacidad),
+                Precio = decimal.Parse(precio),
+                Descripcion = descripcion,
+                Estado = estado
+            };
+
+            HabitacionesService service = new HabitacionesService();
+            service.Insert(nueva); 
+
+            LimpiarFormularioHabitacion();
+            panelFormularioRegistro.Visible = false;
+            panelListadoHabitaciones.Visible = true;
+            CargarHabitaciones();
+        }
+
+        protected void gvHabitaciones_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            gvHabitaciones.PageIndex = e.NewPageIndex;
+            CargarHabitaciones(); 
+        }
+
+        private void LimpiarFormularioHabitacion()
+        {
+            txtNumeroHab.Text = "";
+            txtTipoHab.Text = "";
+            txtCapacidad.Text = "";
+            txtPrecioHab.Text = "";
+            txtDescripcionHab.Text = "";
+            ddlEstadoHab.SelectedValue = "Activa";
+        }
+
+        protected void btnCancelarRegistroHabitacion_Click(object sender, EventArgs e)
+        {
+            panelFormularioRegistro.Visible = false;
+            panelListadoHabitaciones.Visible = true;
+        }
+
+        protected void btnMostrarFormularioHabitaciones_Click(object sender, EventArgs e)
+        {
+            LimpiarFormularioHabitacion();
+            panelFormularioRegistro.Visible = true;
+            panelListadoHabitaciones.Visible = false;
+        }
+
+        protected void btnLimpiarFormularioHabitacion_Click(object sender, EventArgs e)
+        {
+            LimpiarFormularioHabitacion();
+        }
+
+        protected void grvHabitaciones_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+
+            //HabitacionesService service = new HabitacionesService();
+
+            //if (e.CommandName == "Desactivar")
+            //{
+            //    int index = Convert.ToInt32(e.CommandArgument);
+            //    GridViewRow row = gvHabitaciones.Rows[index];
+            //    int id = Convert.ToInt32(gvHabitaciones.DataKeys[index].Value);
+            //    bool resultado = service.Delete(id);
+
+            //    if (resultado)
+            //    {  
+            //        lblMensaje.Text = $"Habitación con ID {id} desactivada.";
+            //    }
+            //    else
+            //    {
+            //        lblMensaje.Text = "No se pudo desactivar la habitación.";
+            //    }
+            //    CargarHabitaciones();
+            //}
+        }
+
+        protected void grvHabitaciones_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow && gvHabitaciones.EditIndex == e.Row.RowIndex)
+            {
+                DropDownList ddlEstado = (DropDownList)e.Row.FindControl("ddlEIEstado");
+                ddlEstado.Items.Clear();
+                ddlEstado.Items.Add("Activa");
+                ddlEstado.Items.Add("Inactiva");
+                ddlEstado.Items.Add("Mantenimiento");
+
+                string estadoActual = DataBinder.Eval(e.Row.DataItem, "Estado").ToString();
+                ddlEstado.SelectedValue = estadoActual;
+            }
+        }
+
+        protected void grvHabitaciones_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            gvHabitaciones.EditIndex = e.NewEditIndex;
+            CargarHabitaciones();
+        }
+
+        protected void grvHabitaciones_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+            gvHabitaciones.EditIndex = -1;
+            CargarHabitaciones();
+        }
+
+        protected void txtBuscarHabitacion_TextChanged(object sender, EventArgs e)
+        {
+            string filtro = txtBuscarHabitacion.Text.Trim().ToLower();
+            HabitacionesService habitacionService = new HabitacionesService();
+            DataTable resultado = (string.IsNullOrEmpty(filtro)) ? habitacionService.GetAll() : habitacionService.GetByFilter(filtro);
+            gvHabitaciones.DataSource = resultado;
+            gvHabitaciones.DataBind();
+        }
+
+        protected void btnHabitaciones_Click(object sender, EventArgs e)
+        {
+            OcultarTodosLosPaneles();
+            lblSeccionTitulo.Text = "Estado de Habitaciones";
+            panelHabitaciones.Visible = true;
+            CargarHabitaciones();
+        }
+        #endregion
+
+        #region Panel Usuario
         protected void btnUsuario_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPanelesAdmin();
@@ -269,9 +436,9 @@ namespace Vistas
             grvUsuario.DataSource = Usuarios;
             grvUsuario.DataBind();
         }
+        #endregion
 
-        // ---------- PANEL METODO DE PAGO ----------
-
+        #region Panel Metodo de Pago
         protected void btnMetodoPago_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPanelesAdmin();
@@ -340,10 +507,9 @@ namespace Vistas
             grvMetodoPago.DataSource = MetodoPagos;
             grvMetodoPago.DataBind();
         }
+        #endregion
 
-      
-
-        // ---------- PANEL SERVICIOS ----------
+        #region Panel Servicios
         protected void btnServicios_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPanelesAdmin();
@@ -352,7 +518,6 @@ namespace Vistas
             getDataServicio();
         }
 
-  
         protected void grvServicio_RowEditing(object sender, GridViewEditEventArgs e)
         {
             grvServicio.EditIndex = e.NewEditIndex;
@@ -435,100 +600,14 @@ namespace Vistas
             lblNameServicio.Text = "";
             lblNamePrecio.Text = "";
         }
+        
         private void getDataServicio()
         {
             DataTable Servicio = negocioServicio.GetServicios();
             grvServicio.DataSource = Servicio;
             grvServicio.DataBind();
         }
+        #endregion
 
-        protected void btnNuevaHabitacion_Click(object sender, EventArgs e)
-        {
-            LimpiarFormularioHabitacion();
-            panelFormularioHabitacion.Visible = true;
-        }
-        protected void btnCancelarHabitacion_Click(object sender, EventArgs e)
-        {
-            panelFormularioHabitacion.Visible = false;
-            LimpiarFormularioHabitacion();
-        }
-
-        protected void btnGuardarHabitacion_Click(object sender, EventArgs e)
-        {
-            Habitacion h = new Habitacion
-            {
-                Id_habitacion = string.IsNullOrEmpty(hfIdHabitacion.Value) ? 0 : Convert.ToInt32(hfIdHabitacion.Value),
-                NumeroHabitacion = int.Parse(txtNumero.Text),
-                Tipo = txtTipo.Text,
-                Capacidad = int.Parse(txtCapacidad.Text),
-                Estado = ddlEstado.SelectedValue,
-                Precio = decimal.Parse(txtPrecio.Text),
-                Descripcion = txtDescripcion.Text
-            };
-
-            HabitacionesService repo = new HabitacionesService();
-
-            if (h.Id_habitacion == 0)
-                repo.Insert(h);
-            else
-                repo.Update(h);
-
-            panelFormularioHabitacion.Visible = false;
-            LimpiarFormularioHabitacion();
-            CargarHabitaciones();
-        }
-
-        protected void gvHabitaciones_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-            int index = Convert.ToInt32(e.CommandArgument);
-            int id = Convert.ToInt32(gvHabitaciones.DataKeys[index].Value);
-            GridViewRow row = gvHabitaciones.Rows[index];
-            var repo = new HabitacionesService();
-            if (e.CommandName == "Editar")
-            {
-                hfIdHabitacion.Value = id.ToString();
-                txtNumero.Text = row.Cells[0].Text;
-                txtTipo.Text = row.Cells[1].Text;
-                txtCapacidad.Text = row.Cells[2].Text;
-                string valor = row.Cells[3].Text.Trim();
-                ddlEstado.SelectedValue = ddlEstado.Items.FindByValue(valor) != null ? valor : "Activo";
-                txtPrecio.Text = row.Cells[4].Text;
-                txtDescripcion.Text = row.Cells[5].Text;
-            }
-            else if (e.CommandName == "Desactivar")
-            {
-                Habitacion h = new Habitacion
-                {
-                    Id_habitacion = id,
-                    NumeroHabitacion = int.Parse(row.Cells[0].Text),
-                    Tipo = row.Cells[1].Text,
-                    Capacidad = int.Parse(row.Cells[2].Text),
-                    Estado = "Inactiva",
-                    Precio = decimal.Parse(row.Cells[4].Text),
-                    Descripcion = row.Cells[5].Text
-                };
-
-                repo.Update(h);
-                CargarHabitaciones();
-            }
-        }
-        private void LimpiarFormularioHabitacion()
-        {
-            hfIdHabitacion.Value = "";
-            txtNumero.Text = "";
-            txtTipo.Text = "";
-            txtCapacidad.Text = "";
-            txtPrecio.Text = "";
-            txtDescripcion.Text = "";
-            ddlEstado.SelectedValue = "Activa";
-        }
-
-        private void CargarHabitaciones()
-        {
-            var habitacionesService = new HabitacionesService();
-            DataTable dt = habitacionesService.GetAll();
-            gvHabitaciones.DataSource = dt;
-            gvHabitaciones.DataBind();
-        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Entidades;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -76,13 +77,11 @@ namespace Dao
 
                 return comando.ExecuteNonQuery() > 0;
             }
-
             catch (Exception conexionerror)
             {
                 Console.WriteLine(conexionerror.Message);
                 throw new Exception("Error al ejecutar consulta", conexionerror);
             }
-
             finally
             {
                 if (conexion != null && conexion.State == System.Data.ConnectionState.Open)
@@ -145,6 +144,22 @@ namespace Dao
             }
         }
 
+        public DataTable SPFiltrarHabitaciones(string nombreSP, string filtro)
+        {
+            using (SqlConnection conexion = ObtenerConexion())
+            using (SqlCommand cmd = new SqlCommand(nombreSP, conexion))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@filtro",
+                    string.IsNullOrWhiteSpace(filtro) ? (object)DBNull.Value : filtro);
+
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataTable tabla = new DataTable();
+                adapter.Fill(tabla);
+                return tabla;
+            }
+        }
 
     }
 }

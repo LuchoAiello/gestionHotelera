@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Entidades;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Entidades;
-using Dao;
 using System.Data.SqlClient;
 
 namespace Dao

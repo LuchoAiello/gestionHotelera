@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Entidades
+﻿namespace Entidades
 {
     public class Servicios
     {
-        private int Id_serviciosAdicionales;
+        private int Id_servicioAdicional;
         private string NombreServicio;
         private decimal Precio;
         private int Estado;
@@ -32,7 +26,7 @@ namespace Entidades
 
         public int getIdServicio()
         {
-            return Id_serviciosAdicionales;
+            return Id_servicioAdicional;
         }
         public string getNombre()
         {
@@ -44,7 +38,6 @@ namespace Entidades
             return Precio;
         }
 
-
         public int getEstado()
         {
             return Estado;
@@ -52,7 +45,7 @@ namespace Entidades
 
         public void setIdServicio(int id)
         {
-            Id_serviciosAdicionales = id;
+            Id_servicioAdicional = id;
         }
 
         public void setNombre(string nombre)
@@ -64,7 +57,6 @@ namespace Entidades
         {
             Precio = precio;
         }
-
 
         public void setEstado(int estado)
         {

@@ -14,6 +14,11 @@ namespace Dao
             return datos.ObtenerTabla("Habitaciones", sql);
         }
 
+        public DataTable GetByFilter(string filtro)
+        {
+            return datos.SPFiltrarHabitaciones("sp_FiltrarHabitaciones", filtro);
+        }
+
         public bool Insert(Habitacion h)
         {
             string consulta = @"INSERT INTO Habitaciones 
@@ -56,7 +61,7 @@ namespace Dao
 
         public bool Delete(int id)
         {
-            string consulta = "DELETE FROM Habitaciones WHERE Id_habitacion = @Id";
+            string consulta = "Update Habitaciones Set Estado = 'Inactiva' WHERE Id_habitacion = @Id";
             SqlCommand cmd = new SqlCommand();
             cmd.Parameters.AddWithValue("@Id", id);
             return datos.EjecutarConsulta(consulta, cmd);

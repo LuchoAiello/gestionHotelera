@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dao;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -9,10 +10,17 @@ namespace Negocio
 {
     public class HabitacionesService
     {
+
         public DataTable GetAll()
         {
-            Dao.HabitacionesRepository repo = new Dao.HabitacionesRepository();
+            var repo = new Dao.HabitacionesRepository();
             return repo.GetAll();
+        }
+        public DataTable GetByFilter(string filtro)
+        {
+            var repo = new Dao.HabitacionesRepository();
+            var listaFiltrada = repo.GetByFilter(filtro);
+            return listaFiltrada;
         }
         public bool Insert(Entidades.Habitacion h)
         {

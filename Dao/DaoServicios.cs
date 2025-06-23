@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Entidades;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Entidades;
-using Dao;
 using System.Data.SqlClient;
 
 namespace Dao
@@ -16,7 +10,7 @@ namespace Dao
 
         private void ArmarParametroServicio(SqlCommand Comando, Servicios servicio)
         {
-            Comando.Parameters.AddWithValue("@Id_serviciosAdicionales", servicio.getIdServicio());
+            Comando.Parameters.AddWithValue("@Id_servicioAdicional", servicio.getIdServicio());
             Comando.Parameters.AddWithValue("@NombreServicio", servicio.getNombre());
             Comando.Parameters.AddWithValue("@Precio", servicio.getPrecio());
             Comando.Parameters.AddWithValue("@Estado", servicio.getEstado());
@@ -37,7 +31,7 @@ namespace Dao
                    SET NombreServicio = @NombreServicio, 
                        Precio = @Precio,
                        Estado = @Estado 
-                   WHERE Id_serviciosAdicionales = @Id_serviciosAdicionales";
+                   WHERE Id_servicioAdicional = @Id_serviciosAdicionales";
 
 
             return ds.EjecutarConsulta(consulta, comando);

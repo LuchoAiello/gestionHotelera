@@ -1,6 +1,4 @@
-﻿using System;
-using System.Web;
-using Dao;
+﻿using Dao;
 using Entidades;
 
 namespace Negocio
