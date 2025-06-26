@@ -65,6 +65,25 @@ namespace Dao
             }
         }
 
+        public DataTable ObtenerTablaReservas(string nombreTabla, string sql, SqlParameter[] parametros)
+        {
+            try
+            {
+                DataSet ds = new DataSet();
+                SqlConnection conexion = ObtenerConexion();
+                SqlCommand cmd = new SqlCommand(sql, conexion);
+                cmd.Parameters.AddRange(parametros);
+                SqlDataAdapter adp = new SqlDataAdapter(cmd);
+                adp.Fill(ds, nombreTabla);
+                conexion.Close();
+                return ds.Tables[nombreTabla];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al obtener la tabla '{nombreTabla}' con la consulta '{sql}': {ex.Message}");
+            }
+        }
+
         public bool EjecutarConsulta(string consulta, SqlCommand comando)
         {
             SqlConnection conexion = null;

@@ -32,7 +32,7 @@
                             <asp:LinkButton ID="btnRooms" runat="server" CssClass="nav-link text-white" OnClick="btnHabitaciones_Click">Habitaciones</asp:LinkButton>
                         </li>
                         <li class="nav-item">
-                            <asp:LinkButton ID="btnHistorialReservas" runat="server" CssClass="nav-link text-white" OnClick="btnHistorialReservas_Click">Reservas</asp:LinkButton>
+                            <asp:LinkButton ID="btnReservas" runat="server" CssClass="nav-link text-white" OnClick="btnReservas_Click">Reservas</asp:LinkButton>
                         </li>
                     </ul>
 
@@ -52,20 +52,22 @@
                     <!-- Título -->
                     <asp:Label ID="lblSeccionTitulo" runat="server" Text="Panel Administrativo" CssClass="fw-bold mb-0" />
 
-                    <!-- Panel para ocultar/mostrar los botones -->
+                    <!-- Panel para ocultar/mostrar los botones de admin-->
                     <asp:Panel ID="panelAdministrativo" runat="server" CssClass="d-flex gap-3">
                         <asp:LinkButton ID="btnUsuario" runat="server" CssClass="nav-link text-white px-2" OnClick="btnUsuario_Click">Usuario</asp:LinkButton>
                         <asp:LinkButton ID="btnMetodoPago" runat="server" CssClass="nav-link text-white px-2" OnClick="btnMetodoPago_Click">Método de Pago</asp:LinkButton>
                         <asp:LinkButton ID="btnServicios" runat="server" CssClass="nav-link text-white px-2" OnClick="btnServicios_Click">Servicios</asp:LinkButton>
                     </asp:Panel>
+
+                    <!-- Panel para ocultar/mostrar los botones de reservas-->
+                    <asp:Panel ID="panelAdministarReservas" runat="server" CssClass="d-flex gap-3">
+                        <asp:LinkButton ID="btnReserva" runat="server" CssClass="nav-link text-white px-2" OnClick="btnReserva_Click">Reservas</asp:LinkButton>
+                        <asp:LinkButton ID="btnCrearReserva" runat="server" CssClass="nav-link text-white px-2">Crear Reserva</asp:LinkButton>
+                        <asp:LinkButton ID="btnHistorialReserva" runat="server" CssClass="nav-link text-white px-2" OnClick="btnHistorialReservas_Click">Historial de Reservas</asp:LinkButton>
+                    </asp:Panel>
                 </div>
 
                 <div class="card-body">
-
-                    <!-- Panel para Reservas -->
-                    <asp:Panel ID="panelReservas" runat="server" Visible="false">
-                    </asp:Panel>
-
                     <!-- Panel para Panel Usuario -->
                     <asp:Panel ID="panelUsuario" runat="server" Visible="false">
                         <asp:Button ID="btnNuevoUsuario" runat="server" Text="Nuevo Usuario" CssClass="btn btn-primary" OnClick="btnNuevoUsuario_Click" />
@@ -277,109 +279,156 @@
                         </div>
                     </asp:Panel>
 
-                    <!-- Panel para Reservas -->
-                    <asp:Panel ID="panelHistorialReservas" runat="server" Visible="false">
-                        <!-- Botón para iniciar registro de reserva -->
-                        <div class="container" style="margin: 10px">
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <asp:Label ID="Label1" runat="server" Text="Número de Habitación:" CssClass="form-label" />
-                                    <asp:TextBox ID="txtNumber" runat="server" CssClass="form-control" />
-                                </div>
-                                <div class="col-md-4">
-                                    <asp:Label ID="Label2" runat="server" Text="Fecha Desde:" CssClass="form-label" />
-                                    <asp:TextBox ID="txtDateFrom" runat="server" CssClass="form-control" TextMode="Date" />
-                                </div>
-                                <div class="col-md-4">
-                                    <asp:Label ID="Label3" runat="server" Text="Fecha Hasta:" CssClass="form-label" />
-                                    <asp:TextBox ID="txtDateTo" runat="server" CssClass="form-control" TextMode="Date" />
-                                </div>
-                            </div>
+                    <!-- Panel para Huespedes -->
+                    <asp:Panel ID="panelHuespedes" runat="server" Visible="false">
+                        <asp:Button ID="btnNuevoHuesped" runat="server" Text="Nuevo Huesped" CssClass="btn btn-primary" OnClick="btnNuevoHuesped_Click" />
 
-                            <div class="row">
-                                <div class="col text-end">
-                                    <asp:Button ID="Button1" runat="server" Text="Crear" CssClass="btn btn-primary me-1" OnClick="btnMostrarFormularioReserva_Click" />
-                                    <asp:Button ID="btnFilter" runat="server" Text="Filtrar" CssClass="btn btn-primary me-2" OnClick="btnFilter_Click" />
-                                    <asp:Button ID="btnSacarFiltro" runat="server" Text="Limpiar Filtro" CssClass="btn btn-secondary" OnClick="btnSacarFiltro_Click" />
-                                </div>
-                            </div>
-                        </div>
-                        <%--Aqui creare el formulario para ingresar una nueva reserva ↓--%>
-                        <%--   <asp:Panel ID="panel1" runat="server" Visible="false">
-                            <h6 class="mb-2 fw-bold">Registrar Reserva</h6>
+                        <div class="mt-3" style="overflow-x: auto; width: 100%;">
 
-                            <div class="mb-3  p-0 d-flex align-items-center gap-2">
-                                <label for="txtNumeroHabReserva" class="form-label me-2 mb-0" style="min-width: 90px;">Numero Habitacion: </label>
-                                <asp:TextBox ID="txtNumeroHabReserva" runat="server" CssClass="form-control flex-grow-1" Style="max-width: 60px;" />
-                                &nbsp;<asp:Label ID="Label9" runat="server"></asp:Label>
-                            </div>
-                            <div class="mb-3  p-0 d-flex align-items-center gap-2">
-                                <label for="txtTipoHab" class="form-label me-2 mb-0" style="min-width: 90px;">Tipo: </label>
-                                <asp:TextBox ID="TextBox2" runat="server" CssClass="form-control flex-grow-1" Style="max-width: 250px;" />
-                                &nbsp;<asp:Label ID="Label10" runat="server"></asp:Label>
-                            </div>
-                            <div class="mb-3  p-0 d-flex align-items-center gap-2">
-                                <label for="txtCapacidad" class="form-label me-2 mb-0" style="min-width: 90px;">Capacidad: </label>
-                                <asp:TextBox ID="TextBox3" runat="server" CssClass="form-control flex-grow-1" Style="max-width: 250px;" />
-                                &nbsp;<asp:Label ID="Label11" runat="server"></asp:Label>
-                            </div>
-                            <div class="mb-3  p-0 d-flex align-items-center gap-2">
-                                <label for="txtPrecioHab" class="form-label me-2 mb-0" style="min-width: 90px;">Precio: </label>
-                                <asp:TextBox ID="TextBox4" runat="server" CssClass="form-control flex-grow-1" Style="max-width: 250px;" />
-                                &nbsp;<asp:Label ID="Label12" runat="server"></asp:Label>
-                            </div>
-                            <div class="mb-3  p-0 d-flex align-items-center gap-2">
-                                <label for="txtDescripcionHab" class="form-label me-2 mb-0" style="min-width: 90px;">Descripcion: </label>
-                                <asp:TextBox ID="TextBox5" runat="server" CssClass="form-control flex-grow-1" Style="max-width: 250px;" />
-                                &nbsp;<asp:Label ID="Label13" runat="server"></asp:Label>
-                            </div>
-                                <div class="mb-3 col-md-4 col-sm-6 p-0 d-flex align-items-center gap-2">
-                                    <label for="DropDownList1" class="form-label me-2 mb-0" style="min-width: 90px;">Estado: </label>
-                                    <asp:DropDownList ID="DropDownList1" runat="server" CssClass="form-select w-auto flex-grow-1" Style="max-width: 250px;">
-                                        <asp:ListItem Text="Activa" Value="Activa" />
-                                        <asp:ListItem Text="Inactiva" Value="Inactiva" />
-                                        <asp:ListItem Text="Mantenimiento" Value="Mantenimiento" />
-                                    </asp:DropDownList>
-                                </div>
-                            <asp:Label ID="Label14" runat="server" CssClass="alert alert-danger d-block" Visible="false" />
-                            <asp:Button ID="Button2" runat="server" Text="Guardar" CssClass="btn btn-success me-2" OnClick="btnRegistrarHabitacion_Click" />
-                            <asp:Button ID="Button3" runat="server" Text="Cancelar" CssClass="btn btn-secondary" OnClick="btnCancelarRegistroHabitacion_Click" />
-                        </asp:Panel>--%>
-
-                        <div style="overflow-x: auto; width: 100%;">
-                            <asp:GridView ID="grvHistorialReservas" runat="server" AutoGenerateColumns="False"
-                                CssClass="table table-striped table-bordered w-100"
-                                AllowPaging="true" PageSize="10"
-                                OnPageIndexChanging="grvHistorialReservas_PageIndexChanging"
-                                OnRowCommand="grvHistorialReservas_RowCommand">
+                            <asp:GridView ID="grvHuespedes" runat="server" AutoGenerateColumns="False" DataKeyNames="Id_huesped" CssClass="table table-striped table-bordered w-100"
+                                AllowPaging="true" PageSize="5" OnPageIndexChanging="grvHuespedes_PageIndexChanging" OnRowCancelingEdit="grvHuespedes_RowCancelingEdit" OnRowEditing="grvHuespedes_RowEditing" OnRowUpdating="grvHuespedes_RowUpdating" OnRowDataBound="grvHuespedes_RowDataBound">
                                 <Columns>
-                                    <asp:BoundField DataField="NumeroHabitacion" HeaderText="Habitación N°" />
-                                    <asp:BoundField DataField="NombreCompleto" HeaderText="Nombre del Huésped" />
-                                    <asp:BoundField DataField="Documento" HeaderText="Documento" />
-                                    <asp:BoundField DataField="FechaReserva" HeaderText="Reservado el" DataFormatString="{0:dd/MM/yyyy}" />
-                                    <asp:BoundField DataField="FechaLlegada" HeaderText="Llegada" DataFormatString="{0:dd/MM/yyyy}" />
-                                    <asp:BoundField DataField="FechaSalida" HeaderText="Salida" DataFormatString="{0:dd/MM/yyyy}" />
-                                    <asp:BoundField DataField="ServiciosAdicionales" HeaderText="Servicios Extras" />
-                                    <asp:BoundField DataField="PrecioFinal" HeaderText="Total" DataFormatString="{0:C}" />
-
-
+                                    <asp:TemplateField HeaderText="Nombre">
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtEINombreHuesped" runat="server" Text='<%# Bind("Nombre") %>'></asp:TextBox>
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="txtNombreHuesped" runat="server" Text='<%# Bind("Nombre") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Apellido">
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtEIApellido" runat="server" Text='<%# Bind("Apellido") %>'></asp:TextBox>
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="txtApellido" runat="server" Text='<%# Bind("Apellido") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Documento">
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtEIDocumento" runat="server" Text='<%# Bind("Documento") %>'></asp:TextBox>
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="txtDocumento" runat="server" Text='<%# Bind("Documento") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Tipo Documento">
+                                        <EditItemTemplate>
+                                            <asp:DropDownList ID="txtEITipoDocumento" runat="server" CssClass="form-select"></asp:DropDownList>
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblTipoDocumento" runat="server" Text='<%# Bind("TipoDocumento") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Email">
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtEIEmail" runat="server" Text='<%# Bind("Email") %>'></asp:TextBox>
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblEmail" runat="server" Text='<%# Bind("Email") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Teléfono">
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtEITelefono" runat="server" Text='<%# Bind("Telefono") %>'></asp:TextBox>
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblTelefono" runat="server" Text='<%# Bind("Telefono") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Fecha Nacimiento">
+                                        <EditItemTemplate>
+                                            <asp:TextBox ID="txtEIFechaNacimiento" runat="server" TextMode="Date"
+                                                Text='<%# Bind("FechaNacimiento", "{0:yyyy-MM-dd}") %>'></asp:TextBox>
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblFechaNacimiento" runat="server" Text='<%# Bind("FechaNacimiento", "{0:dd/MM/yyyy}") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Estado">
+                                        <EditItemTemplate>
+                                            <asp:DropDownList ID="ddlEIEstadoHuesped" runat="server" />
+                                        </EditItemTemplate>
+                                        <ItemTemplate>
+                                            <asp:Label ID="txtEstadoHuesped" runat="server" Text='<%# Convert.ToBoolean(Eval("Estado")) ? "Activo" : "Inactivo" %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Acciones">
                                         <ItemTemplate>
-                                            <asp:LinkButton ID="btnEditar" runat="server" CssClass="btn btn-sm btn-outline-primary me-1"
-                                                CommandName="Editar" CommandArgument='<%# Eval("Id_reserva") %>' ToolTip="Editar">
-                                                <i class="bi bi-pencil"></i>
-                                            </asp:LinkButton>
-                                            <asp:LinkButton ID="btnEliminar" runat="server" CssClass="btn btn-sm btn-outline-danger"
-                                                CommandName="Eliminar" CommandArgument='<%# Eval("Id_reserva") %>' ToolTip="Eliminar"
-                                                OnClientClick="return confirm('¿Estás seguro que querés eliminar esta reserva?');">
-                                                <i class="bi bi-trash"></i>
-                                            </asp:LinkButton>
+                                            <asp:LinkButton ID="btnEditar" runat="server" CommandName="Edit" CssClass="btn btn-sm btn-outline-primary me-1"><i class="bi bi-pencil"></i></asp:LinkButton>
                                         </ItemTemplate>
+                                        <EditItemTemplate>
+                                            <div style="max-width: 75px; width: 75px; white-space: nowrap; overflow: hidden;">
+                                                <asp:LinkButton ID="btnActualizar" runat="server" CommandName="Update" CssClass="btn btn-sm btn-outline-success  me-1"><i class="bi bi-check"></i></asp:LinkButton>
+                                                <asp:LinkButton ID="btnCancelar" runat="server" CommandName="Cancel" CssClass="btn btn-sm  btn-outline-danger "><i class="bi bi-x"></i></asp:LinkButton>
+                                            </div>
+                                        </EditItemTemplate>
                                     </asp:TemplateField>
                                 </Columns>
                             </asp:GridView>
+
+                            <!-- Panel para Registrar Huespedes -->
+                            <asp:Panel ID="panelRegistrarHuesped" runat="server" Visible="false" CssClass="mt-4 p-3 border rounded">
+                                <h6 class="fw-bold mb-3">Agregar Huésped</h6>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="txtNombreHuesped" class="form-label">Nombre</label>
+                                        <asp:TextBox ID="txtNombreHuesped" runat="server" CssClass="form-control" />
+                                        <asp:Label ID="lblNombreHuesped" runat="server" CssClass="text-danger small" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="txtApellidoHuesped" class="form-label">Apellido</label>
+                                        <asp:TextBox ID="txtApellidoHuesped" runat="server" CssClass="form-control" />
+                                        <asp:Label ID="lblApellidoHuesped" runat="server" CssClass="text-danger small" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="txtDocumentoHuesped" class="form-label">Documento</label>
+                                        <asp:TextBox ID="txtDocumentoHuesped" runat="server" CssClass="form-control" />
+                                        <asp:Label ID="lblDocumentoHuesped" runat="server" CssClass="text-danger small" />
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="ddlTipoDocumentoHuesped" class="form-label">Tipo de Documento</label>
+                                        <asp:DropDownList ID="ddlTipoDocumentoHuesped" runat="server" CssClass="form-select">
+                                            <asp:ListItem>DNI</asp:ListItem>
+                                            <asp:ListItem>Libreta Cívica</asp:ListItem>
+                                            <asp:ListItem>Libreta de Enrolamiento</asp:ListItem>
+                                            <asp:ListItem>Pasaporte</asp:ListItem>
+                                        </asp:DropDownList>
+                                        <asp:Label ID="lblTipoDocumentoHuesped" runat="server" CssClass="text-danger small" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="txtEmailHuesped" class="form-label">Email</label>
+                                        <asp:TextBox ID="txtEmailHuesped" runat="server" CssClass="form-control" />
+                                        <asp:Label ID="lblEmailHuesped" runat="server" CssClass="text-danger small" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="txtTelefonoHuesped" class="form-label">Teléfono</label>
+                                        <asp:TextBox ID="txtTelefonoHuesped" runat="server" CssClass="form-control" />
+                                        <asp:Label ID="lblTelefonoHuesped" runat="server" CssClass="text-danger small" />
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="txtFechaNacimientoHuesped" class="form-label">Fecha de Nacimiento</label>
+                                        <asp:TextBox ID="txtFechaNacimientoHuesped" runat="server" TextMode="Date" CssClass="form-control" />
+                                        <asp:Label ID="lblFechaNacimientoHuesped" runat="server" CssClass="text-danger small" />
+                                    </div>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <asp:Button ID="btnRegistrarHuesped" runat="server" Text="Registrar" CssClass="btn btn-success" OnClick="btnRegistrarHuesped_Click" />
+                                    <asp:Button ID="btnLimpiarHuesped" runat="server" Text="Cancelar" CssClass="btn btn-secondary" OnClick="btnLimpiarHuesped_Click" />
+                                </div>
+                            </asp:Panel>
+
                         </div>
                     </asp:Panel>
+
                     <%--Panel para Habitaciones--%>
                     <asp:Panel ID="panelHabitaciones" runat="server" Visible="false">
                         <!-- Botón para iniciar registro -->
@@ -536,160 +585,137 @@
                         <asp:Label ID="lblMensaje" runat="server" CssClass="text-danger" />
 
                     </asp:Panel>
-                    <!-- Panel para Huespedes -->
-                    <asp:Panel ID="panelHuespedes" runat="server" Visible="false">
-                        <asp:Button ID="btnNuevoHuesped" runat="server" Text="Nuevo Huesped" CssClass="btn btn-primary" OnClick="btnNuevoHuesped_Click" />
 
+                    <!-- Panel para Reservas -->
+                    <asp:Panel ID="panelReservas" runat="server" Visible="false">
                         <div class="mt-3" style="overflow-x: auto; width: 100%;">
-
-                            <asp:GridView ID="grvHuespedes" runat="server" AutoGenerateColumns="False" DataKeyNames="Id_huesped" CssClass="table table-striped table-bordered w-100"
-                                AllowPaging="true" PageSize="5" OnPageIndexChanging="grvHuespedes_PageIndexChanging" OnRowCancelingEdit="grvHuespedes_RowCancelingEdit" OnRowEditing="grvHuespedes_RowEditing" OnRowUpdating="grvHuespedes_RowUpdating" OnRowDataBound="grvHuespedes_RowDataBound">
+                            <asp:GridView ID="grvReservas" runat="server" AutoGenerateColumns="False" AllowPaging="True" PageSize="5"
+                                OnPageIndexChanging="grvReservas_PageIndexChanging"
+                                OnRowCommand="grvReservas_RowCommand"
+                                CssClass="table table-bordered" DataKeyNames="Id_reserva">
                                 <Columns>
-                                    <asp:TemplateField HeaderText="Nombre">
-                                        <EditItemTemplate>
-                                            <asp:TextBox ID="txtEINombreHuesped" runat="server" Text='<%# Bind("Nombre") %>'></asp:TextBox>
-                                        </EditItemTemplate>
+                                    <asp:BoundField HeaderText="Nombre Completo" DataField="NombreCompleto" />
+                                    <asp:BoundField HeaderText="Documento" DataField="Documento" />
+                                    <asp:BoundField HeaderText="Email" DataField="Email" />
+                                    <asp:BoundField HeaderText="Teléfono" DataField="Telefono" />
+                                    <asp:BoundField HeaderText="Fecha Reserva" DataField="FechaReserva" DataFormatString="{0:dd/MM/yyyy}" />
+                                    <asp:BoundField HeaderText="Huéspedes" DataField="CantidadHuespedes" />
+                                    <asp:BoundField HeaderText="Precio Final" DataField="PrecioReserva" DataFormatString="{0:C}" />
+
+                                    <asp:TemplateField HeaderText="Detalles">
                                         <ItemTemplate>
-                                            <asp:Label ID="txtNombreHuesped" runat="server" Text='<%# Bind("Nombre") %>'></asp:Label>
+                                          <asp:Button ID="btnVerDetalle" runat="server" Text="Ver Detalle" CommandName="MostrarDetalle"
+                                                CommandArgument='<%# Container.DataItemIndex %>' CssClass="btn btn-outline-info btn-sm" />
+                                            <asp:Panel ID="pnlDetalles" runat="server" Visible="false">
+                                                <asp:GridView ID="grvDetalles" runat="server" CssClass="table table-sm" AutoGenerateColumns="False">
+                                                    <Columns>
+                                                        <asp:BoundField HeaderText="N° Habitación" DataField="NumeroHabitacion" />
+                                                        <asp:BoundField HeaderText="Tipo" DataField="Tipo" />
+                                                        <asp:BoundField HeaderText="Check-In" DataField="CheckIn" DataFormatString="{0:dd/MM/yyyy}" />
+                                                        <asp:BoundField HeaderText="Check-Out" DataField="CheckOut" DataFormatString="{0:dd/MM/yyyy}" />
+                                                        <asp:BoundField HeaderText="Precio" DataField="PrecioDetalle" DataFormatString="{0:C}" />
+                                                    </Columns>
+                                                </asp:GridView>
+                                            </asp:Panel>
                                         </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Apellido">
-                                        <EditItemTemplate>
-                                            <asp:TextBox ID="txtEIApellido" runat="server" Text='<%# Bind("Apellido") %>'></asp:TextBox>
-                                        </EditItemTemplate>
-                                        <ItemTemplate>
-                                            <asp:Label ID="txtApellido" runat="server" Text='<%# Bind("Apellido") %>'></asp:Label>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Documento">
-                                        <EditItemTemplate>
-                                            <asp:TextBox ID="txtEIDocumento" runat="server" Text='<%# Bind("Documento") %>'></asp:TextBox>
-                                        </EditItemTemplate>
-                                        <ItemTemplate>
-                                            <asp:Label ID="txtDocumento" runat="server" Text='<%# Bind("Documento") %>'></asp:Label>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Tipo Documento">
-                                        <EditItemTemplate>
-                                            <asp:DropDownList ID="txtEITipoDocumento" runat="server" CssClass="form-select"></asp:DropDownList>
-                                        </EditItemTemplate>
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblTipoDocumento" runat="server" Text='<%# Bind("TipoDocumento") %>'></asp:Label>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Email">
-                                        <EditItemTemplate>
-                                            <asp:TextBox ID="txtEIEmail" runat="server" Text='<%# Bind("Email") %>'></asp:TextBox>
-                                        </EditItemTemplate>
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblEmail" runat="server" Text='<%# Bind("Email") %>'></asp:Label>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Teléfono">
-                                        <EditItemTemplate>
-                                            <asp:TextBox ID="txtEITelefono" runat="server" Text='<%# Bind("Telefono") %>'></asp:TextBox>
-                                        </EditItemTemplate>
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblTelefono" runat="server" Text='<%# Bind("Telefono") %>'></asp:Label>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Fecha Nacimiento">
-                                        <EditItemTemplate>
-                                            <asp:TextBox ID="txtEIFechaNacimiento" runat="server" TextMode="Date"
-                                                Text='<%# Bind("FechaNacimiento", "{0:yyyy-MM-dd}") %>'></asp:TextBox>
-                                        </EditItemTemplate>
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblFechaNacimiento" runat="server" Text='<%# Bind("FechaNacimiento", "{0:dd/MM/yyyy}") %>'></asp:Label>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Estado">
-                                        <EditItemTemplate>
-                                            <asp:DropDownList ID="ddlEIEstadoHuesped" runat="server" />
-                                        </EditItemTemplate>
-                                        <ItemTemplate>
-                                            <asp:Label ID="txtEstadoHuesped" runat="server" Text='<%# Convert.ToBoolean(Eval("Estado")) ? "Activo" : "Inactivo" %>'></asp:Label>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Acciones">
-                                        <ItemTemplate>
-                                            <asp:LinkButton ID="btnEditar" runat="server" CommandName="Edit" CssClass="btn btn-sm btn-outline-primary me-1"><i class="bi bi-pencil"></i></asp:LinkButton>
-                                        </ItemTemplate>
-                                        <EditItemTemplate>
-                                            <div style="max-width: 75px; width: 75px; white-space: nowrap; overflow: hidden;">
-                                                <asp:LinkButton ID="btnActualizar" runat="server" CommandName="Update" CssClass="btn btn-sm btn-outline-success  me-1"><i class="bi bi-check"></i></asp:LinkButton>
-                                                <asp:LinkButton ID="btnCancelar" runat="server" CommandName="Cancel" CssClass="btn btn-sm  btn-outline-danger "><i class="bi bi-x"></i></asp:LinkButton>
-                                            </div>
-                                        </EditItemTemplate>
                                     </asp:TemplateField>
                                 </Columns>
                             </asp:GridView>
 
-                            <!-- Panel para Registrar Huespedes -->
-                            <asp:Panel ID="panelRegistrarHuesped" runat="server" Visible="false" CssClass="mt-4 p-3 border rounded">
-                                <h6 class="fw-bold mb-3">Agregar Huésped</h6>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-4">
-                                        <label for="txtNombreHuesped" class="form-label">Nombre</label>
-                                        <asp:TextBox ID="txtNombreHuesped" runat="server" CssClass="form-control" />
-                                        <asp:Label ID="lblNombreHuesped" runat="server" CssClass="text-danger small" />
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="txtApellidoHuesped" class="form-label">Apellido</label>
-                                        <asp:TextBox ID="txtApellidoHuesped" runat="server" CssClass="form-control" />
-                                        <asp:Label ID="lblApellidoHuesped" runat="server" CssClass="text-danger small" />
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="txtDocumentoHuesped" class="form-label">Documento</label>
-                                        <asp:TextBox ID="txtDocumentoHuesped" runat="server" CssClass="form-control" />
-                                        <asp:Label ID="lblDocumentoHuesped" runat="server" CssClass="text-danger small" />
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-4">
-                                        <label for="ddlTipoDocumentoHuesped" class="form-label">Tipo de Documento</label>
-                                        <asp:DropDownList ID="ddlTipoDocumentoHuesped" runat="server" CssClass="form-select">
-                                            <asp:ListItem>DNI</asp:ListItem>
-                                            <asp:ListItem>Libreta Cívica</asp:ListItem>
-                                            <asp:ListItem>Libreta de Enrolamiento</asp:ListItem>
-                                            <asp:ListItem>Pasaporte</asp:ListItem>
-                                        </asp:DropDownList>
-                                        <asp:Label ID="lblTipoDocumentoHuesped" runat="server" CssClass="text-danger small" />
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="txtEmailHuesped" class="form-label">Email</label>
-                                        <asp:TextBox ID="txtEmailHuesped" runat="server" CssClass="form-control" />
-                                        <asp:Label ID="lblEmailHuesped" runat="server" CssClass="text-danger small" />
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="txtTelefonoHuesped" class="form-label">Teléfono</label>
-                                        <asp:TextBox ID="txtTelefonoHuesped" runat="server" CssClass="form-control" />
-                                        <asp:Label ID="lblTelefonoHuesped" runat="server" CssClass="text-danger small" />
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-4">
-                                        <label for="txtFechaNacimientoHuesped" class="form-label">Fecha de Nacimiento</label>
-                                        <asp:TextBox ID="txtFechaNacimientoHuesped" runat="server" TextMode="Date" CssClass="form-control" />
-                                        <asp:Label ID="lblFechaNacimientoHuesped" runat="server" CssClass="text-danger small" />
-                                    </div>
-                                </div>
-
-                                <div class="d-flex gap-2">
-                                    <asp:Button ID="btnRegistrarHuesped" runat="server" Text="Registrar" CssClass="btn btn-success" OnClick="btnRegistrarHuesped_Click" />
-                                    <asp:Button ID="btnLimpiarHuesped" runat="server" Text="Cancelar" CssClass="btn btn-secondary" OnClick="btnLimpiarHuesped_Click" />
-                                </div>
-                            </asp:Panel>
 
                         </div>
                     </asp:Panel>
+
+                    <!-- Panel para Historial de Reservas -->
+                    <asp:Panel ID="panelHistorialReservas" runat="server" Visible="false">
+                        <div class="container" style="margin: 10px">
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <asp:Label ID="Label1" runat="server" Text="Número de Habitación:" CssClass="form-label" />
+                                    <asp:TextBox ID="txtNumber" runat="server" CssClass="form-control" />
+                                </div>
+                                <div class="col-md-4">
+                                    <asp:Label ID="Label2" runat="server" Text="Fecha Desde:" CssClass="form-label" />
+                                    <asp:TextBox ID="txtDateFrom" runat="server" CssClass="form-control" TextMode="Date" />
+                                </div>
+                                <div class="col-md-4">
+                                    <asp:Label ID="Label3" runat="server" Text="Fecha Hasta:" CssClass="form-label" />
+                                    <asp:TextBox ID="txtDateTo" runat="server" CssClass="form-control" TextMode="Date" />
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col text-end">
+                                    <asp:Button ID="btnFilter" runat="server" Text="Filtrar" CssClass="btn btn-primary me-2" OnClick="btnFilter_Click" />
+                                    <asp:Button ID="btnSacarFiltro" runat="server" Text="Limpiar Filtro" CssClass="btn btn-secondary" OnClick="btnSacarFiltro_Click" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="overflow-x: auto; width: 100%;">
+                            <asp:GridView ID="grvHistorialReservas" runat="server" AutoGenerateColumns="False"
+                                CssClass="table table-striped table-bordered w-100"
+                                AllowPaging="true" PageSize="10"
+                                OnPageIndexChanging="grvHistorialReservas_PageIndexChanging"
+                                OnRowCommand="grvHistorialReservas_RowCommand">
+                                <Columns>
+                                    <asp:TemplateField HeaderText="Habitación N°">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblNumeroHabitacion" runat="server" Text='<%# Eval("NumeroHabitacion") %>' />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Nombre del Huésped">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblNombreCompleto" runat="server" Text='<%# Eval("NombreCompleto") %>' />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Documento">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblDocumento" runat="server" Text='<%# Eval("Documento") %>' />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Reservado el">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblFechaReserva" runat="server" Text='<%# Eval("FechaReserva", "{0:dd/MM/yyyy}") %>' />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Llegada">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblFechaLlegada" runat="server" Text='<%# Eval("FechaLlegada", "{0:dd/MM/yyyy}") %>' />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Salida">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblFechaSalida" runat="server" Text='<%# Eval("FechaSalida", "{0:dd/MM/yyyy}") %>' />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Servicios Extras">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblServiciosAdicionales" runat="server" Text='<%# Eval("ServiciosAdicionales") %>' />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Total">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblPrecioFinal" runat="server" Text='<%# Eval("PrecioFinal", "{0:C}") %>' />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                </Columns>
+                            </asp:GridView>
+
+                        </div>
+                    </asp:Panel>
+
                 </div>
             </div>
         </div>
     </form>
 
+    <script type="text/javascript">
+        function toggleDetalle(id) {
+            var panel = document.getElementById(id);
+            panel.style.display = (panel.style.display === "none") ? "block" : "none";
+        }
+    </script>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

@@ -46,6 +46,7 @@
     <Compile Include="NegocioHuespedes.cs" />
     <Compile Include="NegocioLogin.cs" />
     <Compile Include="NegocioMetodoPagos.cs" />
+    <Compile Include="NegocioReservas.cs" />
     <Compile Include="NegocioServicios.cs" />
     <Compile Include="NegocioUsuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

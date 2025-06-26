@@ -10,7 +10,7 @@ namespace Dao
 
         public DataTable GetAll()
         {
-            string sql = "EXEC SP_ListarHabitaciones";
+            string sql = "SELECT * FROM Habitaciones";
             return datos.ObtenerTabla("Habitaciones", sql);
         }
 
