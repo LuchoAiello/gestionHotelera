@@ -12,6 +12,7 @@ namespace Entidades
         public DateTime FechaReserva { get; set; }
         public int CantidadHuespedes { get; set; }
         public decimal PrecioFinal { get; set; }
+        public int Estado {  get; set; }
 
         public static Reserva Crear(int id, string nombre, string documento, string email, string telefono, DateTime fecha, int cantidad, decimal precio)
         {
@@ -27,16 +28,5 @@ namespace Entidades
                 PrecioFinal = precio
             };
         }
-
-        public static Reserva ModificarReserva(int id, int cantidadHuespedes)
-        {
-            return new Reserva
-            {
-                IdReserva = id,
-                CantidadHuespedes = cantidadHuespedes
-            };
-        }
-
-
     }
 }

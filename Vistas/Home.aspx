@@ -592,6 +592,7 @@
                             <asp:GridView ID="grvReservas" runat="server" AutoGenerateColumns="False" AllowPaging="True" PageSize="5"
                                 OnPageIndexChanging="grvReservas_PageIndexChanging"
                                 OnRowCommand="grvReservas_RowCommand"
+                                OnRowDataBound="grvReservas_RowDataBound"
                                 CssClass="table table-bordered" DataKeyNames="Id_reserva">
                                 <Columns>
                                     <asp:BoundField HeaderText="Nombre Completo" DataField="NombreCompleto" />
@@ -601,22 +602,21 @@
                                     <asp:BoundField HeaderText="Fecha Reserva" DataField="FechaReserva" DataFormatString="{0:dd/MM/yyyy}" />
                                     <asp:BoundField HeaderText="Huéspedes" DataField="CantidadHuespedes" />
                                     <asp:BoundField HeaderText="Precio Final" DataField="PrecioReserva" DataFormatString="{0:C}" />
-
                                     <asp:TemplateField HeaderText="Detalles">
                                         <ItemTemplate>
-                                          <asp:Button ID="btnVerDetalle" runat="server" Text="Ver Detalle" CommandName="MostrarDetalle"
-                                                CommandArgument='<%# Container.DataItemIndex %>' CssClass="btn btn-outline-info btn-sm" />
-                                            <asp:Panel ID="pnlDetalles" runat="server" Visible="false">
-                                                <asp:GridView ID="grvDetalles" runat="server" CssClass="table table-sm" AutoGenerateColumns="False">
-                                                    <Columns>
-                                                        <asp:BoundField HeaderText="N° Habitación" DataField="NumeroHabitacion" />
-                                                        <asp:BoundField HeaderText="Tipo" DataField="Tipo" />
-                                                        <asp:BoundField HeaderText="Check-In" DataField="CheckIn" DataFormatString="{0:dd/MM/yyyy}" />
-                                                        <asp:BoundField HeaderText="Check-Out" DataField="CheckOut" DataFormatString="{0:dd/MM/yyyy}" />
-                                                        <asp:BoundField HeaderText="Precio" DataField="PrecioDetalle" DataFormatString="{0:C}" />
-                                                    </Columns>
-                                                </asp:GridView>
-                                            </asp:Panel>
+                                            <asp:Button ID="btnVerDetalle" runat="server"
+                                                Text='<%# GetButtonText((int)Eval("Id_reserva")) %>'
+                                                CommandName="MostrarDetalle"
+                                                CommandArgument='<%# Eval("Id_reserva") %>'
+                                                CssClass="btn btn-outline-info btn-sm" />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Acciones">
+                                        <ItemTemplate>
+                                            <asp:Button ID="btnDarDeBaja" runat="server" Text="Dar de baja"
+                                                CommandName="DarDeBaja"
+                                                CommandArgument='<%# Eval("Id_reserva") %>'
+                                                CssClass="btn btn-outline-danger btn-sm" />
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                 </Columns>

@@ -29,13 +29,13 @@ namespace Vistas
                 {
                     btnPanelAdministrativo.Visible = true;
                     btnRooms.Visible = true;
-                   
+
                 }
                 else if (rol == "Recepcionista")
                 {
                     btnPanelAdministrativo.Visible = false;
                     btnRooms.Visible = false;
-                  
+
                 }
 
                 btnRegisterHuesped.Visible = true;
@@ -50,7 +50,7 @@ namespace Vistas
             }
             else
             {
-               // Response.Redirect("Login.aspx");
+                // Response.Redirect("Login.aspx");
             }
         }
 
@@ -879,7 +879,7 @@ namespace Vistas
         {
             if (e.Row.RowType == DataControlRowType.DataRow && grvServicio.EditIndex == e.Row.RowIndex)
             {
-              
+
                 DropDownList ddlEstado = (DropDownList)e.Row.FindControl("ddlEIEstadoServicio");
                 if (ddlEstado != null)
                 {
@@ -992,27 +992,71 @@ namespace Vistas
         {
             if (e.CommandName == "MostrarDetalle")
             {
-                int index = Convert.ToInt32(e.CommandArgument);
-                GridViewRow row = grvReservas.Rows[index];
-                int idReserva = Convert.ToInt32(grvReservas.DataKeys[index].Value);
-
-                Panel pnl = (Panel)row.FindControl("pnlDetalles");
-                GridView grvDetalles = (GridView)pnl.FindControl("grvDetalles");
-                Button btnVerDetalle = (Button)row.FindControl("btnVerDetalle");
-
-                if (pnl.Visible)
+                int idReserva = Convert.ToInt32(e.CommandArgument);
+                if (ViewState["IdReservaDetalle"] != null && (int)ViewState["IdReservaDetalle"] == idReserva)
                 {
-                    pnl.Visible = false;
-                    btnVerDetalle.Text = "Ver Detalle";
+                    ViewState["IdReservaDetalle"] = null;
                 }
                 else
                 {
-                    var detalles = negocioReserva.ObtenerDetallesPorReserva(idReserva);
-                    grvDetalles.DataSource = detalles;
-                    grvDetalles.DataBind();
+                    ViewState["IdReservaDetalle"] = idReserva;
+                }
 
-                    pnl.Visible = true;
-                    btnVerDetalle.Text = "Ocultar Detalle";
+                getDataReservas();
+            }
+            else if (e.CommandName == "DarDeBaja")
+            {
+                int idReserva = Convert.ToInt32(e.CommandArgument);
+
+                negocioReserva.EliminarReserva(idReserva);
+
+                getDataReservas();
+            }
+        }
+
+        private GridView CrearGrillaDetalles(int idReserva)
+        {
+            var negocioDetalle = new NegocioReserva();
+            DataTable dtDetalles = negocioDetalle.ObtenerDetallesPorReserva(idReserva);
+
+            GridView gvDetalles = new GridView();
+            gvDetalles.CssClass = "table table-sm";
+            gvDetalles.AutoGenerateColumns = false;
+
+            gvDetalles.Columns.Add(new BoundField { HeaderText = "N° Habitación", DataField = "NumeroHabitacion" });
+            gvDetalles.Columns.Add(new BoundField { HeaderText = "Tipo", DataField = "Tipo" });
+            gvDetalles.Columns.Add(new BoundField { HeaderText = "Check-In", DataField = "CheckIn", DataFormatString = "{0:dd/MM/yyyy}" });
+            gvDetalles.Columns.Add(new BoundField { HeaderText = "Check-Out", DataField = "CheckOut", DataFormatString = "{0:dd/MM/yyyy}" });
+            gvDetalles.Columns.Add(new BoundField { HeaderText = "Precio", DataField = "PrecioDetalle", DataFormatString = "{0:C}" });
+
+            gvDetalles.DataSource = dtDetalles;
+            gvDetalles.DataBind();
+
+            return gvDetalles;
+        }
+
+        protected string GetButtonText(int idReserva)
+        {
+            return (ViewState["IdReservaDetalle"] != null && (int)ViewState["IdReservaDetalle"] == idReserva) ? "Ocultar Detalle" : "Ver Detalle";
+        }
+
+        protected void grvReservas_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                int idReserva = (int)grvReservas.DataKeys[e.Row.RowIndex].Value;
+
+                if (ViewState["IdReservaDetalle"] != null && (int)ViewState["IdReservaDetalle"] == idReserva)
+                {
+                    GridViewRow detalleRow = new GridViewRow(-1, -1, DataControlRowType.DataRow, DataControlRowState.Insert);
+                    TableCell celda = new TableCell();
+                    celda.ColumnSpan = grvReservas.Columns.Count;
+                    celda.Controls.Add(CrearGrillaDetalles(idReserva));
+                    detalleRow.Cells.Add(celda);
+
+                    Table tabla = (Table)grvReservas.Controls[0];
+                    int rowIndex = tabla.Rows.GetRowIndex(e.Row);
+                    tabla.Rows.AddAt(rowIndex + 1, detalleRow);
                 }
             }
         }

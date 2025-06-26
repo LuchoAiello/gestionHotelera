@@ -12,9 +12,9 @@ namespace Negocio
             return dao.GetReservas();
         }
 
-        public void ModificarReserva(Reserva reserva)
+        public bool EliminarReserva(int idReserva)
         {
-            dao.ModificarReserva(reserva);
+            return dao.EliminarReserva(idReserva);
         }
 
         public DataTable ObtenerDetallesPorReserva(int idReserva)

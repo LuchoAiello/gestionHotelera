@@ -18,6 +18,7 @@ namespace Dao
             comando.Parameters.AddWithValue("@FechaReserva", r.FechaReserva);
             comando.Parameters.AddWithValue("@CantidadHuespedes", r.CantidadHuespedes);
             comando.Parameters.AddWithValue("@PrecioFinal", r.PrecioFinal);
+            comando.Parameters.AddWithValue("@Estado", r.Estado);
         }
 
         public DataTable GetReservas()
@@ -25,17 +26,15 @@ namespace Dao
             string consulta = "SELECT * FROM Vista_Reservas";
             return ds.ObtenerTabla("Reservas", consulta);
         }
-        public bool ModificarReserva(Reserva r)
+        public bool EliminarReserva(int idReserva)
         {
             SqlCommand comando = new SqlCommand();
-            comando.Parameters.AddWithValue("@Id_reserva", r.IdReserva);
-            comando.Parameters.AddWithValue("@CantidadHuespedes", r.CantidadHuespedes);
+            comando.Parameters.AddWithValue("@Id_reserva", idReserva);
 
             string consulta = @"
-        UPDATE Reservas SET 
-            CantidadHuespedes = @CantidadHuespedes
-        WHERE Id_reserva = @Id_reserva;
-    ";
+             DELETE FROM Reservas
+             WHERE Id_reserva = @Id_reserva;
+             ";
 
             return ds.EjecutarConsulta(consulta, comando);
         }
