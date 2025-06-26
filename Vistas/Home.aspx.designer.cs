@@ -51,13 +51,13 @@ namespace Vistas
         protected global::System.Web.UI.WebControls.LinkButton btnRooms;
 
         /// <summary>
-        /// Control btnHistorialReservas.
+        /// Control btnReservas.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnHistorialReservas;
+        protected global::System.Web.UI.WebControls.LinkButton btnReservas;
 
         /// <summary>
         /// Control lblNameLogin.
@@ -123,13 +123,40 @@ namespace Vistas
         protected global::System.Web.UI.WebControls.LinkButton btnServicios;
 
         /// <summary>
-        /// Control panelReservas.
+        /// Control panelAdministarReservas.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel panelReservas;
+        protected global::System.Web.UI.WebControls.Panel panelAdministarReservas;
+
+        /// <summary>
+        /// Control btnReserva.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton btnReserva;
+
+        /// <summary>
+        /// Control btnCrearReserva.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton btnCrearReserva;
+
+        /// <summary>
+        /// Control btnHistorialReserva.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton btnHistorialReserva;
 
         /// <summary>
         /// Control panelUsuario.
@@ -393,103 +420,184 @@ namespace Vistas
         protected global::System.Web.UI.WebControls.Button btnCancelarServicio;
 
         /// <summary>
-        /// Control panelHistorialReservas.
+        /// Control panelHuespedes.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel panelHistorialReservas;
+        protected global::System.Web.UI.WebControls.Panel panelHuespedes;
 
         /// <summary>
-        /// Control Label1.
+        /// Control btnNuevoHuesped.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label1;
+        protected global::System.Web.UI.WebControls.Button btnNuevoHuesped;
 
         /// <summary>
-        /// Control txtNumber.
+        /// Control grvHuespedes.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtNumber;
+        protected global::System.Web.UI.WebControls.GridView grvHuespedes;
 
         /// <summary>
-        /// Control Label2.
+        /// Control panelRegistrarHuesped.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label2;
+        protected global::System.Web.UI.WebControls.Panel panelRegistrarHuesped;
 
         /// <summary>
-        /// Control txtDateFrom.
+        /// Control txtNombreHuesped.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDateFrom;
+        protected global::System.Web.UI.WebControls.TextBox txtNombreHuesped;
 
         /// <summary>
-        /// Control Label3.
+        /// Control lblNombreHuesped.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label3;
+        protected global::System.Web.UI.WebControls.Label lblNombreHuesped;
 
         /// <summary>
-        /// Control txtDateTo.
+        /// Control txtApellidoHuesped.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDateTo;
+        protected global::System.Web.UI.WebControls.TextBox txtApellidoHuesped;
 
         /// <summary>
-        /// Control Button1.
+        /// Control lblApellidoHuesped.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button1;
+        protected global::System.Web.UI.WebControls.Label lblApellidoHuesped;
 
         /// <summary>
-        /// Control btnFilter.
+        /// Control txtDocumentoHuesped.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnFilter;
+        protected global::System.Web.UI.WebControls.TextBox txtDocumentoHuesped;
 
         /// <summary>
-        /// Control btnSacarFiltro.
+        /// Control lblDocumentoHuesped.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSacarFiltro;
+        protected global::System.Web.UI.WebControls.Label lblDocumentoHuesped;
 
         /// <summary>
-        /// Control grvHistorialReservas.
+        /// Control ddlTipoDocumentoHuesped.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView grvHistorialReservas;
+        protected global::System.Web.UI.WebControls.DropDownList ddlTipoDocumentoHuesped;
+
+        /// <summary>
+        /// Control lblTipoDocumentoHuesped.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTipoDocumentoHuesped;
+
+        /// <summary>
+        /// Control txtEmailHuesped.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtEmailHuesped;
+
+        /// <summary>
+        /// Control lblEmailHuesped.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblEmailHuesped;
+
+        /// <summary>
+        /// Control txtTelefonoHuesped.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtTelefonoHuesped;
+
+        /// <summary>
+        /// Control lblTelefonoHuesped.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTelefonoHuesped;
+
+        /// <summary>
+        /// Control txtFechaNacimientoHuesped.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtFechaNacimientoHuesped;
+
+        /// <summary>
+        /// Control lblFechaNacimientoHuesped.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblFechaNacimientoHuesped;
+
+        /// <summary>
+        /// Control btnRegistrarHuesped.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnRegistrarHuesped;
+
+        /// <summary>
+        /// Control btnLimpiarHuesped.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnLimpiarHuesped;
 
         /// <summary>
         /// Control panelHabitaciones.
@@ -681,183 +789,111 @@ namespace Vistas
         protected global::System.Web.UI.WebControls.Label lblMensaje;
 
         /// <summary>
-        /// Control panelHuespedes.
+        /// Control panelReservas.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel panelHuespedes;
+        protected global::System.Web.UI.WebControls.Panel panelReservas;
 
         /// <summary>
-        /// Control btnNuevoHuesped.
+        /// Control grvReservas.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnNuevoHuesped;
+        protected global::System.Web.UI.WebControls.GridView grvReservas;
 
         /// <summary>
-        /// Control grvHuespedes.
+        /// Control panelHistorialReservas.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView grvHuespedes;
+        protected global::System.Web.UI.WebControls.Panel panelHistorialReservas;
 
         /// <summary>
-        /// Control panelRegistrarHuesped.
+        /// Control Label1.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel panelRegistrarHuesped;
+        protected global::System.Web.UI.WebControls.Label Label1;
 
         /// <summary>
-        /// Control txtNombreHuesped.
+        /// Control txtNumber.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtNombreHuesped;
+        protected global::System.Web.UI.WebControls.TextBox txtNumber;
 
         /// <summary>
-        /// Control lblNombreHuesped.
+        /// Control Label2.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblNombreHuesped;
+        protected global::System.Web.UI.WebControls.Label Label2;
 
         /// <summary>
-        /// Control txtApellidoHuesped.
+        /// Control txtDateFrom.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtApellidoHuesped;
+        protected global::System.Web.UI.WebControls.TextBox txtDateFrom;
 
         /// <summary>
-        /// Control lblApellidoHuesped.
+        /// Control Label3.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblApellidoHuesped;
+        protected global::System.Web.UI.WebControls.Label Label3;
 
         /// <summary>
-        /// Control txtDocumentoHuesped.
+        /// Control txtDateTo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDocumentoHuesped;
+        protected global::System.Web.UI.WebControls.TextBox txtDateTo;
 
         /// <summary>
-        /// Control lblDocumentoHuesped.
+        /// Control btnFilter.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDocumentoHuesped;
+        protected global::System.Web.UI.WebControls.Button btnFilter;
 
         /// <summary>
-        /// Control ddlTipoDocumentoHuesped.
+        /// Control btnSacarFiltro.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlTipoDocumentoHuesped;
+        protected global::System.Web.UI.WebControls.Button btnSacarFiltro;
 
         /// <summary>
-        /// Control lblTipoDocumentoHuesped.
+        /// Control grvHistorialReservas.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTipoDocumentoHuesped;
-
-        /// <summary>
-        /// Control txtEmailHuesped.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtEmailHuesped;
-
-        /// <summary>
-        /// Control lblEmailHuesped.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblEmailHuesped;
-
-        /// <summary>
-        /// Control txtTelefonoHuesped.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtTelefonoHuesped;
-
-        /// <summary>
-        /// Control lblTelefonoHuesped.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTelefonoHuesped;
-
-        /// <summary>
-        /// Control txtFechaNacimientoHuesped.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtFechaNacimientoHuesped;
-
-        /// <summary>
-        /// Control lblFechaNacimientoHuesped.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblFechaNacimientoHuesped;
-
-        /// <summary>
-        /// Control btnRegistrarHuesped.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnRegistrarHuesped;
-
-        /// <summary>
-        /// Control btnLimpiarHuesped.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnLimpiarHuesped;
+        protected global::System.Web.UI.WebControls.GridView grvHistorialReservas;
     }
 }

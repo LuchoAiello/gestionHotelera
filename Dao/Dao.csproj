@@ -46,6 +46,7 @@
     <Compile Include="DaoHuespedes.cs" />
     <Compile Include="DaoLogin.cs" />
     <Compile Include="DaoMetodoPagos.cs" />
+    <Compile Include="DaoReservas.cs" />
     <Compile Include="DaoServicios.cs" />
     <Compile Include="DaoUser.cs" />
     <Compile Include="DaoHabitaciones.cs" />

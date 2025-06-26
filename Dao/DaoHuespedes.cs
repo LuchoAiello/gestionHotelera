@@ -62,9 +62,9 @@ namespace Dao
             ArmarParametrosHuesped(comando, huesped);
 
             string consulta = @"INSERT INTO Huespedes 
-                        (Nombre, Apellido, Documento, TipoDocumento, Email, Telefono, FechaNacimiento, Estado)
+                        (Nombre, Apellido, Documento, TipoDocumento, Email, Telefono, FechaNacimiento)
                         VALUES 
-                        (@Nombre, @Apellido, @Documento, @TipoDocumento, @Email, @Telefono, @FechaNacimiento, @Estado)";
+                        (@Nombre, @Apellido, @Documento, @TipoDocumento, @Email, @Telefono, @FechaNacimiento)";
 
             return ds.EjecutarConsulta(consulta, comando);
         }

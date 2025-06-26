@@ -65,6 +65,25 @@ namespace Dao
             }
         }
 
+        public DataTable ObtenerTablaReservas(string nombreTabla, string sql, SqlParameter[] parametros)
+        {
+            try
+            {
+                DataSet ds = new DataSet();
+                SqlConnection conexion = ObtenerConexion();
+                SqlCommand cmd = new SqlCommand(sql, conexion);
+                cmd.Parameters.AddRange(parametros);
+                SqlDataAdapter adp = new SqlDataAdapter(cmd);
+                adp.Fill(ds, nombreTabla);
+                conexion.Close();
+                return ds.Tables[nombreTabla];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al obtener la tabla '{nombreTabla}' con la consulta '{sql}': {ex.Message}");
+            }
+        }
+
         public bool EjecutarConsulta(string consulta, SqlCommand comando)
         {
             SqlConnection conexion = null;
@@ -174,7 +193,6 @@ namespace Dao
                 cmd.Parameters.AddWithValue("@Precio", h.Precio);
                 cmd.Parameters.AddWithValue("@Descripcion", string.IsNullOrWhiteSpace(h.Descripcion) ? (object)DBNull.Value : h.Descripcion);
 
-                conexion.Open();
                 int filasAfectadas = cmd.ExecuteNonQuery();
                 return filasAfectadas > 0;
             }
@@ -194,12 +212,11 @@ namespace Dao
                 cmd.Parameters.AddWithValue("@Precio", h.Precio);
                 cmd.Parameters.AddWithValue("@Descripcion", string.IsNullOrWhiteSpace(h.Descripcion) ? (object)DBNull.Value : h.Descripcion);
 
-                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                DataTable tabla = new DataTable();
-                adapter.Fill(tabla);
-                return tabla. > 0;
+                int filasAfectadas = cmd.ExecuteNonQuery();
+                return filasAfectadas > 0;
             }
         }
+
         public bool ModificarUsuarioConSP(Usuario user)
         {
             using (SqlConnection conexion = ObtenerConexion())

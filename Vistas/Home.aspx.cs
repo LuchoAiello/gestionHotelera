@@ -3,6 +3,8 @@ using Negocio;
 using Negocio.Negocio;
 using System;
 using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -15,6 +17,7 @@ namespace Vistas
         NegocioMetodoPagos negocioMetodoPago = new NegocioMetodoPagos();
         NegocioServicios negocioServicio = new NegocioServicios();
         NegocioHuespedes negocioHuesped = new NegocioHuespedes();
+        NegocioReserva negocioReserva = new NegocioReserva();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -25,21 +28,20 @@ namespace Vistas
                 if (rol == "Administrador")
                 {
                     btnPanelAdministrativo.Visible = true;
+                    btnRooms.Visible = true;
+                   
                 }
                 else if (rol == "Recepcionista")
                 {
                     btnPanelAdministrativo.Visible = false;
+                    btnRooms.Visible = false;
+                  
                 }
 
                 btnRegisterHuesped.Visible = true;
-                btnHistorialReservas.Visible = true;
-                btnRooms.Visible = true;
+                btnReservas.Visible = true;
 
                 OcultarTodosLosPaneles();
-
-                panelHistorialReservas.Visible = true;
-                lblSeccionTitulo.Text = "Historial de Reservas";
-                CargarReservas();
             }
 
             if (Session["NameLogin"] != null)
@@ -48,7 +50,7 @@ namespace Vistas
             }
             else
             {
-                //Response.Redirect("Login.aspx");
+               // Response.Redirect("Login.aspx");
             }
         }
 
@@ -71,11 +73,15 @@ namespace Vistas
         private void OcultarTodosLosPaneles()
         {
             panelAdministrativo.Visible = false;
+            panelAdministarReservas.Visible = false;
             panelHistorialReservas.Visible = false;
             panelHabitaciones.Visible = false;
             panelHuespedes.Visible = false;
             panelRegistrarHuesped.Visible = false;
+            panelUsuario.Visible = false;
+            panelRegistrarUsuario.Visible = false;
             OcultarTodosLosPanelesAdmin();
+            OcultarTodosLosPanelesReserva();
             // Agregá más paneles si sumás nuevas secciones
         }
 
@@ -89,6 +95,11 @@ namespace Vistas
             panelRegistrarServicio.Visible = false;
         }
 
+        private void OcultarTodosLosPanelesReserva()
+        {
+            panelHistorialReservas.Visible = false;
+            panelReservas.Visible = false;
+        }
         protected void btnLogout_Click(object sender, EventArgs e)
         {
             Session.Remove("NameLogin");
@@ -103,6 +114,16 @@ namespace Vistas
             lblSeccionTitulo.Text = "Panel Administrativo";
 
             getDataUser();
+        }
+
+        protected void btnReservas_Click(object sender, EventArgs e)
+        {
+            OcultarTodosLosPaneles();
+            panelAdministarReservas.Visible = true;
+            panelReservas.Visible = true;
+            lblSeccionTitulo.Text = "Panel de Reservas";
+
+            getDataReservas();
         }
 
         #region Panel Huesped 
@@ -339,8 +360,8 @@ namespace Vistas
 
         #endregion
 
-        #region Panel Reservas
-        // PANEL RESERVAS 
+        #region Panel Historial de Reservas
+        // PANEL HISTORIAL DE RESERVAS 
         protected void grvHistorialReservas_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName == "Editar")
@@ -393,9 +414,8 @@ namespace Vistas
 
         protected void btnHistorialReservas_Click(object sender, EventArgs e)
         {
-            OcultarTodosLosPaneles();
+            OcultarTodosLosPanelesReserva();
             panelHistorialReservas.Visible = true;
-            lblSeccionTitulo.Text = "Historial de Reservas";
 
             DataTable HistorialReservas = negocioHistorialReservas.GetHistorialReserva();
             grvHistorialReservas.DataSource = HistorialReservas;
@@ -588,12 +608,19 @@ namespace Vistas
             getDataUser();
 
         }
-
-        protected void btnNuevoUsuario_Click(object sender, EventArgs e)
+        protected void btnMostrarFormularioUsuarios_Click(object sender, EventArgs e)
         {
-            OcultarTodosLosPanelesAdmin();
-            panelUsuario.Visible = true;
+            limpiarFormularioUsuarios();
+            panelUsuario.Visible = false;
             panelRegistrarUsuario.Visible = true;
+        }
+
+        protected void limpiarFormularioUsuarios()
+        {
+            txtName.Text = "";
+            txtPassword.Text = "";
+            lblMensajePassword.Text = "";
+            ddlEstadoHab.SelectedIndex = 1;
         }
 
         protected void grvUsuario_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -688,7 +715,8 @@ namespace Vistas
             negocioUsuario.CrearUsuario(userCreate);
 
             getDataUser();
-
+            panelUsuario.Visible = true;
+            panelRegistrarUsuario.Visible = false;
             txtName.Text = "";
             txtPassword.Text = "";
         }
@@ -955,6 +983,62 @@ namespace Vistas
             DataTable Servicio = negocioServicio.GetServicios();
             grvServicio.DataSource = Servicio;
             grvServicio.DataBind();
+        }
+
+        #endregion
+
+        #region Reservas
+        // PANEL RESERVAS
+        protected void btnReserva_Click(object sender, EventArgs e)
+        {
+            OcultarTodosLosPanelesReserva();
+            panelReservas.Visible = true;
+
+            getDataReservas();
+        }
+
+        protected void grvReservas_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "MostrarDetalle")
+            {
+                int index = Convert.ToInt32(e.CommandArgument);
+                GridViewRow row = grvReservas.Rows[index];
+                int idReserva = Convert.ToInt32(grvReservas.DataKeys[index].Value);
+
+                Panel pnl = (Panel)row.FindControl("pnlDetalles");
+                GridView grvDetalles = (GridView)pnl.FindControl("grvDetalles");
+                Button btnVerDetalle = (Button)row.FindControl("btnVerDetalle");
+
+                if (pnl.Visible)
+                {
+                    pnl.Visible = false;
+                    btnVerDetalle.Text = "Ver Detalle";
+                }
+                else
+                {
+                    var detalles = negocioReserva.ObtenerDetallesPorReserva(idReserva);
+                    grvDetalles.DataSource = detalles;
+                    grvDetalles.DataBind();
+
+                    pnl.Visible = true;
+                    btnVerDetalle.Text = "Ocultar Detalle";
+                }
+            }
+        }
+
+        protected void grvReservas_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            grvReservas.PageIndex = e.NewPageIndex;
+
+            getDataReservas();
+        }
+
+
+        private void getDataReservas()
+        {
+            DataTable reservas = negocioReserva.GetReservas();
+            grvReservas.DataSource = reservas;
+            grvReservas.DataBind();
         }
 
         #endregion

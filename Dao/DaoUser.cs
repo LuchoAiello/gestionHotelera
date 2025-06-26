@@ -8,7 +8,6 @@ namespace Dao
     {
         AccesoDatos ds = new AccesoDatos();
 
-
         public DataTable GetUser()
         {
             string query = "SELECT * FROM Usuarios";
