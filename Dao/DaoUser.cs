@@ -8,14 +8,7 @@ namespace Dao
     {
         AccesoDatos ds = new AccesoDatos();
 
-        private void ArmarParametrosUsuario(SqlCommand Comando, Usuario user)
-        {
-            Comando.Parameters.AddWithValue("@Nombre", user.Nombre);
-            Comando.Parameters.AddWithValue("@Contrasenia", user.Contrasenia);
-            Comando.Parameters.AddWithValue("@Rol", user.Rol);
-            Comando.Parameters.AddWithValue("@Estado", user.Estado);
-            Comando.Parameters.AddWithValue("@Id_usuario", user.IdUsuario);
-        }
+
         public DataTable GetUser()
         {
             string query = "SELECT * FROM Usuarios";
@@ -25,27 +18,12 @@ namespace Dao
 
         public bool ModificarUsuario(Usuario user)
         {
-            SqlCommand comando = new SqlCommand();
-            this.ArmarParametrosUsuario(comando, user);
-            string consulta = @"UPDATE Usuarios 
-                   SET Nombre = @Nombre, 
-                       Contrasenia = @Contrasenia, 
-                       Rol = @Rol, 
-                       Estado = @Estado 
-                   WHERE Id_usuario = @Id_usuario";
-
-
-            return ds.EjecutarConsulta(consulta, comando);
+            return ds.ModificarUsuarioConSP(user);
         }
 
         public bool CrearUsuario(Usuario user)
         {
-            SqlCommand comando = new SqlCommand();
-            this.ArmarParametrosUsuario(comando, user);
-            string consulta = "INSERT INTO Usuarios(Nombre, Contrasenia, Rol) VALUES (@Nombre, @Contrasenia, @Rol)";
-
-
-            return ds.EjecutarConsulta(consulta, comando);
+            return ds.CrearUsuarioConSP(user);
         }
     }
 }

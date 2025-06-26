@@ -411,7 +411,6 @@ namespace Vistas
         #endregion
 
         #region Panel de Habitaciones
-        // PANEL HABITACIONES
         private void CargarHabitaciones()
         {
             var habitacionesService = new NegocioHabitaciones();
@@ -468,7 +467,7 @@ namespace Vistas
             };
 
             NegocioHabitaciones service = new NegocioHabitaciones();
-            service.Insert(nueva);
+            service.Crear(nueva);
 
             LimpiarFormularioHabitacion();
             panelFormularioRegistro.Visible = false;

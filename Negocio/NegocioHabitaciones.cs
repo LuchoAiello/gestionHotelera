@@ -10,7 +10,6 @@ namespace Negocio
 {
     public class NegocioHabitaciones
     {
-
         public DataTable GetAll()
         {
             var repo = new Dao.DaoHabitaciones();
@@ -22,10 +21,10 @@ namespace Negocio
             var listaFiltrada = repo.GetByFilter(filtro);
             return listaFiltrada;
         }
-        public bool Insert(Entidades.Habitacion h)
+        public bool Crear(Entidades.Habitacion h)
         {
             Dao.DaoHabitaciones repo = new Dao.DaoHabitaciones();
-            return repo.Insert(h);
+            return repo.Crear(h);
         }
         public bool Update(Entidades.Habitacion h)
         {

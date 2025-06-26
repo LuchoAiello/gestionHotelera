@@ -12,6 +12,6 @@ namespace Entidades
         public DateTime FechaReserva { get; set; }
         public int CantidadHuespedes { get; set; }
         public decimal? PrecioFinal { get; set; }
-        public bool Pago { get; set; }
+        public bool Estado { get; set; }
     }
 }
