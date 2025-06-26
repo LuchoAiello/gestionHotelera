@@ -70,7 +70,7 @@
                 <div class="card-body">
                     <!-- Panel para Panel Usuario -->
                     <asp:Panel ID="panelUsuario" runat="server" Visible="false">
-                        <asp:Button ID="btnNuevoUsuario" runat="server" Text="Nuevo Usuario" CssClass="btn btn-primary" OnClick="btnNuevoUsuario_Click" />
+                        <asp:Button ID="btnNuevoUsuario" runat="server" Text="Nuevo Usuario" CssClass="btn btn-primary" OnClick="btnMostrarFormularioUsuarios_Click" />
                         <div class="mt-3" style="overflow-x: auto; width: 100%;">
                             <asp:GridView ID="grvUsuario" runat="server" AutoGenerateColumns="False" DataKeyNames="Id_usuario" CssClass="table table-striped table-bordered w-100"
                                 AllowPaging="true" PageSize="5" OnRowCancelingEdit="grvUsuario_RowCancelingEdit" OnRowEditing="grvUsuario_RowEditing" OnRowUpdating="grvUsuario_RowUpdating" OnRowDataBound="grvUsuario_RowDataBound" OnPageIndexChanging="grvUsuario_PageIndexChanging">
@@ -120,39 +120,36 @@
                                 </Columns>
                             </asp:GridView>
 
-                            <!-- Panel para Registrar Usuario Dinamico -->
-                            <asp:Panel ID="panelRegistrarUsuario" runat="server" Visible="false" CssClass="mt-4 p-3 border rounded">
-                                <h6 class="fw-bold mb-3">Agregar Usuario</h6>
-                                <div class="row mb-3">
-                                    <div class="col-md-4">
-                                        <label for="txtName" class="form-label">Usuario</label>
-                                        <asp:TextBox ID="txtName" runat="server" CssClass="form-control" />
-                                        <asp:Label ID="lblMensajeNombre" runat="server" CssClass="text-danger small" />
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="txtPassword" class="form-label">Contraseña</label>
-                                        <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" CssClass="form-control" />
-                                        <asp:Label ID="lblMensajePassword" runat="server" CssClass="text-danger small" />
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="ddlRolUsuario" class="form-label">Rol</label>
-                                        <asp:DropDownList ID="ddlRolUsuario" runat="server" CssClass="form-select">
-                                            <asp:ListItem Text="Administrador" Value="Administrador" />
-                                            <asp:ListItem Text="Recepcionista" Value="Recepcionista" />
-                                        </asp:DropDownList>
-                                    </div>
-                                </div>
-
-                                <div class="d-flex gap-2">
-                                    <asp:Button ID="btnRegisterUser" runat="server" Text="Registrar" CssClass="btn btn-success" OnClick="btnRegisterUser_Click" />
-                                    <asp:Button ID="btnCancelarUser" runat="server" Text="Cancelar" CssClass="btn btn-secondary" OnClick="btnCancelarUser_Click" />
-                                </div>
-                            </asp:Panel>
-
-
                         </div>
                     </asp:Panel>
+                      <!-- Panel para Registrar Usuario Dinamico -->
+                          <asp:Panel ID="panelRegistrarUsuario" runat="server" Visible="false" CssClass="mt-4 p-3 border rounded">
+                          <h6 class="fw-bold mb-3">Agregar Usuario</h6>
+                          <div class="row mb-3">
+                              <div class="col-md-4">
+                                  <label for="txtName" class="form-label">Usuario</label>
+                                  <asp:TextBox ID="txtName" runat="server" CssClass="form-control" />
+                                  <asp:Label ID="lblMensajeNombre" runat="server" CssClass="text-danger small" />
+                              </div>
+                              <div class="col-md-4">
+                                  <label for="txtPassword" class="form-label">Contraseña</label>
+                                  <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" CssClass="form-control" />
+                                  <asp:Label ID="lblMensajePassword" runat="server" CssClass="text-danger small" />
+                              </div>
+                              <div class="col-md-4">
+                                  <label for="ddlRolUsuario" class="form-label">Rol</label>
+                                  <asp:DropDownList ID="ddlRolUsuario" runat="server" CssClass="form-select">
+                                      <asp:ListItem Text="Administrador" Value="Administrador" />
+                                      <asp:ListItem Text="Recepcionista" Value="Recepcionista" />
+                                  </asp:DropDownList>
+                              </div>
+                          </div>
 
+                          <div class="d-flex gap-2">
+                              <asp:Button ID="btnRegisterUser" runat="server" Text="Registrar" CssClass="btn btn-success" OnClick="btnRegisterUser_Click" />
+                              <asp:Button ID="btnCancelarUser" runat="server" Text="Cancelar" CssClass="btn btn-secondary" OnClick="btnCancelarUser_Click" />
+                          </div>
+                      </asp:Panel>
                     <!-- Panel para Panel Metodo de Pago -->
                     <asp:Panel ID="panelMetodoPago" runat="server" Visible="false">
                         <asp:Button ID="btnNuevoMetodo" runat="server" Text="Nuevo Metodo" CssClass="btn btn-primary" OnClick="btnNuevoMetodo_Click" />

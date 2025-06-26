@@ -78,6 +78,8 @@ namespace Vistas
             panelHabitaciones.Visible = false;
             panelHuespedes.Visible = false;
             panelRegistrarHuesped.Visible = false;
+            panelUsuario.Visible = false;
+            panelRegistrarUsuario.Visible = false;
             OcultarTodosLosPanelesAdmin();
             OcultarTodosLosPanelesReserva();
             // Agregá más paneles si sumás nuevas secciones
@@ -429,7 +431,6 @@ namespace Vistas
         #endregion
 
         #region Panel de Habitaciones
-        // PANEL HABITACIONES
         private void CargarHabitaciones()
         {
             var habitacionesService = new NegocioHabitaciones();
@@ -486,7 +487,7 @@ namespace Vistas
             };
 
             NegocioHabitaciones service = new NegocioHabitaciones();
-            service.Insert(nueva);
+            service.Crear(nueva);
 
             LimpiarFormularioHabitacion();
             panelFormularioRegistro.Visible = false;
@@ -607,12 +608,19 @@ namespace Vistas
             getDataUser();
 
         }
-
-        protected void btnNuevoUsuario_Click(object sender, EventArgs e)
+        protected void btnMostrarFormularioUsuarios_Click(object sender, EventArgs e)
         {
-            OcultarTodosLosPanelesAdmin();
-            panelUsuario.Visible = true;
+            limpiarFormularioUsuarios();
+            panelUsuario.Visible = false;
             panelRegistrarUsuario.Visible = true;
+        }
+
+        protected void limpiarFormularioUsuarios()
+        {
+            txtName.Text = "";
+            txtPassword.Text = "";
+            lblMensajePassword.Text = "";
+            ddlEstadoHab.SelectedIndex = 1;
         }
 
         protected void grvUsuario_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -707,7 +715,8 @@ namespace Vistas
             negocioUsuario.CrearUsuario(userCreate);
 
             getDataUser();
-
+            panelUsuario.Visible = true;
+            panelRegistrarUsuario.Visible = false;
             txtName.Text = "";
             txtPassword.Text = "";
         }

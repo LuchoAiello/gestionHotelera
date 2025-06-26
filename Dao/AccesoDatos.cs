@@ -13,12 +13,12 @@ namespace Dao
         public SqlConnection ObtenerConexion()
         {
             //CADENA DE CONEXION PARA LUCHO
-            string rutaGestionHotelera =
-                "Data Source=localhost\\sqlexpress;" + "Initial Catalog=GestionHotelera;" + "Integrated Security=True;" + "Encrypt=True;" + "TrustServerCertificate=True";
+            //string rutaGestionHotelera =
+            //    "Data Source=localhost\\sqlexpress;" + "Initial Catalog=GestionHotelera;" + "Integrated Security=True;" + "Encrypt=True;" + "TrustServerCertificate=True";
 
             //CADENA DE CONEXION PARA CAMI
-            //string rutaGestionHotelera =
-            //    "Data Source=CAMI;Initial Catalog=GestionHotelera;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
+            string rutaGestionHotelera =
+                "Data Source=CAMI;Initial Catalog=GestionHotelera;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
 
             try
             {
@@ -140,15 +140,15 @@ namespace Dao
             return user;
         }
 
-        public DataTable SPHistorialReservasFilter(string nombreSP, string numeroHabitacion, string fechaDesde, string fechaHasta)
+        public DataTable SPHistorialReservasFilter(string nombreSP, string filtro, string fechaDesde, string fechaHasta)
         {
             using (SqlConnection conexion = ObtenerConexion())
             using (SqlCommand cmd = new SqlCommand(nombreSP, conexion))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@NumeroHabitacion",
-                    string.IsNullOrWhiteSpace(numeroHabitacion) ? (object)DBNull.Value : int.Parse(numeroHabitacion));
+                cmd.Parameters.AddWithValue("@filtro",
+                    string.IsNullOrWhiteSpace(filtro) ? (object)DBNull.Value : filtro);
 
                 cmd.Parameters.AddWithValue("@FechaDesde",
                     string.IsNullOrWhiteSpace(fechaDesde) ? (object)DBNull.Value : DateTime.Parse(fechaDesde));
@@ -179,6 +179,74 @@ namespace Dao
                 return tabla;
             }
         }
+        public bool SPCrearHabitacion(string nombreSP, Habitacion h)
+        {
+            using (SqlConnection conexion = ObtenerConexion())
+            using (SqlCommand cmd = new SqlCommand(nombreSP, conexion))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
 
+                cmd.Parameters.AddWithValue("@NumeroHabitacion", h.NumeroHabitacion);
+                cmd.Parameters.AddWithValue("@Tipo", string.IsNullOrWhiteSpace(h.Tipo) ? (object)DBNull.Value : h.Tipo);
+                cmd.Parameters.AddWithValue("@Capacidad", h.Capacidad);
+                cmd.Parameters.AddWithValue("@Estado", h.Estado);
+                cmd.Parameters.AddWithValue("@Precio", h.Precio);
+                cmd.Parameters.AddWithValue("@Descripcion", string.IsNullOrWhiteSpace(h.Descripcion) ? (object)DBNull.Value : h.Descripcion);
+
+                int filasAfectadas = cmd.ExecuteNonQuery();
+                return filasAfectadas > 0;
+            }
+        }
+        public bool SPActualizarHabitaciones(string nombreSP, Habitacion h)
+        {
+            using (SqlConnection conexion = ObtenerConexion())
+            using (SqlCommand cmd = new SqlCommand(nombreSP, conexion))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@Id_habitacion", h.Id_habitacion);
+                cmd.Parameters.AddWithValue("@NumeroHabitacion", h.NumeroHabitacion);
+                cmd.Parameters.AddWithValue("@Tipo", string.IsNullOrWhiteSpace(h.Tipo) ? (object)DBNull.Value : h.Tipo);
+                cmd.Parameters.AddWithValue("@Capacidad", h.Capacidad);
+                cmd.Parameters.AddWithValue("@Estado", h.Estado);
+                cmd.Parameters.AddWithValue("@Precio", h.Precio);
+                cmd.Parameters.AddWithValue("@Descripcion", string.IsNullOrWhiteSpace(h.Descripcion) ? (object)DBNull.Value : h.Descripcion);
+
+                int filasAfectadas = cmd.ExecuteNonQuery();
+                return filasAfectadas > 0;
+            }
+        }
+
+        public bool ModificarUsuarioConSP(Usuario user)
+        {
+            using (SqlConnection conexion = ObtenerConexion())
+            using (SqlCommand comando = new SqlCommand("SP_ModificarUsuario", conexion))
+            {
+                comando.CommandType = CommandType.StoredProcedure;
+
+                comando.Parameters.AddWithValue("@Nombre", user.Nombre);
+                comando.Parameters.AddWithValue("@Contrasenia", user.Contrasenia);
+                comando.Parameters.AddWithValue("@Rol", user.Rol);
+                comando.Parameters.AddWithValue("@Estado", user.Estado);
+                comando.Parameters.AddWithValue("@Id_usuario", user.IdUsuario);
+
+                int filasAfectadas = comando.ExecuteNonQuery();
+                return filasAfectadas > 0;
+            }
+        }
+        public bool CrearUsuarioConSP(Usuario usuario)
+        {
+            using (SqlConnection conexion = ObtenerConexion())
+            using (SqlCommand comando = new SqlCommand("SP_CrearUsuario", conexion))
+            {
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@Nombre", usuario.Nombre);
+                comando.Parameters.AddWithValue("@Contrasenia", usuario.Contrasenia);
+                comando.Parameters.AddWithValue("@Rol", usuario.Rol);
+
+                int filasAfectadas = comando.ExecuteNonQuery();
+                return filasAfectadas > 0;
+            }
+        }
     }
 }
