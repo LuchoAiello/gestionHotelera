@@ -62,7 +62,7 @@
                     <!-- Panel para ocultar/mostrar los botones de reservas-->
                     <asp:Panel ID="panelAdministarReservas" runat="server" CssClass="d-flex gap-3">
                         <asp:LinkButton ID="btnReserva" runat="server" CssClass="nav-link text-white px-2" OnClick="btnReserva_Click">Reservas</asp:LinkButton>
-                        <asp:LinkButton ID="btnCrearReserva" runat="server" CssClass="nav-link text-white px-2">Crear Reserva</asp:LinkButton>
+                        <asp:LinkButton ID="btnCrearReserva" runat="server" CssClass="nav-link text-white px-2" OnClick="btnCrearReserva_Click1">Crear Reserva</asp:LinkButton>
                         <asp:LinkButton ID="btnHistorialReserva" runat="server" CssClass="nav-link text-white px-2" OnClick="btnHistorialReservas_Click">Historial de Reservas</asp:LinkButton>
                     </asp:Panel>
                 </div>
@@ -122,34 +122,34 @@
 
                         </div>
                     </asp:Panel>
-                      <!-- Panel para Registrar Usuario Dinamico -->
-                          <asp:Panel ID="panelRegistrarUsuario" runat="server" Visible="false" CssClass="mt-4 p-3 border rounded">
-                          <h6 class="fw-bold mb-3">Agregar Usuario</h6>
-                          <div class="row mb-3">
-                              <div class="col-md-4">
-                                  <label for="txtName" class="form-label">Usuario</label>
-                                  <asp:TextBox ID="txtName" runat="server" CssClass="form-control" />
-                                  <asp:Label ID="lblMensajeNombre" runat="server" CssClass="text-danger small" />
-                              </div>
-                              <div class="col-md-4">
-                                  <label for="txtPassword" class="form-label">Contraseña</label>
-                                  <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" CssClass="form-control" />
-                                  <asp:Label ID="lblMensajePassword" runat="server" CssClass="text-danger small" />
-                              </div>
-                              <div class="col-md-4">
-                                  <label for="ddlRolUsuario" class="form-label">Rol</label>
-                                  <asp:DropDownList ID="ddlRolUsuario" runat="server" CssClass="form-select">
-                                      <asp:ListItem Text="Administrador" Value="Administrador" />
-                                      <asp:ListItem Text="Recepcionista" Value="Recepcionista" />
-                                  </asp:DropDownList>
-                              </div>
-                          </div>
+                    <!-- Panel para Registrar Usuario Dinamico -->
+                    <asp:Panel ID="panelRegistrarUsuario" runat="server" Visible="false" CssClass="mt-4 p-3 border rounded">
+                        <h6 class="fw-bold mb-3">Agregar Usuario</h6>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="txtName" class="form-label">Usuario</label>
+                                <asp:TextBox ID="txtName" runat="server" CssClass="form-control" />
+                                <asp:Label ID="lblMensajeNombre" runat="server" CssClass="text-danger small" />
+                            </div>
+                            <div class="col-md-4">
+                                <label for="txtPassword" class="form-label">Contraseña</label>
+                                <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" CssClass="form-control" />
+                                <asp:Label ID="lblMensajePassword" runat="server" CssClass="text-danger small" />
+                            </div>
+                            <div class="col-md-4">
+                                <label for="ddlRolUsuario" class="form-label">Rol</label>
+                                <asp:DropDownList ID="ddlRolUsuario" runat="server" CssClass="form-select">
+                                    <asp:ListItem Text="Administrador" Value="Administrador" />
+                                    <asp:ListItem Text="Recepcionista" Value="Recepcionista" />
+                                </asp:DropDownList>
+                            </div>
+                        </div>
 
-                          <div class="d-flex gap-2">
-                              <asp:Button ID="btnRegisterUser" runat="server" Text="Registrar" CssClass="btn btn-success" OnClick="btnRegisterUser_Click" />
-                              <asp:Button ID="btnCancelarUser" runat="server" Text="Cancelar" CssClass="btn btn-secondary" OnClick="btnCancelarUser_Click" />
-                          </div>
-                      </asp:Panel>
+                        <div class="d-flex gap-2">
+                            <asp:Button ID="btnRegisterUser" runat="server" Text="Registrar" CssClass="btn btn-success" OnClick="btnRegisterUser_Click" />
+                            <asp:Button ID="btnCancelarUser" runat="server" Text="Cancelar" CssClass="btn btn-secondary" OnClick="btnCancelarUser_Click" />
+                        </div>
+                    </asp:Panel>
                     <!-- Panel para Panel Metodo de Pago -->
                     <asp:Panel ID="panelMetodoPago" runat="server" Visible="false">
                         <asp:Button ID="btnNuevoMetodo" runat="server" Text="Nuevo Metodo" CssClass="btn btn-primary" OnClick="btnNuevoMetodo_Click" />
@@ -279,9 +279,7 @@
                     <!-- Panel para Huespedes -->
                     <asp:Panel ID="panelHuespedes" runat="server" Visible="false">
                         <asp:Button ID="btnNuevoHuesped" runat="server" Text="Nuevo Huesped" CssClass="btn btn-primary" OnClick="btnNuevoHuesped_Click" />
-
                         <div class="mt-3" style="overflow-x: auto; width: 100%;">
-
                             <asp:GridView ID="grvHuespedes" runat="server" AutoGenerateColumns="False" DataKeyNames="Id_huesped" CssClass="table table-striped table-bordered w-100"
                                 AllowPaging="true" PageSize="5" OnPageIndexChanging="grvHuespedes_PageIndexChanging" OnRowCancelingEdit="grvHuespedes_RowCancelingEdit" OnRowEditing="grvHuespedes_RowEditing" OnRowUpdating="grvHuespedes_RowUpdating" OnRowDataBound="grvHuespedes_RowDataBound">
                                 <Columns>
@@ -605,7 +603,7 @@
                                                 Text='<%# GetButtonText((int)Eval("Id_reserva")) %>'
                                                 CommandName="MostrarDetalle"
                                                 CommandArgument='<%# Eval("Id_reserva") %>'
-                                                CssClass="btn btn-outline-info btn-sm" />
+                                                CssClass="btn btn-outline-success btn-sm" />
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Acciones">
@@ -620,6 +618,261 @@
                             </asp:GridView>
 
 
+                        </div>
+                    </asp:Panel>
+
+                    <!-- Panel para Crear Reservas -->
+                    <!-- ETAPA 1 -->
+                    <asp:Panel ID="panelCrearReservaEtapa1" runat="server" Visible="false">
+                        <div class="container" style="margin: 10px">
+                            <div class="row mb-3 align-items-end">
+                                <div class="col-md-4">
+                                    <asp:Label ID="lblHuespedBuscarPorDocumento" runat="server" Text="Buscar por Documento" CssClass="form-label" />
+                                    <asp:TextBox ID="txtHuespedBuscarPorDocumento" runat="server" CssClass="form-control" />
+                                </div>
+                                <div class="col-md-4 d-flex align-items-end">
+                                    <asp:Button ID="btnFiltarHuespedPorDocumento" runat="server" Text="Filtrar" CssClass="btn btn-primary me-2" OnClick="btnFiltarHuespedPorDocumento_Click" />
+                                    <asp:Button ID="btnLimpiarFiltroHuspedPorDocumento" runat="server" Text="Limpiar Filtro" CssClass="btn btn-secondary" OnClick="btnLimpiarFiltroHuspedPorDocumento_Click" />
+                                </div>
+                            </div>
+
+                            <asp:GridView
+                                ID="grvCrearReservaEtapa1"
+                                runat="server"
+                                AutoGenerateColumns="False"
+                                DataKeyNames="Id_huesped"
+                                CssClass="table table-striped table-bordered w-100"
+                                AllowPaging="true" PageSize="5"
+                                OnPageIndexChanging="GridViewCrearReservaEtapa1_PageIndexChanging"
+                                OnSelectedIndexChanged="grvCrearReservaEtapa1_SelectedIndexChanged"
+                                OnRowDataBound="grvCrearReservaEtapa1_RowDataBound"
+                                AutoPostBack="True">
+                                <Columns>
+                                    <asp:TemplateField HeaderText="Nombre">
+                                        <ItemTemplate>
+                                            <asp:Label ID="txtNombreHuesped" runat="server" Text='<%# Bind("Nombre") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Apellido">
+                                        <ItemTemplate>
+                                            <asp:Label ID="txtApellido" runat="server" Text='<%# Bind("Apellido") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Documento">
+                                        <ItemTemplate>
+                                            <asp:Label ID="txtDocumento" runat="server" Text='<%# Bind("Documento") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Tipo Documento">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblTipoDocumento" runat="server" Text='<%# Bind("TipoDocumento") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Email">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblEmail" runat="server" Text='<%# Bind("Email") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Teléfono">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblTelefono" runat="server" Text='<%# Bind("Telefono") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Fecha Nacimiento">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblFechaNacimiento" runat="server" Text='<%# Bind("FechaNacimiento", "{0:dd/MM/yyyy}") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:CommandField ShowSelectButton="True" SelectText="Seleccionar" HeaderText="Acciones" ButtonType="Link" ControlStyle-CssClass="btn btn-sm btn-outline-success" />
+                                </Columns>
+                            </asp:GridView>
+                            <div class="row mb-3 align-items-end">
+                                <div class="col-md-4">
+                                </div>
+
+                                <div class="col-md-4">
+                                </div>
+
+                                <div class="col-md-4 d-flex justify-content-end">
+                                    <asp:Button ID="btnSiguienteEtapa1" runat="server" Text="Siguiente" CssClass="btn" OnClick="btnSiguienteEtapa1_Click" />
+                                </div>
+                            </div>
+                        </div>
+                    </asp:Panel>
+
+                    <!-- ETAPA 2 -->
+                    <asp:Panel ID="panelCrearReservaEtapa2" runat="server" Visible="false">
+                        <div class="container" style="margin: 10px">
+                            <div class="row mb-3 align-items-end">
+                                <div class="col-md-3">
+                                    <asp:Label ID="lblCantidadDeHuespedes" runat="server" Text="Cantidad de Huespedes" CssClass="form-label" />
+                                    <asp:TextBox ID="txtCantidadDeHuespedes" runat="server" CssClass="form-control" />
+                                </div>
+                                <div class="col-md-3">
+                                    <asp:Label ID="lblFechaDesde" runat="server" Text="Fecha Desde:" CssClass="form-label" />
+                                    <asp:TextBox ID="txtFechaDesde" runat="server" CssClass="form-control" TextMode="Date" />
+                                </div>
+                                <div class="col-md-3">
+                                    <asp:Label ID="lblFechaHastsa" runat="server" Text="Fecha Hasta:" CssClass="form-label" />
+                                    <asp:TextBox ID="txtFechaHasta" runat="server" CssClass="form-control" TextMode="Date" />
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="d-flex gap-2">
+                                        <asp:Button ID="btnFiltrarHabitacionPorFechas" runat="server" Text="Filtrar" CssClass="btn btn-primary w-100" OnClick="btnFiltrarHabitacionPorFechas_Click" />
+                                        <asp:Button ID="btnLimpiarFiltroHabitacionPorFechas" runat="server" Text="Limpiar Filtro" CssClass="btn btn-secondary w-100" OnClick="btnLimpiarFiltroHabitacionPorFechas_Click" />
+                                    </div>
+                                </div>
+                                <asp:Label ID="lblError" runat="server" Text="" CssClass="form-label" />
+                            </div>
+
+                            <asp:GridView
+                                ID="grvCrearReservaEtapa2"
+                                runat="server"
+                                AutoGenerateColumns="False"
+                                DataKeyNames="Id_habitacion"
+                                CssClass="table table-striped table-bordered w-100"
+                                AllowPaging="true" PageSize="5"
+                                OnPageIndexChanging="GridViewCrearReservaEtapa2_PageIndexChanging"
+                                OnRowDataBound="grvCrearReservaEtapa2_RowDataBound">
+                                <Columns>
+                                    <asp:TemplateField HeaderText="Número">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblNumeroHabitacion" runat="server" Text='<%# Bind("NumeroHabitacion") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Tipo">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblTipo" runat="server" Text='<%# Bind("Tipo") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Capacidad">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblCapacidad" runat="server" Text='<%# Bind("Capacidad") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Precio Por Noche">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblPrecio" runat="server" Text='<%# Bind("Precio", "{0:C2}") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Descripción">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblDescripcion" runat="server" Text='<%# Bind("Descripcion") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Seleccionar">
+                                        <ItemTemplate>
+                                            <asp:CheckBox ID="chkSeleccionarHabitacion" runat="server" AutoPostBack="True" OnCheckedChanged="chkSeleccionarHabitacion_CheckedChanged" />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                </Columns>
+                            </asp:GridView>
+                            <div class="row mb-3 align-items-end">
+                                <div class="col-md-4">
+                                    <asp:Button ID="btnVolverEtapa2" runat="server" Text="Volver" CssClass="btn btn-secondary" OnClick="btnVolverEtapa2_Click" />
+                                </div>
+
+                                <div class="col-md-4">
+                                    <asp:Label ID="lblText" runat="server" Text="" CssClass="form-label" />
+                                </div>
+
+                                <div class="col-md-4 d-flex justify-content-end">
+                                    <asp:Button ID="btnSiguienteEtapa2" runat="server" Text="Siguiente" CssClass="btn" OnClick="btnSiguienteEtapa2_Click" />
+                                </div>
+                            </div>
+                        </div>
+                    </asp:Panel>
+
+                    <!-- ETAPA 3 -->
+                    <asp:Panel ID="panelCrearReservaEtapa3" runat="server" Visible="false">
+                        <div class="container" style="margin: 10px">
+                            <asp:GridView
+                                ID="grvCrearReservaEtapa3"
+                                runat="server"
+                                AutoGenerateColumns="False"
+                                DataKeyNames="Id_servicioAdicional"
+                                CssClass="table table-striped table-bordered w-100"
+                                AllowPaging="true" PageSize="5"
+                                OnPageIndexChanging="GridViewCrearReservaEtapa3_PageIndexChanging"
+                                OnRowDataBound="grvCrearReservaEtapa3_RowDataBound">
+                                <Columns>
+                                    <asp:TemplateField HeaderText="Servicio">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblNombreServicio" runat="server" Text='<%# Bind("NombreServicio") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Precio">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblPrecioServicio" runat="server" Text='<%# Bind("Precio", "{0:C2}") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Seleccionar">
+                                        <ItemTemplate>
+                                            <asp:CheckBox ID="chkSeleccionarServicio" runat="server" AutoPostBack="True" OnCheckedChanged="chkSeleccionarServicio_CheckedChanged" />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                </Columns>
+                            </asp:GridView>
+
+                            <div class="row mb-3 align-items-end">
+                                <div class="col-md-4">
+                                    <asp:Button ID="btnVolverEtapa3" runat="server" Text="Volver" CssClass="btn btn-secondary" OnClick="btnVolverEtapa3_Click" />
+                                </div>
+
+                                <div class="col-md-4">
+                                    <asp:Label ID="Label13" runat="server" Text="" CssClass="form-label" />
+                                </div>
+
+                                <div class="col-md-4 d-flex justify-content-end">
+                                    <asp:Button ID="btnSiguienteEtapa3" runat="server" Text="Siguiente" CssClass="btn btn-primary" OnClick="btnSiguienteEtapa3_Click" />
+                                </div>
+                            </div>
+                        </div>
+                    </asp:Panel>
+
+                    <!-- ETAPA 4 -->
+                    <asp:Panel ID="panelCrearReservaEtapa4" runat="server" Visible="false">
+                        <div class="container" style="margin: 10px">
+                            <asp:GridView
+                                ID="grvCrearReservaEtapa4"
+                                runat="server"
+                                AutoGenerateColumns="False"
+                                DataKeyNames="Id_servicioAdicional"
+                                CssClass="table table-striped table-bordered w-100"
+                                AllowPaging="true" PageSize="5"
+                               >
+                                <Columns>
+                                    <asp:TemplateField HeaderText="Servicio">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblNombreServicio" runat="server" Text='<%# Bind("NombreServicio") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Precio">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblPrecioServicio" runat="server" Text='<%# Bind("Precio", "{0:C2}") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Seleccionar">
+                                        <ItemTemplate>
+                                            <asp:CheckBox ID="chkSeleccionarServicio" runat="server" AutoPostBack="True" OnCheckedChanged="chkSeleccionarServicio_CheckedChanged" />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                </Columns>
+                            </asp:GridView>
+
+                            <div class="row mb-3 align-items-end">
+                                <div class="col-md-4">
+                                    <asp:Button ID="btnVolverEtapa4" runat="server" Text="Volver" CssClass="btn btn-secondary" OnClick="btnVolverEtapa4_Click" />
+                                </div>
+
+                                <div class="col-md-4">
+                                    <asp:Label ID="Label9" runat="server" Text="" CssClass="form-label" />
+                                </div>
+
+                                <div class="col-md-4 d-flex justify-content-end">
+                                    <asp:Button ID="btnRegistrarReserva" runat="server" Text="Crear Reserva" CssClass="btn btn-primary" OnClick="btnRegistrarReserva_Click" />
+                                </div>
+                            </div>
                         </div>
                     </asp:Panel>
 
@@ -707,12 +960,6 @@
         </div>
     </form>
 
-    <script type="text/javascript">
-        function toggleDetalle(id) {
-            var panel = document.getElementById(id);
-            panel.style.display = (panel.style.display === "none") ? "block" : "none";
-        }
-    </script>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

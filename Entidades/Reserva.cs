@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Entidades
 {
@@ -28,6 +29,20 @@ namespace Entidades
                 CantidadHuespedes = cantidad,
                 PrecioFinal = precio
             };
+        }
+
+        public class ReservaEnProceso
+        {
+            public int IdHuesped { get; set; }
+            public List<int> IdHabitaciones { get; set; } = new List<int>();
+            public DateTime FechaReserva { get; set; }
+            public DateTime CheckIn { get; set; }
+            public DateTime CheckOut { get; set; }
+            public int CantidadHuespedes { get; set; }
+            public List<int> ServiciosAdicionales { get; set; } = new List<int>();
+            public int IdMetodoPago { get; set; }
+            public decimal MontoTotal { get; set; }
+            public string Observaciones { get; set; }
         }
     }
 }

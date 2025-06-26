@@ -29,6 +29,11 @@ namespace Negocio
             {
                 dao.CrearHuesped(huesped);
             }
+
+            public DataTable FiltrarHuespedPorDocumento(string Documento)
+            {
+                return dao.FiltrarHuespedPorDocumento(Documento);
+            }
         }
     }
 }

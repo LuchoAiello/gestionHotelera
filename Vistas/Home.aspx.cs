@@ -2,11 +2,14 @@
 using Negocio;
 using Negocio.Negocio;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Xml.Linq;
+using static Entidades.Reserva;
 
 namespace Vistas
 {
@@ -18,6 +21,7 @@ namespace Vistas
         NegocioServicios negocioServicio = new NegocioServicios();
         NegocioHuespedes negocioHuesped = new NegocioHuespedes();
         NegocioReserva negocioReserva = new NegocioReserva();
+        NegocioHabitaciones negocioHabitaciones = new NegocioHabitaciones();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -99,6 +103,9 @@ namespace Vistas
         {
             panelHistorialReservas.Visible = false;
             panelReservas.Visible = false;
+            panelCrearReservaEtapa1.Visible = false;
+            panelCrearReservaEtapa2.Visible = false;
+            panelCrearReservaEtapa3.Visible = false;
         }
         protected void btnLogout_Click(object sender, EventArgs e)
         {
@@ -1086,5 +1093,382 @@ namespace Vistas
         }
 
         #endregion
+
+        #region Crear Reservas Etapa 1
+        // PANEL CREAR RESERVAS ETAPA 1
+        private void getDataHuespedReserva()
+        {
+            DataTable Huesped = negocioHuesped.GetHuespedes();
+            grvCrearReservaEtapa1.DataSource = Huesped;
+            grvCrearReservaEtapa1.DataBind();
+        }
+
+        private void ActualizarEstadoBotonSiguienteEtapa1()
+        {
+            bool haySeleccion = ViewState["IdHuespedSeleccionado"] != null;
+            btnSiguienteEtapa1.Enabled = haySeleccion;
+
+            if (haySeleccion)
+            {
+                btnSiguienteEtapa1.CssClass = "btn btn-primary";
+            }
+            else
+            {
+                btnSiguienteEtapa1.CssClass = "btn btn-secondary disabled";
+            }
+        }
+        protected void btnCrearReserva_Click1(object sender, EventArgs e)
+        {
+            OcultarTodosLosPanelesReserva();
+            panelCrearReservaEtapa1.Visible = true;
+
+            getDataHuespedReserva();
+        }
+
+        protected void GridViewCrearReservaEtapa1_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            grvCrearReservaEtapa1.PageIndex = e.NewPageIndex;
+            getDataHuespedReserva();
+        }
+
+        protected void btnLimpiarFiltroHuspedPorDocumento_Click(object sender, EventArgs e)
+        {
+            getDataHuespedReserva();
+            txtHuespedBuscarPorDocumento.Text = "";
+        }
+
+        protected void btnFiltarHuespedPorDocumento_Click(object sender, EventArgs e)
+        {
+            string Documento = txtHuespedBuscarPorDocumento.Text;
+            DataTable Huesped = negocioHuesped.FiltrarHuespedPorDocumento(Documento);
+            grvCrearReservaEtapa1.DataSource = Huesped;
+            grvCrearReservaEtapa1.DataBind();
+        }
+
+        protected void grvCrearReservaEtapa1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int idHuesped = Convert.ToInt32(grvCrearReservaEtapa1.SelectedDataKey.Value);
+            ViewState["IdHuespedSeleccionado"] = idHuesped;
+
+            string Documento = txtHuespedBuscarPorDocumento.Text;
+            DataTable Huesped = negocioHuesped.FiltrarHuespedPorDocumento(Documento);
+            grvCrearReservaEtapa1.DataSource = Huesped;
+            grvCrearReservaEtapa1.DataBind();
+
+            ReservaEnProceso reserva = Session["reservaEnProceso"] as ReservaEnProceso;
+            if (reserva == null)
+            {
+                reserva = new ReservaEnProceso();
+            }
+
+            reserva.IdHuesped = idHuesped;
+            Session["reservaEnProceso"] = reserva;
+
+            ActualizarEstadoBotonSiguienteEtapa1();
+        }
+
+        protected void grvCrearReservaEtapa1_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                int idHuespedFila = Convert.ToInt32(DataBinder.Eval(e.Row.DataItem, "Id_huesped"));
+
+                if (ViewState["IdHuespedSeleccionado"] != null &&
+                    (int)ViewState["IdHuespedSeleccionado"] == idHuespedFila)
+                {
+                    e.Row.CssClass = "table-success";
+                }
+            }
+        }
+
+        protected void btnSiguienteEtapa1_Click(object sender, EventArgs e)
+        {
+            if (ViewState["IdHuespedSeleccionado"] == null)
+            {
+
+                return;
+            }
+
+            OcultarTodosLosPanelesReserva();
+            panelCrearReservaEtapa2.Visible = true;
+        }
+
+        #endregion
+
+        #region Crear Reservas Etapa 2
+        // PANEL CREAR RESERVAS ETAPA 2
+
+        protected void btnLimpiarFiltroHabitacionPorFechas_Click(object sender, EventArgs e)
+        {
+            txtCantidadDeHuespedes.Text = "";
+            txtFechaDesde.Text = "";
+            txtFechaHasta.Text = "";
+            lblError.Text = "";
+
+            ActualizarEstadoBotonSiguienteEtapa2();
+        }
+            protected void btnFiltrarHabitacionPorFechas_Click(object sender, EventArgs e)
+        {
+            string cantidadText = txtCantidadDeHuespedes.Text.Trim();
+            string fechaLlegada = txtFechaDesde.Text.Trim();
+            string fechaSalida = txtFechaHasta.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(cantidadText) ||
+                string.IsNullOrWhiteSpace(fechaLlegada) ||
+                string.IsNullOrWhiteSpace(fechaSalida))
+            {
+                lblError.Text = "Por favor, completá todos los campos.";
+                lblError.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
+
+            if (!int.TryParse(cantidadText, out int cantidadHuespedes))
+            {
+                lblError.Text = "La cantidad de huéspedes debe ser un número válido.";
+                lblError.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
+
+            lblError.Text = "";
+
+            DataTable Reservas = negocioHabitaciones.FiltarHabitacionesPorFecha(fechaLlegada, fechaSalida);
+            ViewState["HabitacionesFiltradas"] = Reservas;
+
+            grvCrearReservaEtapa2.DataSource = Reservas;
+            grvCrearReservaEtapa2.DataBind();
+
+            ActualizarEstadoBotonSiguienteEtapa2();
+        }
+
+        private void ActualizarEstadoBotonSiguienteEtapa2()
+        {
+            bool camposValidos = !string.IsNullOrWhiteSpace(txtCantidadDeHuespedes.Text)
+                              && !string.IsNullOrWhiteSpace(txtFechaDesde.Text)
+                              && !string.IsNullOrWhiteSpace(txtFechaHasta.Text);
+
+            bool haySeleccion = false;
+            int capacidadTotal = 0;
+
+            foreach (GridViewRow row in grvCrearReservaEtapa2.Rows)
+            {
+                CheckBox chk = (CheckBox)row.FindControl("chkSeleccionarHabitacion");
+                if (chk != null && chk.Checked)
+                {
+                    haySeleccion = true;
+
+                    Label lblCapacidad = (Label)row.FindControl("lblCapacidad");
+                    if (lblCapacidad != null && int.TryParse(lblCapacidad.Text, out int capacidad))
+                    {
+                        capacidadTotal += capacidad;
+                    }
+                }
+            }
+
+            bool capacidadSuficiente = false;
+            if (int.TryParse(txtCantidadDeHuespedes.Text, out int cantidadHuespedes))
+            {
+                capacidadSuficiente = capacidadTotal >= cantidadHuespedes;
+            }
+
+            bool habilitar = camposValidos && haySeleccion && capacidadSuficiente;
+
+            btnSiguienteEtapa2.Enabled = habilitar;
+            btnSiguienteEtapa2.CssClass = habilitar ? "btn btn-primary" : "btn";
+        }
+
+        protected void GridViewCrearReservaEtapa2_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            grvCrearReservaEtapa2.PageIndex = e.NewPageIndex;
+
+            if (ViewState["HabitacionesFiltradas"] != null)
+            {
+                DataTable reservas = (DataTable)ViewState["HabitacionesFiltradas"];
+                grvCrearReservaEtapa2.DataSource = reservas;
+                grvCrearReservaEtapa2.DataBind();
+            }
+        }
+
+        protected void grvCrearReservaEtapa2_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                int idHabitacion = Convert.ToInt32(DataBinder.Eval(e.Row.DataItem, "Id_habitacion"));
+                CheckBox chk = (CheckBox)e.Row.FindControl("chkSeleccionarHabitacion");
+
+                ReservaEnProceso reserva = Session["reservaEnProceso"] as ReservaEnProceso;
+
+                if (reserva != null && reserva.IdHabitaciones.Contains(idHabitacion))
+                {
+                    e.Row.CssClass = "table-success";
+                    chk.Checked = true;
+                }
+                else
+                {
+                    e.Row.CssClass = "";
+                    chk.Checked = false;
+                }
+            }
+        }
+
+
+        protected void chkSeleccionarHabitacion_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox chk = (CheckBox)sender;
+            GridViewRow row = (GridViewRow)chk.NamingContainer;
+            int idHabitacion = Convert.ToInt32(grvCrearReservaEtapa2.DataKeys[row.RowIndex].Value);
+
+            ReservaEnProceso reserva = Session["reservaEnProceso"] as ReservaEnProceso;
+
+            if (reserva == null)
+                reserva = new ReservaEnProceso();
+
+            if (chk.Checked)
+            {
+                if (!reserva.IdHabitaciones.Contains(idHabitacion))
+                    reserva.IdHabitaciones.Add(idHabitacion);
+            }
+            else
+            {
+                if (reserva.IdHabitaciones.Contains(idHabitacion))
+                    reserva.IdHabitaciones.Remove(idHabitacion);
+            }
+
+            Session["reservaEnProceso"] = reserva;
+
+            if (ViewState["HabitacionesFiltradas"] != null)
+            {
+                grvCrearReservaEtapa2.DataSource = (DataTable)ViewState["HabitacionesFiltradas"];
+                grvCrearReservaEtapa2.DataBind();
+            }
+
+            ActualizarEstadoBotonSiguienteEtapa2();
+        }
+
+        protected void btnSiguienteEtapa2_Click(object sender, EventArgs e)
+        {
+            ActualizarEstadoBotonSiguienteEtapa2();
+
+            if (!btnSiguienteEtapa2.Enabled)
+            {
+                lblError.Text = "Por favor, completá todos los campos";
+                lblError.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
+
+            OcultarTodosLosPanelesReserva();
+            getDataServiciosReserva();
+            panelCrearReservaEtapa3.Visible = true;
+        }
+
+        protected void btnVolverEtapa2_Click(object sender, EventArgs e)
+        {
+            OcultarTodosLosPanelesReserva();
+            panelCrearReservaEtapa1.Visible = true;
+
+        }
+
+        #endregion
+
+        #region Crear Reservas Etapa 3
+        // PANEL CREAR RESERVAS ETAPA 3
+
+        private void getDataServiciosReserva()
+        {
+            DataTable Servicio = negocioServicio.GetServicios();
+            grvCrearReservaEtapa3.DataSource = Servicio;
+            grvCrearReservaEtapa3.DataBind();
+        }
+
+        protected void GridViewCrearReservaEtapa3_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            grvCrearReservaEtapa3.PageIndex = e.NewPageIndex;
+            getDataServiciosReserva();
+        }
+
+        protected void grvCrearReservaEtapa3_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                int idServicioAdicional = Convert.ToInt32(DataBinder.Eval(e.Row.DataItem, "Id_servicioAdicional"));
+                CheckBox chk = (CheckBox)e.Row.FindControl("chkSeleccionarServicio");
+
+                ReservaEnProceso reserva = Session["reservaEnProceso"] as ReservaEnProceso;
+
+                if (reserva != null && reserva.ServiciosAdicionales.Contains(idServicioAdicional))
+                {
+                    e.Row.CssClass = "table-success";
+                    chk.Checked = true;
+                }
+                else
+                {
+                    e.Row.CssClass = "";
+                    chk.Checked = false;
+                }
+            }
+        }
+
+        protected void chkSeleccionarServicio_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox chk = (CheckBox)sender;
+            GridViewRow row = (GridViewRow)chk.NamingContainer;
+            int idServicioAdicional = Convert.ToInt32(grvCrearReservaEtapa3.DataKeys[row.RowIndex].Value);
+
+            ReservaEnProceso reserva = Session["reservaEnProceso"] as ReservaEnProceso;
+            if (reserva == null)
+                reserva = new ReservaEnProceso();
+
+            if (chk.Checked)
+            {
+                if (!reserva.ServiciosAdicionales.Contains(idServicioAdicional))
+                    reserva.ServiciosAdicionales.Add(idServicioAdicional);
+            }
+            else
+            {
+                if (reserva.ServiciosAdicionales.Contains(idServicioAdicional))
+                    reserva.ServiciosAdicionales.Remove(idServicioAdicional);
+            }
+
+            Session["reservaEnProceso"] = reserva;
+
+            getDataServiciosReserva();
+        }
+
+
+        protected void btnSiguienteEtapa3_Click(object sender, EventArgs e)
+        {
+            OcultarTodosLosPanelesReserva();
+            panelCrearReservaEtapa4.Visible = true;
+        }
+
+        protected void btnVolverEtapa3_Click(object sender, EventArgs e)
+        {
+            OcultarTodosLosPanelesReserva();
+            panelCrearReservaEtapa2.Visible = true;
+        }
+        #endregion
+
+        #region Crear Reservas Etapa 4
+        // PANEL CREAR RESERVAS ETAPA 4
+        protected void btnRegistrarReserva_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected void btnVolverEtapa4_Click(object sender, EventArgs e)
+        {
+            OcultarTodosLosPanelesReserva();
+            panelCrearReservaEtapa3.Visible = true;
+        }
+        #endregion
+
     }
+
+
+
+
+
+
+
+
+
+
 }

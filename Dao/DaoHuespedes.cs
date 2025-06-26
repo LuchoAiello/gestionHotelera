@@ -28,6 +28,10 @@ namespace Dao
             Comando.Parameters.AddWithValue("@Estado", huesped.Estado);
         }
 
+        private void ArmarParametroDNI(SqlCommand comando, string dni)
+        {
+            comando.Parameters.AddWithValue("@DNIhuesped", dni);
+        }
 
         public DataTable GetHuespedes()
         {
@@ -67,6 +71,11 @@ namespace Dao
                         (@Nombre, @Apellido, @Documento, @TipoDocumento, @Email, @Telefono, @FechaNacimiento)";
 
             return ds.EjecutarConsulta(consulta, comando);
+        }
+
+        public DataTable FiltrarHuespedPorDocumento(string Documento)
+        {
+            return ds.SPFiltroHuespedPorDocumento("sp_FiltroHuespedPorDocumento", Documento);
         }
     }
 }

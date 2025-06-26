@@ -36,5 +36,10 @@ namespace Dao
             cmd.Parameters.AddWithValue("@Id", id);
             return datos.EjecutarConsulta(consulta, cmd);
         }
+
+        public DataTable FiltarHabitacionesPorFecha(string fechaLlegada, string fechaSalida)
+        {
+            return datos.SPHabitacionesDisponibles("sp_HabitacionesDisponibles", fechaLlegada, fechaSalida);
+        }
     }
 }

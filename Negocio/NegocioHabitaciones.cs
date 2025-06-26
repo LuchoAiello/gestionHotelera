@@ -36,5 +36,11 @@ namespace Negocio
             Dao.DaoHabitaciones repo = new Dao.DaoHabitaciones();
             return repo.Delete(id);
         }
+
+        public DataTable FiltarHabitacionesPorFecha(string fechaLlegada, string fechaSalida)
+        {
+            var repo = new Dao.DaoHabitaciones();
+            return repo.FiltarHabitacionesPorFecha(fechaLlegada, fechaSalida);
+        }
     }
 }

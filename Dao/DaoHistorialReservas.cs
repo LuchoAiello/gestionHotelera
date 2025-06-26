@@ -20,7 +20,7 @@ namespace Dao
         }
         public DataTable ObtenerHistorialReservaFiltrado(string numeroHabitacion, string fechaDesde, string fechaHasta)
         {
-            return ds.SPHistorialReservasFilter("sp_FiltrarHistorialDeReservas", numeroHabitacion, fechaDesde, fechaHasta);
+            return ds.SPHistorialReservasFilter("sp_FiltroHistorialDeReservas", numeroHabitacion, fechaDesde, fechaHasta);
         }
     }
 }

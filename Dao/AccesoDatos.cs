@@ -9,16 +9,16 @@ namespace Dao
     class AccesoDatos
     {
         public AccesoDatos() { }
-        
+
         public SqlConnection ObtenerConexion()
         {
             //CADENA DE CONEXION PARA LUCHO
-            //string rutaGestionHotelera =
-            //    "Data Source=localhost\\sqlexpress;" + "Initial Catalog=GestionHotelera;" + "Integrated Security=True;" + "Encrypt=True;" + "TrustServerCertificate=True";
+            string rutaGestionHotelera =
+                "Data Source=localhost\\sqlexpress;" + "Initial Catalog=GestionHotelera;" + "Integrated Security=True;" + "Encrypt=True;" + "TrustServerCertificate=True";
 
             //CADENA DE CONEXION PARA CAMI
-            string rutaGestionHotelera =
-                "Data Source=CAMI;Initial Catalog=GestionHotelera;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
+            //string rutaGestionHotelera =
+            //    "Data Source=CAMI;Initial Catalog=GestionHotelera;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
 
             try
             {
@@ -163,6 +163,25 @@ namespace Dao
             }
         }
 
+        public DataTable SPHabitacionesDisponibles(string nombreSP,string fechaLlegada,string fechaSalida)
+        {
+            using (SqlConnection conexion = ObtenerConexion())
+            using (SqlCommand cmd = new SqlCommand(nombreSP, conexion))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@FechaLlegada",
+                    string.IsNullOrWhiteSpace(fechaLlegada) ? (object)DBNull.Value : DateTime.Parse(fechaLlegada));
+
+                cmd.Parameters.AddWithValue("@FechaSalida",
+                    string.IsNullOrWhiteSpace(fechaSalida) ? (object)DBNull.Value : DateTime.Parse(fechaSalida));
+
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataTable tabla = new DataTable();
+                adapter.Fill(tabla);
+                return tabla;
+            }
+        }
+
         public DataTable SPFiltrarHabitaciones(string nombreSP, string filtro)
         {
             using (SqlConnection conexion = ObtenerConexion())
@@ -248,5 +267,24 @@ namespace Dao
                 return filasAfectadas > 0;
             }
         }
+
+        public DataTable SPFiltroHuespedPorDocumento(string nombreSP, string documento)
+        {
+            using (SqlConnection conexion = ObtenerConexion())
+            using (SqlCommand cmd = new SqlCommand(nombreSP, conexion))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@Documento",
+                    string.IsNullOrWhiteSpace(documento) ? (object)DBNull.Value : documento);
+
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataTable tabla = new DataTable();
+                adapter.Fill(tabla);
+                return tabla;
+            }
+        }
+
+
     }
 }
