@@ -8,6 +8,15 @@
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+    <style>
+        .link-activo {
+            border-bottom: 2px solid white;
+        }
+
+        .link-principal-activo {
+            border-bottom: 2px solid white;
+        }
+    </style>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -588,7 +597,7 @@
                                 OnPageIndexChanging="grvReservas_PageIndexChanging"
                                 OnRowCommand="grvReservas_RowCommand"
                                 OnRowDataBound="grvReservas_RowDataBound"
-                                CssClass="table table-bordered" DataKeyNames="Id_reserva">
+                                CssClass="table table-striped table-bordered" DataKeyNames="Id_reserva">
                                 <Columns>
                                     <asp:BoundField HeaderText="Nombre Completo" DataField="NombreCompleto" />
                                     <asp:BoundField HeaderText="Documento" DataField="Documento" />
@@ -600,7 +609,7 @@
                                     <asp:TemplateField HeaderText="Detalles">
                                         <ItemTemplate>
                                             <asp:Button ID="btnVerDetalle" runat="server"
-                                                Text='<%# GetButtonText((int)Eval("Id_reserva")) %>'
+                                                Text='<%# GetButtonTextReserva((int)Eval("Id_reserva")) %>'
                                                 CommandName="MostrarDetalle"
                                                 CommandArgument='<%# Eval("Id_reserva") %>'
                                                 CssClass="btn btn-outline-success btn-sm" />
@@ -898,7 +907,7 @@
                                 OnPageIndexChanging="grvHistorialReservas_PageIndexChanging"
                                 OnRowCommand="grvHistorialReservas_RowCommand"
                                 OnRowDataBound="grvHistorialReservas_RowDataBound"
-                                CssClass="table table-bordered" DataKeyNames="Id_reserva">
+                                CssClass="table table-striped table-bordered" DataKeyNames="Id_reserva">
                                 <Columns>
                                     <asp:BoundField HeaderText="Nombre Completo" DataField="NombreCompleto" />
                                     <asp:BoundField HeaderText="Documento" DataField="Documento" />
@@ -910,7 +919,7 @@
                                     <asp:TemplateField HeaderText="Detalles">
                                         <ItemTemplate>
                                             <asp:Button ID="btnVerDetalle" runat="server"
-                                                Text='<%# GetButtonText((int)Eval("Id_reserva")) %>'
+                                                Text='<%# GetButtonTextReservaHistorial((int)Eval("Id_reserva")) %>'
                                                 CommandName="MostrarDetalle"
                                                 CommandArgument='<%# Eval("Id_reserva") %>'
                                                 CssClass="btn btn-outline-success btn-sm" />

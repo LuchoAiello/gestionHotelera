@@ -91,6 +91,29 @@ namespace Vistas
             panelCrearReservaEtapa3.Visible = false;
             panelCrearReservaEtapa4.Visible = false;
         }
+
+        private void ResaltarBotonPrincipal(LinkButton botonSeleccionado)
+        {
+            btnPanelAdministrativo.CssClass = "nav-link text-white";
+            btnRegisterHuesped.CssClass = "nav-link text-white";
+            btnRooms.CssClass = "nav-link text-white";
+            btnReservas.CssClass = "nav-link text-white";
+
+            botonSeleccionado.CssClass += " link-principal-activo";
+        }
+
+        private void ResaltarBotonSeleccionado(LinkButton botonSeleccionado)
+        {
+            btnReserva.CssClass = "nav-link text-white px-2";
+            btnCrearReserva.CssClass = "nav-link text-white px-2";
+            btnHistorialReserva.CssClass = "nav-link text-white px-2";
+
+            btnUsuario.CssClass = "nav-link text-white px-2";
+            btnMetodoPago.CssClass = "nav-link text-white px-2";
+            btnServicios.CssClass = "nav-link text-white px-2";
+
+            botonSeleccionado.CssClass += " link-activo";
+        }
         protected void btnLogout_Click(object sender, EventArgs e)
         {
             Session.Remove("NameLogin");
@@ -100,6 +123,8 @@ namespace Vistas
         protected void btnPanelAdministrativo_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPaneles();
+            ResaltarBotonPrincipal(btnPanelAdministrativo);
+            ResaltarBotonSeleccionado(btnUsuario);
             panelAdministrativo.Visible = true;
             panelUsuario.Visible = true;
             lblSeccionTitulo.Text = "Panel Administrativo";
@@ -110,6 +135,8 @@ namespace Vistas
         protected void btnReservas_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPaneles();
+            ResaltarBotonPrincipal(btnReservas);
+            ResaltarBotonSeleccionado(btnReserva);
             panelAdministarReservas.Visible = true;
             panelReservas.Visible = true;
             lblSeccionTitulo.Text = "Panel de Reservas";
@@ -123,6 +150,7 @@ namespace Vistas
         protected void btnRegisterHuesped_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPaneles();
+            ResaltarBotonPrincipal(btnRegisterHuesped);
             lblSeccionTitulo.Text = "Huesped";
             panelHuespedes.Visible = true;
 
@@ -371,6 +399,11 @@ namespace Vistas
             }
         }
 
+        protected string GetButtonTextReservaHistorial(int idReserva)
+        {
+            return (ViewState["IdHistorialDetalle"] != null && (int)ViewState["IdHistorialDetalle"] == idReserva) ? "Ocultar Detalle" : "Ver Detalle";
+        }
+
         protected void grvHistorialReservas_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
@@ -409,6 +442,7 @@ namespace Vistas
         protected void btnHistorialReservas_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPanelesReserva();
+            ResaltarBotonSeleccionado(btnHistorialReserva);
             getDataHistorialReservas();
             panelHistorialReservas.Visible = true;
         }
@@ -578,6 +612,7 @@ namespace Vistas
         protected void btnHabitaciones_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPaneles();
+            ResaltarBotonPrincipal(btnRooms);
             lblSeccionTitulo.Text = "Habitaciones";
             panelHabitaciones.Visible = true;
             CargarHabitaciones();
@@ -589,6 +624,7 @@ namespace Vistas
         protected void btnUsuario_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPanelesAdmin();
+            ResaltarBotonSeleccionado(btnUsuario);
             panelUsuario.Visible = true;
 
             getDataUser();
@@ -597,7 +633,7 @@ namespace Vistas
         protected void btnMostrarFormularioUsuarios_Click(object sender, EventArgs e)
         {
             limpiarFormularioUsuarios();
-            panelUsuario.Visible = false;
+            panelUsuario.Visible = true;
             panelRegistrarUsuario.Visible = true;
         }
 
@@ -737,6 +773,7 @@ namespace Vistas
         protected void btnMetodoPago_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPanelesAdmin();
+            ResaltarBotonSeleccionado(btnMetodoPago);
             panelMetodoPago.Visible = true;
 
             getDataMetodoPago();
@@ -846,6 +883,7 @@ namespace Vistas
         protected void btnServicios_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPanelesAdmin();
+            ResaltarBotonSeleccionado(btnServicios);
             panelServicios.Visible = true;
 
             getDataServicio();
@@ -978,6 +1016,7 @@ namespace Vistas
         protected void btnReserva_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPanelesReserva();
+            ResaltarBotonSeleccionado(btnReserva);
             panelReservas.Visible = true;
 
             getDataReservas();
@@ -1030,7 +1069,7 @@ namespace Vistas
             return gvDetalles;
         }
 
-        protected string GetButtonText(int idReserva)
+        protected string GetButtonTextReserva(int idReserva)
         {
             return (ViewState["IdReservaDetalle"] != null && (int)ViewState["IdReservaDetalle"] == idReserva) ? "Ocultar Detalle" : "Ver Detalle";
         }
@@ -1099,6 +1138,7 @@ namespace Vistas
         protected void btnCrearReserva_Click1(object sender, EventArgs e)
         {
             OcultarTodosLosPanelesReserva();
+            ResaltarBotonSeleccionado(btnCrearReserva);
             panelCrearReservaEtapa1.Visible = true;
 
             getDataHuespedReserva();
