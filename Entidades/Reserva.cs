@@ -41,8 +41,10 @@ namespace Entidades
             public int CantidadHuespedes { get; set; }
             public List<int> ServiciosAdicionales { get; set; } = new List<int>();
             public int IdMetodoPago { get; set; }
-            public decimal MontoTotal { get; set; }
-            public string Observaciones { get; set; }
+            public decimal PrecioFinal { get; set; }
+            public string NroTarjeta { get; set; }
+            public string VenTarjeta { get; set; }
+
         }
     }
 }

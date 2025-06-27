@@ -22,6 +22,13 @@ namespace Dao
             return tabla;
         }
 
+        public DataTable GetMetodoPagosReserva()
+        {
+            string query = "SELECT * FROM MetodoPago WHERE Estado = 1";
+            DataTable tabla = ds.ObtenerTabla("MetodoPago", query);
+            return tabla;
+        }
+
         public bool ModificarMetodoPago(MetodoPago pago)
         {
             SqlCommand comando = new SqlCommand();

@@ -616,8 +616,6 @@
                                     </asp:TemplateField>
                                 </Columns>
                             </asp:GridView>
-
-
                         </div>
                     </asp:Panel>
 
@@ -632,7 +630,7 @@
                                 </div>
                                 <div class="col-md-4 d-flex align-items-end">
                                     <asp:Button ID="btnFiltarHuespedPorDocumento" runat="server" Text="Filtrar" CssClass="btn btn-primary me-2" OnClick="btnFiltarHuespedPorDocumento_Click" />
-                                    <asp:Button ID="btnLimpiarFiltroHuspedPorDocumento" runat="server" Text="Limpiar Filtro" CssClass="btn btn-secondary" OnClick="btnLimpiarFiltroHuspedPorDocumento_Click" />
+                                    <asp:Button ID="btnLimpiarFiltroHuespedPorDocumento" runat="server" Text="Limpiar Filtro" CssClass="btn btn-secondary" OnClick="btnLimpiarFiltroHuespedPorDocumento_Click" />
                                 </div>
                             </div>
 
@@ -837,28 +835,45 @@
                                 ID="grvCrearReservaEtapa4"
                                 runat="server"
                                 AutoGenerateColumns="False"
-                                DataKeyNames="Id_servicioAdicional"
+                                DataKeyNames="Id_metodoPago"
                                 CssClass="table table-striped table-bordered w-100"
                                 AllowPaging="true" PageSize="5"
-                               >
+                                OnPageIndexChanging="GridViewCrearReservaEtapa4_PageIndexChanging"
+                                OnSelectedIndexChanged="grvCrearReservaEtapa4_SelectedIndexChanged"
+                                OnRowDataBound="grvCrearReservaEtapa4_RowDataBound">
                                 <Columns>
-                                    <asp:TemplateField HeaderText="Servicio">
+                                    <asp:TemplateField HeaderText="Nombre">
                                         <ItemTemplate>
-                                            <asp:Label ID="lblNombreServicio" runat="server" Text='<%# Bind("NombreServicio") %>'></asp:Label>
+                                            <asp:Label ID="txtNombreMetodoPago" runat="server" Text='<%# Bind("Nombre") %>'></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Precio">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblPrecioServicio" runat="server" Text='<%# Bind("Precio", "{0:C2}") %>'></asp:Label>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Seleccionar">
-                                        <ItemTemplate>
-                                            <asp:CheckBox ID="chkSeleccionarServicio" runat="server" AutoPostBack="True" OnCheckedChanged="chkSeleccionarServicio_CheckedChanged" />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
+                                    <asp:CommandField ShowSelectButton="True" SelectText="Seleccionar" HeaderText="Acciones" ButtonType="Link" ControlStyle-CssClass="btn btn-sm btn-outline-success" />
                                 </Columns>
                             </asp:GridView>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <asp:Label ID="lblNumeroTarjeta" runat="server" Text="Número de Tarjeta:" CssClass="form-label" />
+                                    <asp:TextBox ID="txtNumeroTarjeta" runat="server" CssClass="form-control" MaxLength="16" />
+                                </div>
+                                <div class="col-md-3">
+                                    <asp:Label ID="lblVencimiento" runat="server" Text="Vencimiento (MM/AA):" CssClass="form-label" />
+                                    <asp:TextBox ID="txtVencimiento" runat="server" CssClass="form-control" MaxLength="5" Placeholder="MM/AA" />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="row mb-3">
+                                    <asp:Label ID="lblErrorMetodoPago" runat="server" Text="" CssClass="form-label" />
+                                </div>
+                                <div class="col-md-3">
+                                    <asp:Label ID="lblMontoTotal" runat="server" Text="" CssClass="form-label" />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <asp:Label ID="lblData" runat="server" Text="" CssClass="form-label" />
+                            </div>
 
                             <div class="row mb-3 align-items-end">
                                 <div class="col-md-4">
@@ -870,7 +885,7 @@
                                 </div>
 
                                 <div class="col-md-4 d-flex justify-content-end">
-                                    <asp:Button ID="btnRegistrarReserva" runat="server" Text="Crear Reserva" CssClass="btn btn-primary" OnClick="btnRegistrarReserva_Click" />
+                                    <asp:Button ID="btnRegistrarReserva" runat="server" Text="Crear Reserva" CssClass="btn" OnClick="btnRegistrarReserva_Click" />
                                 </div>
                             </div>
                         </div>
@@ -878,80 +893,31 @@
 
                     <!-- Panel para Historial de Reservas -->
                     <asp:Panel ID="panelHistorialReservas" runat="server" Visible="false">
-                        <div class="container" style="margin: 10px">
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <asp:Label ID="Label1" runat="server" Text="Número de Habitación:" CssClass="form-label" />
-                                    <asp:TextBox ID="txtNumber" runat="server" CssClass="form-control" />
-                                </div>
-                                <div class="col-md-4">
-                                    <asp:Label ID="Label2" runat="server" Text="Fecha Desde:" CssClass="form-label" />
-                                    <asp:TextBox ID="txtDateFrom" runat="server" CssClass="form-control" TextMode="Date" />
-                                </div>
-                                <div class="col-md-4">
-                                    <asp:Label ID="Label3" runat="server" Text="Fecha Hasta:" CssClass="form-label" />
-                                    <asp:TextBox ID="txtDateTo" runat="server" CssClass="form-control" TextMode="Date" />
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col text-end">
-                                    <asp:Button ID="btnFilter" runat="server" Text="Filtrar" CssClass="btn btn-primary me-2" OnClick="btnFilter_Click" />
-                                    <asp:Button ID="btnSacarFiltro" runat="server" Text="Limpiar Filtro" CssClass="btn btn-secondary" OnClick="btnSacarFiltro_Click" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div style="overflow-x: auto; width: 100%;">
-                            <asp:GridView ID="grvHistorialReservas" runat="server" AutoGenerateColumns="False"
-                                CssClass="table table-striped table-bordered w-100"
-                                AllowPaging="true" PageSize="10"
+                        <div class="mt-3" style="overflow-x: auto; width: 100%;">
+                            <asp:GridView ID="grvHistorialReservas" runat="server" AutoGenerateColumns="False" AllowPaging="True" PageSize="5"
                                 OnPageIndexChanging="grvHistorialReservas_PageIndexChanging"
-                                OnRowCommand="grvHistorialReservas_RowCommand">
+                                OnRowCommand="grvHistorialReservas_RowCommand"
+                                OnRowDataBound="grvHistorialReservas_RowDataBound"
+                                CssClass="table table-bordered" DataKeyNames="Id_reserva">
                                 <Columns>
-                                    <asp:TemplateField HeaderText="Habitación N°">
+                                    <asp:BoundField HeaderText="Nombre Completo" DataField="NombreCompleto" />
+                                    <asp:BoundField HeaderText="Documento" DataField="Documento" />
+                                    <asp:BoundField HeaderText="Email" DataField="Email" />
+                                    <asp:BoundField HeaderText="Teléfono" DataField="Telefono" />
+                                    <asp:BoundField HeaderText="Fecha Reserva" DataField="FechaReserva" DataFormatString="{0:dd/MM/yyyy}" />
+                                    <asp:BoundField HeaderText="Huéspedes" DataField="CantidadHuespedes" />
+                                    <asp:BoundField HeaderText="Precio Final" DataField="PrecioReserva" DataFormatString="{0:C}" />
+                                    <asp:TemplateField HeaderText="Detalles">
                                         <ItemTemplate>
-                                            <asp:Label ID="lblNumeroHabitacion" runat="server" Text='<%# Eval("NumeroHabitacion") %>' />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Nombre del Huésped">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblNombreCompleto" runat="server" Text='<%# Eval("NombreCompleto") %>' />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Documento">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblDocumento" runat="server" Text='<%# Eval("Documento") %>' />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Reservado el">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblFechaReserva" runat="server" Text='<%# Eval("FechaReserva", "{0:dd/MM/yyyy}") %>' />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Llegada">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblFechaLlegada" runat="server" Text='<%# Eval("FechaLlegada", "{0:dd/MM/yyyy}") %>' />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Salida">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblFechaSalida" runat="server" Text='<%# Eval("FechaSalida", "{0:dd/MM/yyyy}") %>' />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Servicios Extras">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblServiciosAdicionales" runat="server" Text='<%# Eval("ServiciosAdicionales") %>' />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Total">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblPrecioFinal" runat="server" Text='<%# Eval("PrecioFinal", "{0:C}") %>' />
+                                            <asp:Button ID="btnVerDetalle" runat="server"
+                                                Text='<%# GetButtonText((int)Eval("Id_reserva")) %>'
+                                                CommandName="MostrarDetalle"
+                                                CommandArgument='<%# Eval("Id_reserva") %>'
+                                                CssClass="btn btn-outline-success btn-sm" />
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                 </Columns>
                             </asp:GridView>
-
                         </div>
                     </asp:Panel>
 

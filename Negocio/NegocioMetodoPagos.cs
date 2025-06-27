@@ -12,6 +12,10 @@ namespace Negocio
             return dao.GetMetodoPagos();
         }
 
+        public DataTable GetMetodoPagosReserva()
+        {
+            return dao.GetMetodoPagosReserva();
+        }
         public void ModificarMetodoPago(MetodoPago pago)
         {
             dao.ModificarMetodoPago(pago);

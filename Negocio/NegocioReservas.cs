@@ -1,6 +1,7 @@
 ﻿using Dao;
 using Entidades;
 using System.Data;
+using static Entidades.Reserva;
 
 namespace Negocio
 {
@@ -21,5 +22,11 @@ namespace Negocio
         {
             return dao.ObtenerDetallesPorReserva(idReserva);
         }
+        public bool GuardarReserva(ReservaEnProceso reserva)
+        {
+            return dao.GuardarReserva(reserva);
+        }
+
     }
+
 }

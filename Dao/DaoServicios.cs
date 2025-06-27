@@ -23,6 +23,13 @@ namespace Dao
             return tabla;
         }
 
+        public DataTable GetServiciosActivos()
+        {
+            string query = "SELECT * FROM ServiciosAdicionales WHERE Estado = 1";
+            DataTable tabla = ds.ObtenerTabla("ServiciosAdicionales", query);
+            return tabla;
+        }
+
         public bool ModificarServicio(Servicios servicio)
         {
             SqlCommand comando = new SqlCommand();

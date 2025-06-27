@@ -1,6 +1,9 @@
 ﻿using Entidades;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using static Entidades.Reserva;
 
 namespace Dao
 {
@@ -49,5 +52,45 @@ namespace Dao
             return ds.ObtenerTablaReservas("Vista_DetallesReserva", query, parametros);
         }
 
+        public bool GuardarReserva(ReservaEnProceso reserva)
+        {
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+                new SqlParameter("@IdHuesped", reserva.IdHuesped),
+                new SqlParameter("@IdMetodoPago", reserva.IdMetodoPago),
+                new SqlParameter("@FechaPago", DateTime.Now),
+                new SqlParameter("@MontoTotal", reserva.PrecioFinal),
+                new SqlParameter("@FechaReserva", reserva.FechaReserva),
+                new SqlParameter("@FechaLlegada", reserva.CheckIn),
+                new SqlParameter("@FechaSalida", reserva.CheckOut),
+                new SqlParameter("@CantidadHuespedes", reserva.CantidadHuespedes),
+                new SqlParameter("@NroTarjeta", reserva.NroTarjeta),
+                new SqlParameter("@VencimientoTarjeta", reserva.VenTarjeta),
+                new SqlParameter("@Habitaciones", ConvertirListaHabitaciones(reserva.IdHabitaciones)),
+                new SqlParameter("@Servicios", ConvertirListaServicios(reserva.ServiciosAdicionales))
+            };
+
+            int filasAfectadas = ds.EjecutarProcedimientoConParametros("sp_RegistrarReservaCompleta", parametros);
+            return filasAfectadas > 0;
+        }
+
+        // Métodos para convertir las listas a DataTable (igual que tenías)
+        private DataTable ConvertirListaHabitaciones(List<int> ids)
+        {
+            DataTable table = new DataTable();
+            table.Columns.Add("Id", typeof(int));
+            foreach (int id in ids)
+                table.Rows.Add(id);
+            return table;
+        }
+
+        private DataTable ConvertirListaServicios(List<int> ids)
+        {
+            DataTable table = new DataTable();
+            table.Columns.Add("Id", typeof(int));
+            foreach (int id in ids)
+                table.Rows.Add(id);
+            return table;
+        }
     }
 }

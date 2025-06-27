@@ -15,7 +15,6 @@ namespace Vistas
 {
     public partial class Home : System.Web.UI.Page
     {
-        NegocioHistorialReservas negocioHistorialReservas = new NegocioHistorialReservas();
         NegocioUsuario negocioUsuario = new NegocioUsuario();
         NegocioMetodoPagos negocioMetodoPago = new NegocioMetodoPagos();
         NegocioServicios negocioServicio = new NegocioServicios();
@@ -58,22 +57,6 @@ namespace Vistas
             }
         }
 
-        protected void grvHistorialReservas_PageIndexChanging(object sender, GridViewPageEventArgs e)
-        {
-            grvHistorialReservas.PageIndex = e.NewPageIndex;
-
-            // Reobtener datos para mostrar en la nueva página
-            string numeroHabitacion = txtNumber.Text;
-            string fechaDesde = txtDateFrom.Text;
-            string fechaHasta = txtDateTo.Text;
-
-            DataTable HistorialReservas = negocioHistorialReservas.GetFilterHistorialReserva(
-                numeroHabitacion, fechaDesde, fechaHasta);
-
-            grvHistorialReservas.DataSource = HistorialReservas;
-            grvHistorialReservas.DataBind();
-        }
-
         private void OcultarTodosLosPaneles()
         {
             panelAdministrativo.Visible = false;
@@ -106,6 +89,7 @@ namespace Vistas
             panelCrearReservaEtapa1.Visible = false;
             panelCrearReservaEtapa2.Visible = false;
             panelCrearReservaEtapa3.Visible = false;
+            panelCrearReservaEtapa4.Visible = false;
         }
         protected void btnLogout_Click(object sender, EventArgs e)
         {
@@ -371,70 +355,65 @@ namespace Vistas
         // PANEL HISTORIAL DE RESERVAS 
         protected void grvHistorialReservas_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            if (e.CommandName == "Editar")
+            if (e.CommandName == "MostrarDetalle")
             {
-                //int idReserva = Convert.ToInt32(e.CommandArgument);
+                int idReserva = Convert.ToInt32(e.CommandArgument);
+                if (ViewState["IdHistorialDetalle"] != null && (int)ViewState["IdHistorialDetalle"] == idReserva)
+                {
+                    ViewState["IdHistorialDetalle"] = null;
+                }
+                else
+                {
+                    ViewState["IdHistorialDetalle"] = idReserva;
+                }
+
+                getDataHistorialReservas();
             }
-            else if (e.CommandName == "Eliminar")
+        }
+
+        protected void grvHistorialReservas_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                //int idReserva = Convert.ToInt32(e.CommandArgument);
-                //EliminarReserva(idReserva); // Por ejemplo
-                //CargarReservas(); // Recargás la grilla
+                int idReserva = (int)grvHistorialReservas.DataKeys[e.Row.RowIndex].Value;
+
+                if (ViewState["IdHistorialDetalle"] != null && (int)ViewState["IdHistorialDetalle"] == idReserva)
+                {
+                    GridViewRow detalleRow = new GridViewRow(-1, -1, DataControlRowType.DataRow, DataControlRowState.Insert);
+                    TableCell celda = new TableCell();
+                    celda.ColumnSpan = grvHistorialReservas.Columns.Count;
+                    celda.Controls.Add(CrearGrillaDetalles(idReserva));
+                    detalleRow.Cells.Add(celda);
+
+                    Table tabla = (Table)grvHistorialReservas.Controls[0];
+                    int rowIndex = tabla.Rows.GetRowIndex(e.Row);
+                    tabla.Rows.AddAt(rowIndex + 1, detalleRow);
+                }
             }
         }
-        protected void btnCrearReserva_Click(object sender, EventArgs e)
+
+        protected void grvHistorialReservas_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
-            OcultarTodosLosPaneles();
-            lblSeccionTitulo.Text = "Crear Reserva";
-            //gvReservas.DataSource = ObtenerDatosReserva(); // Método que devuelve una lista o DataTable
-            //gvReservas.DataBind();
-        }
-        protected void btnMostrarFormularioReserva_Click(object sender, EventArgs e)
-        {
-            //LimpiarFormularioReservas();
-            //panelFormularioRegistroReservas.Visible = true;
-            //panelListadoReservas.Visible = false;
+            grvHistorialReservas.PageIndex = e.NewPageIndex;
+            getDataHistorialReservas();
         }
 
-        protected void btnFilter_Click(object sender, EventArgs e)
+        private void getDataHistorialReservas()
         {
-            string numeroHabitacion = txtNumber.Text;
-            string fechaDesde = txtDateFrom.Text;
-            string fechaHasta = txtDateTo.Text;
-
-            DataTable HistorialReservas = negocioHistorialReservas.GetFilterHistorialReserva(
-                numeroHabitacion, fechaDesde, fechaHasta);
-
-            grvHistorialReservas.DataSource = HistorialReservas;
+            DataTable historial = negocioReserva.GetReservas();
+            grvHistorialReservas.DataSource = historial;
             grvHistorialReservas.DataBind();
         }
 
-        protected void btnSacarFiltro_Click(object sender, EventArgs e)
-        {
-            DataTable HistorialReservas = negocioHistorialReservas.GetHistorialReserva();
-            grvHistorialReservas.DataSource = HistorialReservas;
-            grvHistorialReservas.DataBind();
-            txtNumber.Text = "";
-            txtDateFrom.Text = "";
-            txtDateTo.Text = "";
-        }
 
         protected void btnHistorialReservas_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPanelesReserva();
+            getDataHistorialReservas();
             panelHistorialReservas.Visible = true;
-
-            DataTable HistorialReservas = negocioHistorialReservas.GetHistorialReserva();
-            grvHistorialReservas.DataSource = HistorialReservas;
-            grvHistorialReservas.DataBind();
         }
 
-        private void CargarReservas()
-        {
-            DataTable reservas = negocioHistorialReservas.GetHistorialReserva();
-            grvHistorialReservas.DataSource = reservas;
-            grvHistorialReservas.DataBind();
-        }
+      
         #endregion
 
         #region Panel de Habitaciones
@@ -1131,7 +1110,7 @@ namespace Vistas
             getDataHuespedReserva();
         }
 
-        protected void btnLimpiarFiltroHuspedPorDocumento_Click(object sender, EventArgs e)
+        protected void btnLimpiarFiltroHuespedPorDocumento_Click(object sender, EventArgs e)
         {
             getDataHuespedReserva();
             txtHuespedBuscarPorDocumento.Text = "";
@@ -1207,7 +1186,7 @@ namespace Vistas
 
             ActualizarEstadoBotonSiguienteEtapa2();
         }
-            protected void btnFiltrarHabitacionPorFechas_Click(object sender, EventArgs e)
+        protected void btnFiltrarHabitacionPorFechas_Click(object sender, EventArgs e)
         {
             string cantidadText = txtCantidadDeHuespedes.Text.Trim();
             string fechaLlegada = txtFechaDesde.Text.Trim();
@@ -1237,8 +1216,20 @@ namespace Vistas
             grvCrearReservaEtapa2.DataSource = Reservas;
             grvCrearReservaEtapa2.DataBind();
 
+            Dictionary<int, decimal> preciosPorHabitacion = new Dictionary<int, decimal>();
+
+            foreach (DataRow row in Reservas.Rows)
+            {
+                int idHabitacion = Convert.ToInt32(row["Id_habitacion"]);
+                decimal precio = Convert.ToDecimal(row["Precio"]);
+                preciosPorHabitacion[idHabitacion] = precio;
+            }
+
+            Session["PreciosHabitaciones"] = preciosPorHabitacion;
+
             ActualizarEstadoBotonSiguienteEtapa2();
         }
+
 
         private void ActualizarEstadoBotonSiguienteEtapa2()
         {
@@ -1355,6 +1346,15 @@ namespace Vistas
                 return;
             }
 
+            ReservaEnProceso reserva = Session["reservaEnProceso"] as ReservaEnProceso ?? new ReservaEnProceso();
+
+            reserva.CantidadHuespedes = int.Parse(txtCantidadDeHuespedes.Text.Trim());
+            reserva.CheckIn = DateTime.Parse(txtFechaDesde.Text.Trim());
+            reserva.CheckOut = DateTime.Parse(txtFechaHasta.Text.Trim());
+            reserva.FechaReserva = DateTime.Now;
+
+            Session["reservaEnProceso"] = reserva;
+
             OcultarTodosLosPanelesReserva();
             getDataServiciosReserva();
             panelCrearReservaEtapa3.Visible = true;
@@ -1367,6 +1367,42 @@ namespace Vistas
 
         }
 
+        private void CalcularMontoTotalReserva(ReservaEnProceso reserva)
+        {
+            var preciosHabitaciones = Session["PreciosHabitaciones"] as Dictionary<int, decimal>;
+            var preciosServicios = Session["PreciosServiciosAdicionales"] as Dictionary<int, decimal>;
+
+            if (preciosHabitaciones == null) return;
+
+            int dias = (reserva.CheckOut - reserva.CheckIn).Days;
+            if (dias <= 0) dias = 1;
+
+            int cantidadHabitaciones = reserva.IdHabitaciones.Count;
+
+            decimal totalHabitaciones = 0;
+            foreach (int idHabitacion in reserva.IdHabitaciones)
+            {
+                if (preciosHabitaciones.TryGetValue(idHabitacion, out decimal precioHabitacion))
+                    totalHabitaciones += precioHabitacion;
+            }
+            totalHabitaciones *= dias;
+
+            decimal totalServicios = 0;
+            if (preciosServicios != null)
+            {
+                foreach (int idServicio in reserva.ServiciosAdicionales)
+                {
+                    if (preciosServicios.TryGetValue(idServicio, out decimal precioServicio))
+                        totalServicios += precioServicio;
+                }
+            }
+
+            totalServicios *= cantidadHabitaciones;
+
+            reserva.PrecioFinal = totalHabitaciones + totalServicios;
+        }
+
+
         #endregion
 
         #region Crear Reservas Etapa 3
@@ -1374,10 +1410,20 @@ namespace Vistas
 
         private void getDataServiciosReserva()
         {
-            DataTable Servicio = negocioServicio.GetServicios();
+            DataTable Servicio = negocioServicio.GetServiciosActivos();
             grvCrearReservaEtapa3.DataSource = Servicio;
             grvCrearReservaEtapa3.DataBind();
+
+            Dictionary<int, decimal> preciosServicios = new Dictionary<int, decimal>();
+            foreach (DataRow row in Servicio.Rows)
+            {
+                int idServicio = Convert.ToInt32(row["Id_servicioAdicional"]);
+                decimal precio = Convert.ToDecimal(row["Precio"]);
+                preciosServicios[idServicio] = precio;
+            }
+            Session["PreciosServiciosAdicionales"] = preciosServicios;
         }
+
 
         protected void GridViewCrearReservaEtapa3_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
@@ -1433,10 +1479,20 @@ namespace Vistas
             getDataServiciosReserva();
         }
 
-
         protected void btnSiguienteEtapa3_Click(object sender, EventArgs e)
         {
+            ReservaEnProceso reserva = Session["reservaEnProceso"] as ReservaEnProceso;
+
+            if (reserva != null)
+            {
+                CalcularMontoTotalReserva(reserva);
+                Session["reservaEnProceso"] = reserva;
+
+                lblMontoTotal.Text = "Monto Total: " + reserva.PrecioFinal.ToString("C2");
+            }
+
             OcultarTodosLosPanelesReserva();
+            getDataMetodoPagoReserva();
             panelCrearReservaEtapa4.Visible = true;
         }
 
@@ -1449,10 +1505,113 @@ namespace Vistas
 
         #region Crear Reservas Etapa 4
         // PANEL CREAR RESERVAS ETAPA 4
+
+        private void getDataMetodoPagoReserva()
+        {
+            DataTable MetodoPagos = negocioMetodoPago.GetMetodoPagosReserva();
+            grvCrearReservaEtapa4.DataSource = MetodoPagos;
+            grvCrearReservaEtapa4.DataBind();
+        }
+
+        private void ActualizarEstadoBotonSiguienteEtapa4()
+        {
+            bool haySeleccion = ViewState["IdMetodoPagoSeleccionado"] != null;
+            btnRegistrarReserva.Enabled = haySeleccion;
+
+            if (haySeleccion)
+            {
+                btnRegistrarReserva.CssClass = "btn btn-primary";
+            }
+            else
+            {
+                btnRegistrarReserva.CssClass = "btn btn-secondary disabled";
+            }
+        }
+
+        protected void GridViewCrearReservaEtapa4_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            grvCrearReservaEtapa4.PageIndex = e.NewPageIndex;
+            getDataMetodoPagoReserva();
+        }
+
+        protected void grvCrearReservaEtapa4_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int idMetodoPago = Convert.ToInt32(grvCrearReservaEtapa4.SelectedDataKey.Value);
+            ViewState["IdMetodoPagoSeleccionado"] = idMetodoPago;
+
+            getDataMetodoPagoReserva();
+
+            ReservaEnProceso reserva = Session["reservaEnProceso"] as ReservaEnProceso;
+            if (reserva == null)
+            {
+                reserva = new ReservaEnProceso();
+            }
+
+            reserva.IdMetodoPago = idMetodoPago;
+            Session["reservaEnProceso"] = reserva;
+
+            ActualizarEstadoBotonSiguienteEtapa4();
+        }
+
+        protected void grvCrearReservaEtapa4_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                int idMetodoPago = Convert.ToInt32(DataBinder.Eval(e.Row.DataItem, "Id_metodoPago"));
+
+                if (ViewState["IdMetodoPagoSeleccionado"] != null &&
+                    (int)ViewState["IdMetodoPagoSeleccionado"] == idMetodoPago)
+                {
+                    e.Row.CssClass = "table-success";
+                }
+            }
+        }
         protected void btnRegistrarReserva_Click(object sender, EventArgs e)
         {
+            string nroTarjeta = txtNumeroTarjeta.Text.Trim();
+            string vencimiento = txtVencimiento.Text.Trim();
 
+            lblErrorMetodoPago.Text = ""; // Limpiar error
+
+            if (string.IsNullOrEmpty(nroTarjeta) || !long.TryParse(nroTarjeta, out _))
+            {
+                lblErrorMetodoPago.Text = "Por favor ingresá un número de tarjeta válido.";
+                lblErrorMetodoPago.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
+
+            if (string.IsNullOrEmpty(vencimiento) || vencimiento.Length != 5 || !vencimiento.Contains('/'))
+            {
+                lblErrorMetodoPago.Text = "Por favor ingresá el vencimiento en formato MM/AA.";
+                lblErrorMetodoPago.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
+
+            ReservaEnProceso reserva = Session["reservaEnProceso"] as ReservaEnProceso;
+            if (reserva != null)
+            {
+                reserva.NroTarjeta = nroTarjeta;
+                reserva.VenTarjeta = vencimiento;
+                Session["reservaEnProceso"] = reserva;
+
+                NegocioReserva negocio = new NegocioReserva();
+                bool exito = negocio.GuardarReserva(reserva);
+
+                if (exito)
+                {
+                    OcultarTodosLosPanelesReserva();
+                    getDataReservas();
+                    panelReservas.Visible = true;
+                }
+                else
+                {
+                    lblErrorMetodoPago.Text = "Error al guardar la reserva. Intentá nuevamente.";
+                    lblErrorMetodoPago.ForeColor = System.Drawing.Color.Red;
+                }
+            }
         }
+
+
         protected void btnVolverEtapa4_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPanelesReserva();

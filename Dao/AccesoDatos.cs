@@ -285,6 +285,16 @@ namespace Dao
             }
         }
 
-
+        public int EjecutarProcedimientoConParametros(string nombreSP, SqlParameter[] parametros)
+        {
+            using (SqlConnection conexion = ObtenerConexion())
+            using (SqlCommand cmd = new SqlCommand(nombreSP, conexion))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddRange(parametros);
+                conexion.Open();
+                return cmd.ExecuteNonQuery();
+            }
+        }
     }
 }
