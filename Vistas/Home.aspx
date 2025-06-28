@@ -651,7 +651,7 @@
                         <!-- Datos generales de la reserva -->
                         <asp:Panel ID="panel1" runat="server" CssClass="mb-4">
                             <asp:GridView ID="grvReservaById" runat="server" AutoGenerateColumns="False"
-                                CssClass="table table-bordered w-100" ShowHeader="False">
+                                CssClass="table table-bordered">
                                 <Columns>
                                     <asp:BoundField DataField="NombreCompleto" HeaderText="Nombre:" />
                                     <asp:BoundField DataField="Documento" HeaderText="Documento:" />
@@ -993,7 +993,7 @@
                                    <asp:TemplateField HeaderText="Detalles">
                                         <ItemTemplate>
                                             <asp:Button ID="btnVerDetalle" runat="server" Text="Ver Detalle"
-                                                CommandName="MostrarDetalle"
+                                                CommandName="MostrarHistorialDetalle"
                                                 CommandArgument='<%# Eval("Id_reserva") %>'
                                                 CssClass="btn btn-outline-success btn-sm" />
                                         </ItemTemplate>
@@ -1008,7 +1008,7 @@
                     <!-- Datos generales de la reserva -->
                     <asp:Panel ID="panel3" runat="server" CssClass="mb-4">
                         <asp:GridView ID="gvHistorialReservaById" runat="server" AutoGenerateColumns="False"
-                            CssClass="table table-bordered w-100" ShowHeader="False">
+                            CssClass="table table-bordered">
                             <Columns>
                                 <asp:BoundField DataField="NombreCompleto" HeaderText="Nombre:" />
                                 <asp:BoundField DataField="Documento" HeaderText="Documento:" />
@@ -1037,21 +1037,15 @@
                                     <asp:BoundField HeaderText="Capacidad" DataField="Capacidad" />
                                     <asp:TemplateField HeaderText="Acciones">
                                         <ItemTemplate>
-                                            <asp:Button ID="btnCheckIn" runat="server" Text="CheckIn" 
-                                                CommandName="HacerCheckIn" CommandArgument='<%# Eval("Id_detalleReserva") %>' 
-                                                CssClass="btn btn-outline-success btn-sm" />
-                                            <asp:Button ID="btnCheckOut" runat="server" Text="CheckOut" 
-                                                CommandName="HacerCheckOut" CommandArgument='<%# Eval("Id_detalleReserva") %>' 
-                                                CssClass="btn btn-outline-primary btn-sm" />
-                                            <asp:Label ID="lblFinalizada" runat="server" Text="Finalizada" CssClass="badge bg-success" Visible="false" />
+                                            <asp:Label ID="lblFinalizada" runat="server" Text="Finalizada" CssClass="badge bg-success" />
                                         </ItemTemplate>
                                     </asp:TemplateField>    
                                 </Columns>
                             </asp:GridView>
 
-                            <asp:Button ID="Button1" runat="server" Text="Volver"
+                            <asp:Button ID="btnVolverAHistoiralReserva" runat="server" Text="Volver"
                                 CssClass="btn btn-secondary mt-3"
-                                OnClick="btnVolverAReservas_Click" />
+                                OnClick="btnVolverAHistorialReserva_Click" />
                     </asp:Panel>
                         
             </div>

@@ -82,7 +82,6 @@ namespace Vistas
             panelRegistrarHuesped.Visible = false;
             panelUsuario.Visible = false;
             panelRegistrarUsuario.Visible = false;
-            panelHistorialReservaDetalle.Visible = false;
             OcultarTodosLosPanelesAdmin();
             OcultarTodosLosPanelesReserva();
             // Agregá más paneles si sumás nuevas secciones
@@ -103,6 +102,7 @@ namespace Vistas
             panelHistorialReservas.Visible = false;
             panelReservas.Visible = false;
             panelDetalleReserva.Visible = false;
+            panelHistorialReservaDetalle.Visible = false;
             panelCrearReservaEtapa1.Visible = false;
             panelCrearReservaEtapa2.Visible = false;
             panelCrearReservaEtapa3.Visible = false;
@@ -424,23 +424,17 @@ namespace Vistas
         #region Panel Historial de Reservas
         protected void grvHistorialReservas_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            if (e.CommandName == "MostrarDetalle")
+            if (e.CommandName == "MostrarHistorialDetalle")
             {
                 int idReserva = Convert.ToInt32(e.CommandArgument);
-                ViewState["IdReservaDetalle"] = idReserva;
 
-                MostrarDetalleReservaFijo(idReserva);
+                MostrarHistorialDetalleReservaFijo(idReserva);
             }
         }
         protected void grvHistorialDetalleReserva_RowCommand(object sender, GridViewCommandEventArgs e)
         {
         
         }
-        protected string GetButtonTextReservaHistorial(int idReserva)
-        {
-            return (ViewState["IdHistorialDetalle"] != null && (int)ViewState["IdHistorialDetalle"] == idReserva) ? "Ocultar Detalle" : "Ver Detalle";
-        }
-
 
         protected void grvHistorialReservas_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
@@ -466,6 +460,31 @@ namespace Vistas
         protected void grvHistorialDetalleReservaFijo_RowDataBound(object sender, EventArgs e)
         {
 
+        }
+
+        protected void btnVolverAHistorialReserva_Click(object sender, EventArgs e)
+        {
+            OcultarTodosLosPanelesReserva();
+            ResaltarBotonSeleccionado(btnHistorialReserva);
+            panelAdministarReservas.Visible = true;
+            panelHistorialReservas.Visible = true;
+
+            getDataHistorialReservas();
+        }
+
+        private void MostrarHistorialDetalleReservaFijo(int idReserva)
+        {
+            OcultarTodosLosPaneles();
+            panelHistorialReservas.Visible = false;
+            panelHistorialReservaDetalle.Visible = true;
+
+            DataTable dtHistorialReserva = negocioReserva.ObtenerHistorialReservaPorId(idReserva);
+            gvHistorialReservaById.DataSource = dtHistorialReserva;
+            gvHistorialReservaById.DataBind();
+
+            DataTable detalles = negocioReserva.ObtenerDetallesPorReserva(idReserva);
+            grvHistorialReservaDetalle.DataSource = detalles;
+            grvHistorialReservaDetalle.DataBind();
         }
 
         #endregion
@@ -1064,7 +1083,9 @@ namespace Vistas
         }
         protected void btnVolverAReservas_Click(object sender, EventArgs e)
         {
-            panelDetalleReserva.Visible = false;
+            OcultarTodosLosPanelesReserva();
+            ResaltarBotonSeleccionado(btnReserva);
+            panelAdministarReservas.Visible = true;
             panelReservas.Visible = true;
 
             getDataReservas();
@@ -1106,6 +1127,7 @@ namespace Vistas
 
         private void MostrarDetalleReservaFijo(int idReserva)
         {
+            OcultarTodosLosPaneles();
             panelReservas.Visible = false;
             panelDetalleReserva.Visible = true;
 
@@ -1116,6 +1138,7 @@ namespace Vistas
             DataTable detalles = negocioReserva.ObtenerDetallesPorReserva(idReserva);
             grvDetalleReservaFijo.DataSource = detalles;
             grvDetalleReservaFijo.DataBind();
+
         }
 
         protected void grvDetalleReservaFijo_RowCommand(object sender, GridViewCommandEventArgs e)

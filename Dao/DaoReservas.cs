@@ -78,6 +78,19 @@ namespace Dao
             return ds.ObtenerTablaReservas("Vista_ReservasActualesYFuturas", consulta, parametros);
         }
 
+        public DataTable ObtenerHistorialReservaPorId(int IdReserva)
+        {
+            string consulta = "SELECT * FROM Vista_ReservasHistorial WHERE Id_Reserva = @Id_reserva";
+
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+                new SqlParameter("@Id_reserva", IdReserva)
+            };
+            parametros[0] = new SqlParameter("@Id_reserva", IdReserva);
+
+            return ds.ObtenerTablaReservas("Vista_ReservasHistorial", consulta, parametros);
+        }
+
         public bool GuardarReserva(ReservaEnProceso reserva)
         {
             try

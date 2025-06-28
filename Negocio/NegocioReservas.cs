@@ -23,6 +23,11 @@ namespace Negocio
         {
             return dao.ObtenerReservaPorId(idReserva);
         }
+
+        public DataTable ObtenerHistorialReservaPorId(int idReserva)
+        {
+            return dao.ObtenerHistorialReservaPorId(idReserva);
+        }
         public bool EliminarReserva(int idReserva)
         {
             return dao.EliminarReserva(idReserva);
