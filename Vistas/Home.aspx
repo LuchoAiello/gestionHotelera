@@ -70,7 +70,7 @@
 
                     <!-- Panel para ocultar/mostrar los botones de reservas-->
                     <asp:Panel ID="panelAdministarReservas" runat="server" CssClass="d-flex gap-3">
-                        <asp:LinkButton ID="btnReserva" runat="server" CssClass="nav-link text-white px-2" OnClick="btnReserva_Click">Reservas</asp:LinkButton>
+                        <asp:LinkButton ID="btnReserva" runat="server" CssClass="nav-link text-white px-2" OnClick="btnReserva_Click">Reservas Activas</asp:LinkButton>
                         <asp:LinkButton ID="btnCrearReserva" runat="server" CssClass="nav-link text-white px-2" OnClick="btnCrearReserva_Click1">Crear Reserva</asp:LinkButton>
                         <asp:LinkButton ID="btnHistorialReserva" runat="server" CssClass="nav-link text-white px-2" OnClick="btnHistorialReservas_Click">Historial de Reservas</asp:LinkButton>
                     </asp:Panel>
@@ -661,41 +661,41 @@
                                     <asp:BoundField DataField="MontoTotal" HeaderText="Monto Total:" DataFormatString="{0:C}" />
                                 </Columns>
                             </asp:GridView>
-                         
+
                         </asp:Panel>
 
-                            <!-- Grilla de detalles -->
+                        <!-- Grilla de detalles -->
                         <h3>Detalle de Reserva</h3>
-                            <asp:GridView ID="grvDetalleReservaFijo" runat="server" AutoGenerateColumns="False"
-                                CssClass="table table-bordered" 
-                                OnRowCommand="grvDetalleReserva_RowCommand"
-                                DataKeyNames="Id_detalleReserva"
-                                OnRowDataBound="grvDetalleReservaFijo_RowDataBound">
-                                <Columns>
-                                    <asp:BoundField HeaderText="N° Habitación" DataField="NumeroHabitacion" />
-                                    <asp:BoundField HeaderText="Tipo" DataField="Tipo" />
-                                    <asp:BoundField HeaderText="Check-In" DataField="CheckIn" DataFormatString="{0:dd/MM/yyyy}" />
-                                    <asp:BoundField HeaderText="Check-Out" DataField="CheckOut" DataFormatString="{0:dd/MM/yyyy}" />
-                                    <asp:BoundField HeaderText="Precio" DataField="PrecioDetalle" DataFormatString="{0:C}" />
-                                    <asp:BoundField HeaderText="Capacidad" DataField="Capacidad" />
-                                    <asp:TemplateField HeaderText="Acciones">
-                                        <ItemTemplate>
-                                            <asp:Button ID="btnCheckIn" runat="server" Text="CheckIn" 
-                                                CommandName="HacerCheckIn" CommandArgument='<%# Eval("Id_detalleReserva") %>' 
-                                                CssClass="btn btn-outline-success btn-sm" />
-                                            <asp:Button ID="btnCheckOut" runat="server" Text="CheckOut" 
-                                                CommandName="HacerCheckOut" CommandArgument='<%# Eval("Id_detalleReserva") %>' 
-                                                CssClass="btn btn-outline-primary btn-sm" />
-                                            <asp:Label ID="lblFinalizada" runat="server" Text="Finalizada" CssClass="badge bg-success" Visible="false" />
-                                        </ItemTemplate>
-                                   </asp:TemplateField>    
-                                </Columns>
-                            </asp:GridView>
+                        <asp:GridView ID="grvDetalleReservaFijo" runat="server" AutoGenerateColumns="False"
+                            CssClass="table table-bordered"
+                            OnRowCommand="grvDetalleReserva_RowCommand"
+                            DataKeyNames="Id_detalleReserva"
+                            OnRowDataBound="grvDetalleReservaFijo_RowDataBound">
+                            <Columns>
+                                <asp:BoundField HeaderText="N° Habitación" DataField="NumeroHabitacion" />
+                                <asp:BoundField HeaderText="Tipo" DataField="Tipo" />
+                                <asp:BoundField HeaderText="Check-In" DataField="CheckIn" DataFormatString="{0:dd/MM/yyyy}" />
+                                <asp:BoundField HeaderText="Check-Out" DataField="CheckOut" DataFormatString="{0:dd/MM/yyyy}" />
+                                <asp:BoundField HeaderText="Precio" DataField="PrecioDetalle" DataFormatString="{0:C}" />
+                                <asp:BoundField HeaderText="Capacidad" DataField="Capacidad" />
+                                <asp:TemplateField HeaderText="Acciones">
+                                    <ItemTemplate>
+                                        <asp:Button ID="btnCheckIn" runat="server" Text="CheckIn"
+                                            CommandName="HacerCheckIn" CommandArgument='<%# Eval("Id_detalleReserva") %>'
+                                            CssClass="btn btn-outline-success btn-sm" />
+                                        <asp:Button ID="btnCheckOut" runat="server" Text="CheckOut"
+                                            CommandName="HacerCheckOut" CommandArgument='<%# Eval("Id_detalleReserva") %>'
+                                            CssClass="btn btn-outline-primary btn-sm" />
+                                        <asp:Label ID="lblFinalizada" runat="server" Text="Finalizada" CssClass="badge bg-success" Visible="false" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                            </Columns>
+                        </asp:GridView>
 
-                            <asp:Button ID="btnVolverAReservas" runat="server" Text="Volver"
-                                CssClass="btn btn-secondary mt-3"
-                                OnClick="btnVolverAReservas_Click" />
-                        </asp:Panel>
+                        <asp:Button ID="btnVolverAReservas" runat="server" Text="Volver"
+                            CssClass="btn btn-secondary mt-3"
+                            OnClick="btnVolverAReservas_Click" />
+                    </asp:Panel>
 
                     <!-- Panel para Crear Reservas -->
                     <!-- ETAPA 1 -->
@@ -975,6 +975,13 @@
                     <!-- Panel para Historial de Reservas -->
                     <asp:Panel ID="panelHistorialReservas" runat="server" Visible="false">
                         <div class="mt-3" style="overflow-x: auto; width: 100%;">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="input-group w-50">
+                                    <asp:TextBox ID="txtBuscarHistorialReservas" runat="server" CssClass="form-control"
+                                        placeholder="Buscar Reserva"
+                                        AutoPostBack="true" OnTextChanged="txtBuscarHistorialReserva_TextChanged" />
+                                </div>
+                            </div>
                             <asp:GridView ID="grvHistorialReservas" runat="server" AutoGenerateColumns="False" AllowPaging="True" PageSize="5"
                                 OnPageIndexChanging="grvHistorialReservas_PageIndexChanging"
                                 OnRowCommand="grvHistorialReservas_RowCommand"
@@ -990,66 +997,66 @@
                                     <asp:BoundField HeaderText="Fecha de Pago" DataField="FechaPago" DataFormatString="{0:dd/MM/yyyy}" />
                                     <asp:BoundField HeaderText="Huéspedes" DataField="CantidadHuespedes" />
                                     <asp:BoundField HeaderText="Monto Total" DataField="MontoTotal" DataFormatString="{0:C}" />
-                                   <asp:TemplateField HeaderText="Detalles">
+                                    <asp:TemplateField HeaderText="Detalles">
                                         <ItemTemplate>
                                             <asp:Button ID="btnVerDetalle" runat="server" Text="Ver Detalle"
                                                 CommandName="MostrarHistorialDetalle"
                                                 CommandArgument='<%# Eval("Id_reserva") %>'
                                                 CssClass="btn btn-outline-success btn-sm" />
                                         </ItemTemplate>
-                                   </asp:TemplateField>
+                                    </asp:TemplateField>
                                 </Columns>
                             </asp:GridView>
                         </div>
-                </asp:Panel>
-                <asp:Panel ID="panelHistorialReservaDetalle" runat="server" Visible="false">
-                    <h4>Reserva</h4>
-
-                    <!-- Datos generales de la reserva -->
-                    <asp:Panel ID="panel3" runat="server" CssClass="mb-4">
-                        <asp:GridView ID="gvHistorialReservaById" runat="server" AutoGenerateColumns="False"
-                            CssClass="table table-bordered">
-                            <Columns>
-                                <asp:BoundField DataField="NombreCompleto" HeaderText="Nombre:" />
-                                <asp:BoundField DataField="Documento" HeaderText="Documento:" />
-                                <asp:BoundField DataField="FechaLlegada" HeaderText="Fecha Llegada:" DataFormatString="{0:dd/MM/yyyy}" />
-                                <asp:BoundField DataField="FechaSalida" HeaderText="Fecha Salida:" DataFormatString="{0:dd/MM/yyyy}" />
-                                <asp:BoundField DataField="CantidadHuespedes" HeaderText="Huéspedes:" />
-                                <asp:BoundField DataField="MontoTotal" HeaderText="Monto Total:" DataFormatString="{0:C}" />
-                            </Columns>
-                        </asp:GridView>
-     
                     </asp:Panel>
+                    <asp:Panel ID="panelHistorialReservaDetalle" runat="server" Visible="false">
+                        <h4>Reserva</h4>
 
-                            <!-- Grilla de detalles -->
-                        <h3>Detalle de Reserva</h3>
-                            <asp:GridView ID="grvHistorialReservaDetalle" runat="server" AutoGenerateColumns="False"
-                                CssClass="table table-bordered" 
-                                OnRowCommand="grvHistorialDetalleReserva_RowCommand"
-                                DataKeyNames="Id_detalleReserva"
-                                OnRowDataBound="grvHistorialDetalleReservaFijo_RowDataBound">
+                        <!-- Datos generales de la reserva -->
+                        <asp:Panel ID="panel3" runat="server" CssClass="mb-4">
+                            <asp:GridView ID="gvHistorialReservaById" runat="server" AutoGenerateColumns="False"
+                                CssClass="table table-bordered">
                                 <Columns>
-                                    <asp:BoundField HeaderText="N° Habitación" DataField="NumeroHabitacion" />
-                                    <asp:BoundField HeaderText="Tipo" DataField="Tipo" />
-                                    <asp:BoundField HeaderText="Check-In" DataField="CheckIn" DataFormatString="{0:dd/MM/yyyy}" />
-                                    <asp:BoundField HeaderText="Check-Out" DataField="CheckOut" DataFormatString="{0:dd/MM/yyyy}" />
-                                    <asp:BoundField HeaderText="Precio" DataField="PrecioDetalle" DataFormatString="{0:C}" />
-                                    <asp:BoundField HeaderText="Capacidad" DataField="Capacidad" />
-                                    <asp:TemplateField HeaderText="Acciones">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblFinalizada" runat="server" Text="Finalizada" CssClass="badge bg-success" />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>    
+                                    <asp:BoundField DataField="NombreCompleto" HeaderText="Nombre:" />
+                                    <asp:BoundField DataField="Documento" HeaderText="Documento:" />
+                                    <asp:BoundField DataField="FechaLlegada" HeaderText="Fecha Llegada:" DataFormatString="{0:dd/MM/yyyy}" />
+                                    <asp:BoundField DataField="FechaSalida" HeaderText="Fecha Salida:" DataFormatString="{0:dd/MM/yyyy}" />
+                                    <asp:BoundField DataField="CantidadHuespedes" HeaderText="Huéspedes:" />
+                                    <asp:BoundField DataField="MontoTotal" HeaderText="Monto Total:" DataFormatString="{0:C}" />
                                 </Columns>
                             </asp:GridView>
 
-                            <asp:Button ID="btnVolverAHistoiralReserva" runat="server" Text="Volver"
-                                CssClass="btn btn-secondary mt-3"
-                                OnClick="btnVolverAHistorialReserva_Click" />
+                        </asp:Panel>
+
+                        <!-- Grilla de detalles -->
+                        <h3>Detalle de Reserva</h3>
+                        <asp:GridView ID="grvHistorialReservaDetalle" runat="server" AutoGenerateColumns="False"
+                            CssClass="table table-bordered"
+                            OnRowCommand="grvHistorialDetalleReserva_RowCommand"
+                            DataKeyNames="Id_detalleReserva"
+                            OnRowDataBound="grvHistorialDetalleReservaFijo_RowDataBound">
+                            <Columns>
+                                <asp:BoundField HeaderText="N° Habitación" DataField="NumeroHabitacion" />
+                                <asp:BoundField HeaderText="Tipo" DataField="Tipo" />
+                                <asp:BoundField HeaderText="Check-In" DataField="CheckIn" DataFormatString="{0:dd/MM/yyyy}" />
+                                <asp:BoundField HeaderText="Check-Out" DataField="CheckOut" DataFormatString="{0:dd/MM/yyyy}" />
+                                <asp:BoundField HeaderText="Precio" DataField="PrecioDetalle" DataFormatString="{0:C}" />
+                                <asp:BoundField HeaderText="Capacidad" DataField="Capacidad" />
+                                <asp:TemplateField HeaderText="Acciones">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblFinalizada" runat="server" Text="Finalizada" CssClass="badge bg-success" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                            </Columns>
+                        </asp:GridView>
+
+                        <asp:Button ID="btnVolverAHistoiralReserva" runat="server" Text="Volver"
+                            CssClass="btn btn-secondary mt-3"
+                            OnClick="btnVolverAHistorialReserva_Click" />
                     </asp:Panel>
-                        
+
+                </div>
             </div>
-        </div>
         </div>
     </form>
 

@@ -91,6 +91,11 @@ namespace Dao
             return ds.ObtenerTablaReservas("Vista_ReservasHistorial", consulta, parametros);
         }
 
+        public DataTable ObtenerHistorialReservaFiltrado(string filtro)
+        {
+            return ds.SPFiltrarHistorialReservas("sp_FiltrarReservasHistorial", filtro);
+        }
+
         public bool GuardarReserva(ReservaEnProceso reserva)
         {
             try

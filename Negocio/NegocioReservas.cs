@@ -56,5 +56,10 @@ namespace Negocio
         {
             dao.RegistrarCheckOut(idDetalleReserva);
         }
+
+        public DataTable ObtenerHistorialReservaFiltrado(string filtro)
+        {
+           return dao.ObtenerHistorialReservaFiltrado(filtro);
+        }
     }
 }

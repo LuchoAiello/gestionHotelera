@@ -199,6 +199,23 @@ namespace Dao
             }
         }
 
+        public DataTable SPFiltrarHistorialReservas(string nombreSP, string filtro)
+        {
+            using (SqlConnection conexion = ObtenerConexion())
+            using (SqlCommand cmd = new SqlCommand(nombreSP, conexion))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@filtro",
+                    string.IsNullOrWhiteSpace(filtro) ? (object)DBNull.Value : filtro);
+
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataTable tabla = new DataTable();
+                adapter.Fill(tabla);
+                return tabla;
+            }
+        }
+
         public bool GestionarUsuarioConSP(Usuario usuario, string accion)
         {
             using (SqlConnection conexion = ObtenerConexion())

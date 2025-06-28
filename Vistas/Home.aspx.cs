@@ -68,7 +68,7 @@ namespace Vistas
             }
             else
             {
-                //Response.Redirect("Login.aspx");
+                Response.Redirect("Login.aspx");
             }
         }
 
@@ -449,7 +449,19 @@ namespace Vistas
             grvHistorialReservas.DataBind();
         }
 
+        protected void txtBuscarHistorialReserva_TextChanged(object sender, EventArgs e)
+        {
+            string filtro = txtBuscarHistorialReservas.Text.Trim().ToLower();
+            NegocioHabitaciones habitacionService = new NegocioHabitaciones();
+            DataTable resultado = (string.IsNullOrEmpty(filtro)) ? habitacionService.GetAll() : habitacionService.GetByFilter(filtro);
+            gvHabitaciones.DataSource = resultado;
+            gvHabitaciones.DataBind();
 
+            DataTable historialReservaFiltrado = (string.IsNullOrEmpty(filtro)) ? negocioReserva.GetHistorialDeReservas() : negocioReserva.ObtenerHistorialReservaFiltrado(filtro);
+            grvHistorialReservas.DataSource = historialReservaFiltrado;
+            grvHistorialReservas.DataBind();
+
+        }
         protected void btnHistorialReservas_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPanelesReserva();
@@ -1215,7 +1227,6 @@ namespace Vistas
 
             getDataReservas();
             MostrarDetalleReservaFijo(idReserva);
-            
         }
 
         protected void btnCancelarCheckInOut_Click(object sender, EventArgs e)
@@ -1360,12 +1371,12 @@ namespace Vistas
         protected void btnFiltrarHabitacionPorFechas_Click(object sender, EventArgs e)
         {
             string cantidadText = txtCantidadDeHuespedes.Text.Trim();
-            string fechaLlegada = txtFechaDesde.Text.Trim();
-            string fechaSalida = txtFechaHasta.Text.Trim();
+            string fechaLlegadaText = txtFechaDesde.Text.Trim();
+            string fechaSalidaText = txtFechaHasta.Text.Trim();
 
             if (string.IsNullOrWhiteSpace(cantidadText) ||
-                string.IsNullOrWhiteSpace(fechaLlegada) ||
-                string.IsNullOrWhiteSpace(fechaSalida))
+                string.IsNullOrWhiteSpace(fechaLlegadaText) ||
+                string.IsNullOrWhiteSpace(fechaSalidaText))
             {
                 lblError.Text = "Por favor, completá todos los campos.";
                 lblError.ForeColor = System.Drawing.Color.Red;
@@ -1379,9 +1390,31 @@ namespace Vistas
                 return;
             }
 
+            if (!DateTime.TryParse(fechaLlegadaText, out DateTime fechaLlegada) ||
+                !DateTime.TryParse(fechaSalidaText, out DateTime fechaSalida))
+            {
+                lblError.Text = "Las fechas ingresadas no son válidas.";
+                lblError.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
+
+            if (fechaLlegada.Date < DateTime.Today)
+            {
+                lblError.Text = "La fecha de llegada no puede ser anterior a hoy.";
+                lblError.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
+
+            if (fechaSalida.Date <= fechaLlegada.Date)
+            {
+                lblError.Text = "La fecha de salida debe ser posterior a la fecha de llegada.";
+                lblError.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
+
             lblError.Text = "";
 
-            DataTable Reservas = negocioHabitaciones.FiltarHabitacionesPorFecha(fechaLlegada, fechaSalida);
+            DataTable Reservas = negocioHabitaciones.FiltarHabitacionesPorFecha(fechaLlegadaText, fechaSalidaText);
             ViewState["HabitacionesFiltradas"] = Reservas;
 
             grvCrearReservaEtapa2.DataSource = Reservas;
