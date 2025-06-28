@@ -58,7 +58,6 @@ namespace Dao
                  new SqlParameter("@FechaLlegada", reserva.FechaLlegada),
                  new SqlParameter("@FechaSalida", reserva.FechaSalida),
                  new SqlParameter("@CantidadHuespedes", reserva.CantidadHuespedes),
-                 new SqlParameter("@MontoTotal", reserva.PrecioFinal),
                  new SqlParameter("@NroTarjeta", (object)reserva.NroTarjeta ?? DBNull.Value),
                  new SqlParameter("@VtoTarjeta", ConvertirVencimiento(reserva.VtoTarjeta)),
                  new SqlParameter
@@ -94,7 +93,7 @@ namespace Dao
 
             foreach (int id in reserva.IdHabitaciones)
             {
-                dt.Rows.Add(id, reserva.PrecioFinal);
+                dt.Rows.Add(id);
             }
 
             return dt;
@@ -124,6 +123,26 @@ namespace Dao
                 return new DateTime(vto.Year, vto.Month, DateTime.DaysInMonth(vto.Year, vto.Month));
             }
             return DBNull.Value;
+        }
+
+        public void RegistrarCheckIn(int idDetalleReserva)
+        {
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+                new SqlParameter("@Id_detalleReserva", idDetalleReserva)
+            };
+
+            ds.EjecutarProcedimientoConParametros("SP_AsignarCheckIn", parametros);
+        }
+
+        public void RegistrarCheckOut(int idDetalleReserva)
+        {
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+                new SqlParameter("@Id_detalleReserva", idDetalleReserva)
+            };
+
+            ds.EjecutarProcedimientoConParametros("SP_AsignarCheckOut", parametros);
         }
 
     }

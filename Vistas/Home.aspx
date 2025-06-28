@@ -665,25 +665,29 @@
 
                     <asp:Panel ID="panelCheckInOut" runat="server" Visible="false">
                         <div class="container" style="margin: 10px">
+                            <asp:HiddenField ID="hfIdDetalleReserva" runat="server" />
+
                             <div class="row mb-3 align-items-end">
                                 <div class="col-md-3">
-                                    <asp:Label ID="lblCheckin" runat="server" Text="CheckIn" CssClass="form-label" />
-                                    <asp:TextBox ID="txtCheckIn" runat="server" CssClass="form-control" TextMode="Date" />
+                                    <asp:Label ID="lblCheckin" runat="server" Text="Check-In" CssClass="form-label d-block" />
+                                    <!-- Botón para hacer Check-In -->
+                                    <asp:Button ID="btnHacerCheckIn" runat="server" Text="Hacer Check-In" CssClass="btn btn-outline-primary" OnClick="btnHacerCheckIn_Click" />
+                                    <!-- Mostrar fecha si ya se hizo Check-In -->
+                                    <asp:Label ID="lblFechaCheckIn" runat="server" CssClass="form-label" Visible="false" />
                                 </div>
+
                                 <div class="col-md-3">
-                                    <asp:Label ID="lblCheckOut" runat="server" Text="CheckOut" CssClass="form-label" />
+                                    <asp:Label ID="lblCheckOut" runat="server" Text="Check-Out" CssClass="form-label" />
                                     <asp:TextBox ID="txtCheckOut" runat="server" CssClass="form-control" TextMode="Date" />
                                 </div>
-                                <asp:Label ID="Label10" runat="server" Text="" CssClass="form-label" />
                             </div>
 
                             <div class="d-flex gap-2">
-                                <asp:Button ID="btnRegistrarCheckInOut" runat="server" Text="Registrar" CssClass="btn btn-success" OnClick="btnRegistrarCheckInOut_Click" />
+                                <asp:Button ID="btnRegistrarCheckInOut" runat="server" Text="Registrar Check-Out" CssClass="btn btn-success" OnClick="btnRegistrarCheckInOut_Click" />
                                 <asp:Button ID="btnCancelarCheckInOut" runat="server" Text="Cancelar" CssClass="btn btn-secondary" OnClick="btnCancelarCheckInOut_Click" />
                             </div>
                         </div>
                     </asp:Panel>
-
                     <!-- Panel para Crear Reservas -->
                     <!-- ETAPA 1 -->
                     <asp:Panel ID="panelCrearReservaEtapa1" runat="server" Visible="false">

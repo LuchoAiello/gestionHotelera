@@ -621,8 +621,8 @@ namespace Vistas
             {
                 DropDownList ddlEstado = (DropDownList)e.Row.FindControl("ddlEIEstado");
                 ddlEstado.Items.Clear();
-                ddlEstado.Items.Add("Activa");
-                ddlEstado.Items.Add("Inactiva");
+                ddlEstado.Items.Add("Disponible");
+                ddlEstado.Items.Add("Ocupada");
                 ddlEstado.Items.Add("Mantenimiento");
 
                 string estadoActual = DataBinder.Eval(e.Row.DataItem, "Estado").ToString();
@@ -1101,7 +1101,6 @@ namespace Vistas
         {
             if (e.CommandName == "MostrarDetalle")
             {
-
                 int idReserva = Convert.ToInt32(e.CommandArgument);
                 if (ViewState["IdReservaDetalle"] != null && (int)ViewState["IdReservaDetalle"] == idReserva)
                 {
@@ -1129,7 +1128,6 @@ namespace Vistas
 
                 int idReserva = Convert.ToInt32(e.CommandArgument);
 
-                // 2. Obtenemos el resto de los detalles desde la base
                 var negocioDetalle = new NegocioReserva();
                 DataTable dtDetalles = negocioDetalle.ObtenerDetallesPorReserva(idReserva);
 
@@ -1137,17 +1135,28 @@ namespace Vistas
                 {
                     var row = dtDetalles.Rows[0];
 
+                    hfIdDetalleReserva.Value = row["Id_detalleReserva"].ToString();
+
                     // ---- CheckIn ----
-                    DateTime checkIn = DateTime.MinValue;
-                    if (row["CheckIn"] != DBNull.Value && DateTime.TryParse(row["CheckIn"].ToString(), out checkIn))
+                    if (row["CheckIn"] != DBNull.Value && DateTime.TryParse(row["CheckIn"].ToString(), out DateTime checkIn))
                     {
-                        txtCheckIn.Text = checkIn.ToString("yyyy-MM-dd");
-                        txtCheckIn.Enabled = false;
+                        lblFechaCheckIn.Text = checkIn.ToString("yyyy-MM-dd");
+                        lblFechaCheckIn.Visible = true;
+                        btnHacerCheckIn.Visible = false;
+
+                        // Activar CheckOut
+                        txtCheckOut.Enabled = true;
+                        txtCheckOut.Attributes["min"] = checkIn.ToString("yyyy-MM-dd");
                     }
                     else
                     {
-                        txtCheckIn.Text = "";
-                        txtCheckIn.Enabled = true;
+                        lblFechaCheckIn.Text = "";
+                        lblFechaCheckIn.Visible = false;
+                        btnHacerCheckIn.Visible = true;
+
+                        // Desactivar CheckOut
+                        txtCheckOut.Text = "";
+                        txtCheckOut.Enabled = false;
                     }
 
                     // ---- CheckOut ----
@@ -1159,22 +1168,46 @@ namespace Vistas
                     else
                     {
                         txtCheckOut.Text = "";
-                        txtCheckOut.Enabled = true;
+                        // Se habilita solo si ya hay CheckIn (lo controla el bloque de arriba)
                     }
-
-                    if (checkIn != DateTime.MinValue)
-                    {
-                        txtCheckOut.Attributes["min"] = checkIn.ToString("yyyy-MM-dd");
-                    }
-
                 }
             }
         }
 
+        protected void btnHacerCheckIn_Click(object sender, EventArgs e)
+        {
+            int idDetalle = Convert.ToInt32(hfIdDetalleReserva.Value);
+            var negocio = new NegocioReserva();
+            negocio.RegistrarCheckIn(idDetalle);
+
+            // Actualizar el panel visualmente
+            DateTime fecha = DateTime.Today;
+            lblFechaCheckIn.Text = fecha.ToString("yyyy-MM-dd");
+            lblFechaCheckIn.Visible = true;
+            btnHacerCheckIn.Visible = false;
+
+            // Activar CheckOut
+            txtCheckOut.Enabled = true;
+            txtCheckOut.Attributes["min"] = fecha.ToString("yyyy-MM-dd");
+        }
+
+
         protected void btnRegistrarCheckInOut_Click(object sender, EventArgs e)
         {
-           
+            int idDetalleReserva = Convert.ToInt32(hfIdDetalleReserva.Value);
+            var negocio = new NegocioReserva();
 
+            // Solo registrar CheckOut (CheckIn ya se maneja con botón aparte)
+            if (string.IsNullOrEmpty(txtCheckOut.Text))
+            {
+                negocio.RegistrarCheckOut(idDetalleReserva);
+            }
+
+            // Refrescar UI
+            OcultarTodosLosPanelesReserva();
+            ResaltarBotonSeleccionado(btnReserva);
+            panelReservas.Visible = true;
+            getDataReservas();
         }
 
         protected void btnCancelarCheckInOut_Click(object sender, EventArgs e)

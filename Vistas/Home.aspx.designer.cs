@@ -816,6 +816,15 @@ namespace Vistas
         protected global::System.Web.UI.WebControls.Panel panelCheckInOut;
 
         /// <summary>
+        /// Control hfIdDetalleReserva.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hfIdDetalleReserva;
+
+        /// <summary>
         /// Control lblCheckin.
         /// </summary>
         /// <remarks>
@@ -825,13 +834,22 @@ namespace Vistas
         protected global::System.Web.UI.WebControls.Label lblCheckin;
 
         /// <summary>
-        /// Control txtCheckIn.
+        /// Control btnHacerCheckIn.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCheckIn;
+        protected global::System.Web.UI.WebControls.Button btnHacerCheckIn;
+
+        /// <summary>
+        /// Control lblFechaCheckIn.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblFechaCheckIn;
 
         /// <summary>
         /// Control lblCheckOut.
@@ -850,15 +868,6 @@ namespace Vistas
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCheckOut;
-
-        /// <summary>
-        /// Control Label10.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label10;
 
         /// <summary>
         /// Control btnRegistrarCheckInOut.

@@ -1,6 +1,7 @@
 ﻿using Dao;
 using Entidades;
 using System.Data;
+using System.Data.SqlClient;
 using static Entidades.Reserva;
 
 namespace Negocio
@@ -30,6 +31,16 @@ namespace Negocio
         public bool GuardarReserva(ReservaEnProceso reserva)
         {
             return dao.GuardarReserva(reserva);
+        }
+
+        public void RegistrarCheckIn(int idDetalleReserva)
+        {
+            dao.RegistrarCheckIn(idDetalleReserva);
+        }
+
+        public void RegistrarCheckOut(int idDetalleReserva)
+        {
+            dao.RegistrarCheckOut(idDetalleReserva);
         }
 
     }
