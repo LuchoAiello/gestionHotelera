@@ -12,14 +12,19 @@ namespace Negocio
             return dao.GetUser();
         }
 
+        public void CrearUsuario(Usuario user)
+        {
+            dao.CrearUsuario(user);
+        }
+
         public void ModificarUsuario(Usuario user)
         {
            dao.ModificarUsuario(user);
         }
 
-        public void CrearUsuario(Usuario user)
+        public void EliminarUsuario(Usuario user)
         {
-            dao.CrearUsuario(user);
+            dao.EliminarUsuario(user);
         }
     }
 }

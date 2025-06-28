@@ -5,7 +5,6 @@
         public int IdServicio { get; set; }
         public string NombreServicio { get; set; }
         public decimal Precio { get; set; }
-        public int Estado { get; set; }
 
         public static Servicios CrearServicios(string nombre, decimal precio)
         {
@@ -16,14 +15,20 @@
             };
         }
 
-        public static Servicios ModificarServicio(int id, string nombre, decimal precio, int estado)
+        public static Servicios ModificarServicio(int id, string nombre, decimal precio)
         {
             return new Servicios
             {
                 IdServicio = id,
                 NombreServicio = nombre,
                 Precio = precio,
-                Estado = estado
+            };
+        }
+        public static Servicios EliminarServicio(int id)
+        {
+            return new Servicios
+            {
+                IdServicio = id,
             };
         }
     }

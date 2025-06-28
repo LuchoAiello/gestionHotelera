@@ -20,14 +20,20 @@ namespace Negocio
                 return dao.GetHuespedes();
             }
 
+
+            public void CrearHuesped(Huespedes huesped)
+            {
+                dao.CrearHuesped(huesped);
+            }
+
             public void ModificarHuesped(Huespedes huesped)
             {
                 dao.ModificarHuesped(huesped);
             }
 
-            public void CrearHuesped(Huespedes huesped)
+            public void EliminarHuesped(Huespedes huesped)
             {
-                dao.CrearHuesped(huesped);
+                dao.EliminarHuesped(huesped);
             }
 
             public DataTable FiltrarHuespedPorDocumento(string Documento)

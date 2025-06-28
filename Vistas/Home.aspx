@@ -35,13 +35,13 @@
                             <asp:LinkButton ID="btnPanelAdministrativo" runat="server" CssClass="nav-link text-white" OnClick="btnPanelAdministrativo_Click">Panel Administrativo</asp:LinkButton>
                         </li>
                         <li class="nav-item">
+                            <asp:LinkButton ID="btnReservas" runat="server" CssClass="nav-link text-white" OnClick="btnReservas_Click">Reservas</asp:LinkButton>
+                        </li>
+                        <li class="nav-item">
                             <asp:LinkButton ID="btnRegisterHuesped" runat="server" CssClass="nav-link text-white" OnClick="btnRegisterHuesped_Click">Huesped</asp:LinkButton>
                         </li>
                         <li class="nav-item">
                             <asp:LinkButton ID="btnRooms" runat="server" CssClass="nav-link text-white" OnClick="btnHabitaciones_Click">Habitaciones</asp:LinkButton>
-                        </li>
-                        <li class="nav-item">
-                            <asp:LinkButton ID="btnReservas" runat="server" CssClass="nav-link text-white" OnClick="btnReservas_Click">Reservas</asp:LinkButton>
                         </li>
                     </ul>
 
@@ -82,7 +82,14 @@
                         <asp:Button ID="btnNuevoUsuario" runat="server" Text="Nuevo Usuario" CssClass="btn btn-primary" OnClick="btnMostrarFormularioUsuarios_Click" />
                         <div class="mt-3" style="overflow-x: auto; width: 100%;">
                             <asp:GridView ID="grvUsuario" runat="server" AutoGenerateColumns="False" DataKeyNames="Id_usuario" CssClass="table table-striped table-bordered w-100"
-                                AllowPaging="true" PageSize="5" OnRowCancelingEdit="grvUsuario_RowCancelingEdit" OnRowEditing="grvUsuario_RowEditing" OnRowUpdating="grvUsuario_RowUpdating" OnRowDataBound="grvUsuario_RowDataBound" OnPageIndexChanging="grvUsuario_PageIndexChanging">
+                                AllowPaging="true"
+                                PageSize="5"
+                                OnRowCancelingEdit="grvUsuario_RowCancelingEdit"
+                                OnRowEditing="grvUsuario_RowEditing"
+                                OnRowUpdating="grvUsuario_RowUpdating"
+                                OnRowDataBound="grvUsuario_RowDataBound"
+                                OnPageIndexChanging="grvUsuario_PageIndexChanging"
+                                OnRowCommand="grvUsuario_RowCommand">
                                 <Columns>
                                     <asp:TemplateField HeaderText="Usuario">
                                         <EditItemTemplate>
@@ -109,17 +116,13 @@
                                             <asp:Label ID="txtRol" runat="server" Text='<%# Bind("Rol") %>'></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Estado">
-                                        <EditItemTemplate>
-                                            <asp:DropDownList ID="ddlEIEstado" runat="server" />
-                                        </EditItemTemplate>
-                                        <ItemTemplate>
-                                            <asp:Label ID="txtEstado" runat="server" Text='<%# Convert.ToBoolean(Eval("Estado")) ? "Activo" : "Inactivo" %>'></asp:Label>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Acciones">
                                         <ItemTemplate>
                                             <asp:LinkButton ID="btnEditar" runat="server" CommandName="Edit" CssClass="btn btn-sm btn-outline-primary me-1"><i class="bi bi-pencil"></i></asp:LinkButton>
+                                            <asp:Button ID="btnDarDeBajaUsuario" runat="server" Text="Dar de baja"
+                                                CommandName="DarDeBajaUsuario"
+                                                CommandArgument='<%# Eval("Id_usuario") %>'
+                                                CssClass="btn btn-outline-danger btn-sm" />
                                         </ItemTemplate>
                                         <EditItemTemplate>
                                             <asp:LinkButton ID="btnActualizar" runat="server" CommandName="Update" CssClass="btn btn-sm btn-outline-success  me-1"><i class="bi bi-check"></i></asp:LinkButton>
@@ -165,8 +168,19 @@
 
                         <div class="mt-3" style="overflow-x: auto; width: 100%;">
 
-                            <asp:GridView ID="grvMetodoPago" runat="server" AutoGenerateColumns="False" DataKeyNames="Id_metodoPago" CssClass="table table-striped table-bordered w-100"
-                                AllowPaging="true" PageSize="5" OnRowCancelingEdit="grvMetodoPago_RowCancelingEdit" OnRowEditing="grvMetodoPago_RowEditing" OnRowUpdating="grvMetodoPago_RowUpdating" OnPageIndexChanging="grvMetodoPago_PageIndexChanging" OnRowDataBound="grvMetodoPago_RowDataBound">
+                            <asp:GridView ID="grvMetodoPago"
+                                runat="server"
+                                AutoGenerateColumns="False"
+                                DataKeyNames="Id_metodoPago"
+                                CssClass="table table-striped table-bordered w-100"
+                                AllowPaging="true"
+                                PageSize="5"
+                                OnRowCancelingEdit="grvMetodoPago_RowCancelingEdit"
+                                OnRowEditing="grvMetodoPago_RowEditing"
+                                OnRowUpdating="grvMetodoPago_RowUpdating"
+                                OnPageIndexChanging="grvMetodoPago_PageIndexChanging"
+                                OnRowDataBound="grvMetodoPago_RowDataBound"
+                                OnRowCommand="grvMetodoPago_RowCommand">
                                 <Columns>
                                     <asp:TemplateField HeaderText="Metodo de Pago">
                                         <EditItemTemplate>
@@ -176,17 +190,13 @@
                                             <asp:Label ID="txtNombrePago" runat="server" Text='<%# Bind("Nombre") %>'></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Estado">
-                                        <EditItemTemplate>
-                                            <asp:DropDownList ID="ddlEIEstadoPago" runat="server" />
-                                        </EditItemTemplate>
-                                        <ItemTemplate>
-                                            <asp:Label ID="txtEstadoPago" runat="server" Text='<%# Convert.ToBoolean(Eval("Estado")) ? "Activo" : "Inactivo" %>'></asp:Label>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Acciones">
                                         <ItemTemplate>
                                             <asp:LinkButton ID="btnEditar" runat="server" CommandName="Edit" CssClass="btn btn-sm btn-outline-primary me-1"><i class="bi bi-pencil"></i></asp:LinkButton>
+                                            <asp:Button ID="btnDarDeBajaMetodoPago" runat="server" Text="Dar de baja"
+                                                CommandName="DarDeBajaMetodoPago"
+                                                CommandArgument='<%# Eval("Id_metodoPago") %>'
+                                                CssClass="btn btn-outline-danger btn-sm" />
                                         </ItemTemplate>
                                         <EditItemTemplate>
                                             <asp:LinkButton ID="btnActualizar" runat="server" CommandName="Update" CssClass="btn btn-sm btn-outline-success  me-1"><i class="bi bi-check"></i></asp:LinkButton>
@@ -221,8 +231,19 @@
 
                         <div class="mt-3" style="overflow-x: auto; width: 100%;">
 
-                            <asp:GridView ID="grvServicio" runat="server" AutoGenerateColumns="False" DataKeyNames="Id_servicioAdicional" CssClass="table table-striped table-bordered w-100"
-                                AllowPaging="true" PageSize="5" OnPageIndexChanging="grvServicio_PageIndexChanging" OnRowCancelingEdit="grvServicio_RowCancelingEdit" OnRowEditing="grvServicio_RowEditing" OnRowUpdating="grvServicio_RowUpdating" OnRowDataBound="grvServicio_RowDataBound">
+                            <asp:GridView ID="grvServicio"
+                                runat="server"
+                                AutoGenerateColumns="False"
+                                DataKeyNames="Id_servicioAdicional"
+                                CssClass="table table-striped table-bordered w-100"
+                                AllowPaging="true"
+                                PageSize="5"
+                                OnPageIndexChanging="grvServicio_PageIndexChanging"
+                                OnRowCancelingEdit="grvServicio_RowCancelingEdit"
+                                OnRowEditing="grvServicio_RowEditing"
+                                OnRowUpdating="grvServicio_RowUpdating"
+                                OnRowDataBound="grvServicio_RowDataBound"
+                                OnRowCommand="grvServicio_RowCommand">
                                 <Columns>
                                     <asp:TemplateField HeaderText="Servicio">
                                         <EditItemTemplate>
@@ -240,17 +261,13 @@
                                             <asp:Label ID="txtPrecio" runat="server" Text='<%# Bind("Precio") %>'></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Estado">
-                                        <EditItemTemplate>
-                                            <asp:DropDownList ID="ddlEIEstadoServicio" runat="server" />
-                                        </EditItemTemplate>
-                                        <ItemTemplate>
-                                            <asp:Label ID="txtEstadoServicio" runat="server" Text='<%# Convert.ToBoolean(Eval("Estado")) ? "Activo" : "Inactivo" %>'></asp:Label>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Acciones">
                                         <ItemTemplate>
                                             <asp:LinkButton ID="btnEditar" runat="server" CommandName="Edit" CssClass="btn btn-sm btn-outline-primary me-1"><i class="bi bi-pencil"></i></asp:LinkButton>
+                                            <asp:Button ID="btnDarDeBajaServicio" runat="server" Text="Dar de baja"
+                                                CommandName="DarDeBajaServicio"
+                                                CommandArgument='<%# Eval("Id_servicioAdicional") %>'
+                                                CssClass="btn btn-outline-danger btn-sm" />
                                         </ItemTemplate>
                                         <EditItemTemplate>
                                             <asp:LinkButton ID="btnActualizar" runat="server" CommandName="Update" CssClass="btn btn-sm btn-outline-success  me-1"><i class="bi bi-check"></i></asp:LinkButton>
@@ -289,8 +306,19 @@
                     <asp:Panel ID="panelHuespedes" runat="server" Visible="false">
                         <asp:Button ID="btnNuevoHuesped" runat="server" Text="Nuevo Huesped" CssClass="btn btn-primary" OnClick="btnNuevoHuesped_Click" />
                         <div class="mt-3" style="overflow-x: auto; width: 100%;">
-                            <asp:GridView ID="grvHuespedes" runat="server" AutoGenerateColumns="False" DataKeyNames="Id_huesped" CssClass="table table-striped table-bordered w-100"
-                                AllowPaging="true" PageSize="5" OnPageIndexChanging="grvHuespedes_PageIndexChanging" OnRowCancelingEdit="grvHuespedes_RowCancelingEdit" OnRowEditing="grvHuespedes_RowEditing" OnRowUpdating="grvHuespedes_RowUpdating" OnRowDataBound="grvHuespedes_RowDataBound">
+                            <asp:GridView ID="grvHuespedes"
+                                runat="server"
+                                AutoGenerateColumns="False"
+                                DataKeyNames="Id_huesped"
+                                CssClass="table table-striped table-bordered w-100"
+                                AllowPaging="true"
+                                PageSize="5"
+                                OnPageIndexChanging="grvHuespedes_PageIndexChanging"
+                                OnRowCancelingEdit="grvHuespedes_RowCancelingEdit"
+                                OnRowEditing="grvHuespedes_RowEditing"
+                                OnRowUpdating="grvHuespedes_RowUpdating"
+                                OnRowDataBound="grvHuespedes_RowDataBound"
+                                OnRowCommand="grvHuespedes_RowCommand">
                                 <Columns>
                                     <asp:TemplateField HeaderText="Nombre">
                                         <EditItemTemplate>
@@ -349,17 +377,13 @@
                                             <asp:Label ID="lblFechaNacimiento" runat="server" Text='<%# Bind("FechaNacimiento", "{0:dd/MM/yyyy}") %>'></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Estado">
-                                        <EditItemTemplate>
-                                            <asp:DropDownList ID="ddlEIEstadoHuesped" runat="server" />
-                                        </EditItemTemplate>
-                                        <ItemTemplate>
-                                            <asp:Label ID="txtEstadoHuesped" runat="server" Text='<%# Convert.ToBoolean(Eval("Estado")) ? "Activo" : "Inactivo" %>'></asp:Label>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Acciones">
                                         <ItemTemplate>
                                             <asp:LinkButton ID="btnEditar" runat="server" CommandName="Edit" CssClass="btn btn-sm btn-outline-primary me-1"><i class="bi bi-pencil"></i></asp:LinkButton>
+                                            <asp:Button ID="btnDarDeBajaHuesped" runat="server" Text="Dar de baja"
+                                                CommandName="DarDeBajaHuesped"
+                                                CommandArgument='<%# Eval("Id_huesped") %>'
+                                                CssClass="btn btn-outline-danger btn-sm" />
                                         </ItemTemplate>
                                         <EditItemTemplate>
                                             <div style="max-width: 75px; width: 75px; white-space: nowrap; overflow: hidden;">
@@ -603,9 +627,10 @@
                                     <asp:BoundField HeaderText="Documento" DataField="Documento" />
                                     <asp:BoundField HeaderText="Email" DataField="Email" />
                                     <asp:BoundField HeaderText="Teléfono" DataField="Telefono" />
-                                    <asp:BoundField HeaderText="Fecha Reserva" DataField="FechaReserva" DataFormatString="{0:dd/MM/yyyy}" />
+                                    <asp:BoundField HeaderText="Fecha Reserva" DataField="FechaReserva" DataFormatString="{0:dd/MM/yyyy}" />      
+                                    <asp:BoundField HeaderText="Fecha de Pago" DataField="FechaPago" DataFormatString="{0:dd/MM/yyyy}" />
                                     <asp:BoundField HeaderText="Huéspedes" DataField="CantidadHuespedes" />
-                                    <asp:BoundField HeaderText="Precio Final" DataField="PrecioReserva" DataFormatString="{0:C}" />
+                                    <asp:BoundField HeaderText="Monto Total" DataField="MontoTotal" DataFormatString="{0:C}" />
                                     <asp:TemplateField HeaderText="Detalles">
                                         <ItemTemplate>
                                             <asp:Button ID="btnVerDetalle" runat="server"
@@ -617,8 +642,8 @@
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Acciones">
                                         <ItemTemplate>
-                                            <asp:Button ID="btnDarDeBaja" runat="server" Text="Dar de baja"
-                                                CommandName="DarDeBaja"
+                                            <asp:Button ID="btnDarDeBajaReserva" runat="server" Text="Dar de baja"
+                                                CommandName="DarDeBajaReserva"
                                                 CommandArgument='<%# Eval("Id_reserva") %>'
                                                 CssClass="btn btn-outline-danger btn-sm" />
                                         </ItemTemplate>
@@ -878,6 +903,9 @@
                                 <div class="col-md-3">
                                     <asp:Label ID="lblMontoTotal" runat="server" Text="" CssClass="form-label" />
                                 </div>
+                                <div class="row mb-3">
+                                    <asp:Label ID="lblErrorMetodoPago1" runat="server" Text="" CssClass="form-label" />
+                                </div>
                             </div>
 
                             <div class="row mb-3">
@@ -914,8 +942,9 @@
                                     <asp:BoundField HeaderText="Email" DataField="Email" />
                                     <asp:BoundField HeaderText="Teléfono" DataField="Telefono" />
                                     <asp:BoundField HeaderText="Fecha Reserva" DataField="FechaReserva" DataFormatString="{0:dd/MM/yyyy}" />
+                                    <asp:BoundField HeaderText="Fecha de Pago" DataField="FechaPago" DataFormatString="{0:dd/MM/yyyy}" />
                                     <asp:BoundField HeaderText="Huéspedes" DataField="CantidadHuespedes" />
-                                    <asp:BoundField HeaderText="Precio Final" DataField="PrecioReserva" DataFormatString="{0:C}" />
+                                    <asp:BoundField HeaderText="Monto Total" DataField="MontoTotal" DataFormatString="{0:C}" />
                                     <asp:TemplateField HeaderText="Detalles">
                                         <ItemTemplate>
                                             <asp:Button ID="btnVerDetalle" runat="server"

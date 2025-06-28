@@ -35,7 +35,6 @@ namespace Entidades
         {
             public int IdHuesped { get; set; }
             public List<int> IdHabitaciones { get; set; } = new List<int>();
-            public DateTime FechaReserva { get; set; }
             public DateTime CheckIn { get; set; }
             public DateTime CheckOut { get; set; }
             public int CantidadHuespedes { get; set; }
@@ -43,7 +42,7 @@ namespace Entidades
             public int IdMetodoPago { get; set; }
             public decimal PrecioFinal { get; set; }
             public string NroTarjeta { get; set; }
-            public string VenTarjeta { get; set; }
+            public string VtoTarjeta { get; set; }
 
         }
     }

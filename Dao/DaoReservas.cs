@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using static Entidades.Reserva;
 
 namespace Dao
@@ -11,24 +12,18 @@ namespace Dao
     {
         AccesoDatos ds = new AccesoDatos();
 
-        private void ArmarParametros(SqlCommand comando, Reserva r)
+        public DataTable GetReservasActualesYFuturas()
         {
-            comando.Parameters.AddWithValue("@Id_reserva", r.IdReserva);
-            comando.Parameters.AddWithValue("@Nombre", r.NombreCompleto);
-            comando.Parameters.AddWithValue("@Documento", r.Documento);
-            comando.Parameters.AddWithValue("@Email", r.Email);
-            comando.Parameters.AddWithValue("@Telefono", r.Telefono);
-            comando.Parameters.AddWithValue("@FechaReserva", r.FechaReserva);
-            comando.Parameters.AddWithValue("@CantidadHuespedes", r.CantidadHuespedes);
-            comando.Parameters.AddWithValue("@PrecioFinal", r.PrecioFinal);
-            comando.Parameters.AddWithValue("@Estado", r.Estado);
-        }
-
-        public DataTable GetReservas()
-        {
-            string consulta = "SELECT * FROM Vista_Reservas";
+            string consulta = "SELECT * FROM Vista_ReservasActualesYFuturas ORDER BY FechaSalida ASC";
             return ds.ObtenerTabla("Reservas", consulta);
         }
+
+        public DataTable GetHistorialDeReservas()
+        {
+            string consulta = "SELECT * FROM Vista_ReservasHistorial ORDER BY FechaSalida DESC";
+            return ds.ObtenerTabla("Reservas", consulta);
+        }
+
         public bool EliminarReserva(int idReserva)
         {
             SqlCommand comando = new SqlCommand();
@@ -54,43 +49,85 @@ namespace Dao
 
         public bool GuardarReserva(ReservaEnProceso reserva)
         {
-            SqlParameter[] parametros = new SqlParameter[]
+            try
             {
-                new SqlParameter("@IdHuesped", reserva.IdHuesped),
-                new SqlParameter("@IdMetodoPago", reserva.IdMetodoPago),
-                new SqlParameter("@FechaPago", DateTime.Now),
-                new SqlParameter("@MontoTotal", reserva.PrecioFinal),
-                new SqlParameter("@FechaReserva", reserva.FechaReserva),
-                new SqlParameter("@FechaLlegada", reserva.CheckIn),
-                new SqlParameter("@FechaSalida", reserva.CheckOut),
-                new SqlParameter("@CantidadHuespedes", reserva.CantidadHuespedes),
-                new SqlParameter("@NroTarjeta", reserva.NroTarjeta),
-                new SqlParameter("@VencimientoTarjeta", reserva.VenTarjeta),
-                new SqlParameter("@Habitaciones", ConvertirListaHabitaciones(reserva.IdHabitaciones)),
-                new SqlParameter("@Servicios", ConvertirListaServicios(reserva.ServiciosAdicionales))
-            };
+                SqlParameter[] parametros = new SqlParameter[]
+                {
+                 new SqlParameter("@Id_huesped", reserva.IdHuesped),
+                 new SqlParameter("@Id_metodoPago", reserva.IdMetodoPago),
+                 new SqlParameter("@FechaLlegada", reserva.CheckIn),
+                 new SqlParameter("@FechaSalida", reserva.CheckOut),
+                 new SqlParameter("@CantidadHuespedes", reserva.CantidadHuespedes),
+                 new SqlParameter("@MontoTotal", reserva.PrecioFinal),
+                 new SqlParameter("@NroTarjeta", (object)reserva.NroTarjeta ?? DBNull.Value),
+                 new SqlParameter("@VtoTarjeta", ConvertirVencimiento(reserva.VtoTarjeta)),
+                 new SqlParameter
+            {
+                ParameterName = "@HabitacionesDetalle",
+                SqlDbType = SqlDbType.Structured,
+                TypeName = "TipoHabitacionesDetalle",
+                Value = ConvertirHabitacionesDetalle(reserva)
+            },
+                new SqlParameter
+            {
+                ParameterName = "@ServiciosDetalle",
+                SqlDbType = SqlDbType.Structured,
+                TypeName = "TipoServiciosDetalle",
+                Value = ConvertirServiciosDetalle(reserva)
+            }
+                };
 
-            int filasAfectadas = ds.EjecutarProcedimientoConParametros("sp_RegistrarReservaCompleta", parametros);
-            return filasAfectadas > 0;
+                ds.EjecutarProcedimientoConParametros("SP_CrearReservaCompleta", parametros);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error en DAO.GuardarReserva: " + ex.Message, ex);
+            }
         }
 
-        // Métodos para convertir las listas a DataTable (igual que tenías)
-        private DataTable ConvertirListaHabitaciones(List<int> ids)
+        private DataTable ConvertirHabitacionesDetalle(ReservaEnProceso reserva)
         {
-            DataTable table = new DataTable();
-            table.Columns.Add("Id", typeof(int));
-            foreach (int id in ids)
-                table.Rows.Add(id);
-            return table;
+            DataTable dt = new DataTable();
+            dt.Columns.Add("Id_habitacion", typeof(int));
+            dt.Columns.Add("PrecioDetalle", typeof(decimal));
+            dt.Columns.Add("CheckIn", typeof(DateTime));
+            dt.Columns.Add("CheckOut", typeof(DateTime));
+
+            foreach (int id in reserva.IdHabitaciones)
+            {
+                dt.Rows.Add(id, reserva.PrecioFinal, reserva.CheckIn, reserva.CheckOut);
+            }
+
+            return dt;
         }
 
-        private DataTable ConvertirListaServicios(List<int> ids)
+        private DataTable ConvertirServiciosDetalle(ReservaEnProceso reserva)
         {
-            DataTable table = new DataTable();
-            table.Columns.Add("Id", typeof(int));
-            foreach (int id in ids)
-                table.Rows.Add(id);
-            return table;
+            DataTable dt = new DataTable();
+            dt.Columns.Add("Id_habitacion", typeof(int));
+            dt.Columns.Add("Id_servicioAdicional", typeof(int));
+
+            foreach (int idHab in reserva.IdHabitaciones)
+            {
+                foreach (int idServ in reserva.ServiciosAdicionales)
+                {
+                    dt.Rows.Add(idHab, idServ);
+                }
+            }
+
+            return dt;
         }
+
+        private object ConvertirVencimiento(string vencimientoMMYY)
+        {
+            if (DateTime.TryParseExact(vencimientoMMYY, "MM/yy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime vto))
+            {
+                return new DateTime(vto.Year, vto.Month, DateTime.DaysInMonth(vto.Year, vto.Month));
+            }
+            return DBNull.Value;
+        }
+
     }
 }

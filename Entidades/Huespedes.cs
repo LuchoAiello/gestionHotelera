@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml.Linq;
 
 namespace Entidades
 {
@@ -12,7 +13,6 @@ namespace Entidades
         public string Email { get; set; }
         public string Telefono { get; set; }
         public DateTime FechaNacimiento { get; set; }
-        public int Estado { get; set; }
 
         public static Huespedes CrearHuesped(string nombre, string apellido, string documento, string tipoDocumento, string email, string telefono, DateTime fechaNacimiento)
         {
@@ -28,7 +28,7 @@ namespace Entidades
             };
         }
 
-        public static Huespedes ModificarHuesped(int id, string nombre, string apellido, string documento, string tipoDocumento, string email, string telefono, DateTime fechaNacimiento, int estado)
+        public static Huespedes ModificarHuesped(int id, string nombre, string apellido, string documento, string tipoDocumento, string email, string telefono, DateTime fechaNacimiento)
         {
             return new Huespedes
             {
@@ -39,8 +39,15 @@ namespace Entidades
                 TipoDocumento = tipoDocumento,
                 Email = email,
                 Telefono = telefono,
-                FechaNacimiento = fechaNacimiento,
-                Estado = estado
+                FechaNacimiento = fechaNacimiento
+            };
+        }
+
+        public static Huespedes EliminarHuesped(int id)
+        {
+            return new Huespedes
+            {
+                IdHuesped = id
             };
         }
     }

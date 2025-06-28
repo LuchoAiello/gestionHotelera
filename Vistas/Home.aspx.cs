@@ -28,23 +28,36 @@ namespace Vistas
             {
                 string rol = Session["RolLogin"]?.ToString();
 
+                OcultarTodosLosPaneles();
+
                 if (rol == "Administrador")
                 {
-                    btnPanelAdministrativo.Visible = true;
                     btnRooms.Visible = true;
+                    OcultarTodosLosPaneles();
+                    ResaltarBotonPrincipal(btnPanelAdministrativo);
+                    ResaltarBotonSeleccionado(btnUsuario);
+                    panelAdministrativo.Visible = true;
+                    panelUsuario.Visible = true;
+                    lblSeccionTitulo.Text = "Panel Administrativo";
+
+                    getDataUser();
 
                 }
                 else if (rol == "Recepcionista")
                 {
                     btnPanelAdministrativo.Visible = false;
                     btnRooms.Visible = false;
+                    OcultarTodosLosPaneles();
+                    ResaltarBotonPrincipal(btnReservas);
+                    ResaltarBotonSeleccionado(btnReserva);
+                    panelReservas.Visible = true;
+                    lblSeccionTitulo.Text = "Panel de Reservas";
 
+                    getDataReservas();
                 }
 
                 btnRegisterHuesped.Visible = true;
                 btnReservas.Visible = true;
-
-                OcultarTodosLosPaneles();
             }
 
             if (Session["NameLogin"] != null)
@@ -53,7 +66,7 @@ namespace Vistas
             }
             else
             {
-                // Response.Redirect("Login.aspx");
+                Response.Redirect("Login.aspx");
             }
         }
 
@@ -145,7 +158,6 @@ namespace Vistas
         }
 
         #region Panel Huesped 
-
         //PANEL HUESPED
         protected void btnRegisterHuesped_Click(object sender, EventArgs e)
         {
@@ -233,14 +245,25 @@ namespace Vistas
             string email = ((TextBox)grvHuespedes.Rows[e.RowIndex].FindControl("txtEIEmail")).Text;
             string telefono = ((TextBox)grvHuespedes.Rows[e.RowIndex].FindControl("txtEITelefono")).Text;
             DateTime fechaNacimiento = Convert.ToDateTime(((TextBox)grvHuespedes.Rows[e.RowIndex].FindControl("txtEIFechaNacimiento")).Text);
-            DropDownList ddlEstado = (DropDownList)grvHuespedes.Rows[e.RowIndex].FindControl("ddlEIEstadoHuesped");
-            int estado = Convert.ToInt32(ddlEstado.SelectedValue);
 
-            Huespedes huesped = Huespedes.ModificarHuesped(id, nombre, apellido, documento, tipoDocumento, email, telefono, fechaNacimiento, estado);
+            Huespedes huesped = Huespedes.ModificarHuesped(id, nombre, apellido, documento, tipoDocumento, email, telefono, fechaNacimiento);
             negocioHuesped.ModificarHuesped(huesped);
 
             grvHuespedes.EditIndex = -1;
             getDataHuesped();
+        }
+
+        protected void grvHuespedes_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "DarDeBajaHuesped")
+            {
+                int idHuesped = Convert.ToInt32(e.CommandArgument);
+
+                Huespedes eliminarHuesped = Huespedes.EliminarHuesped(idHuesped);
+                negocioHuesped.EliminarHuesped(eliminarHuesped);
+
+                getDataHuesped();
+            }
         }
 
         protected void btnRegistrarHuesped_Click(object sender, EventArgs e)
@@ -433,7 +456,7 @@ namespace Vistas
 
         private void getDataHistorialReservas()
         {
-            DataTable historial = negocioReserva.GetReservas();
+            DataTable historial = negocioReserva.GetHistorialDeReservas();
             grvHistorialReservas.DataSource = historial;
             grvHistorialReservas.DataBind();
         }
@@ -447,7 +470,7 @@ namespace Vistas
             panelHistorialReservas.Visible = true;
         }
 
-      
+
         #endregion
 
         #region Panel de Habitaciones
@@ -699,10 +722,8 @@ namespace Vistas
             string nombre = ((TextBox)grvUsuario.Rows[e.RowIndex].FindControl("txtEINombre")).Text;
             string contrasenia = ((TextBox)grvUsuario.Rows[e.RowIndex].FindControl("txtEIContrasenia")).Text;
             string rol = ((DropDownList)grvUsuario.Rows[e.RowIndex].FindControl("ddpEIRol")).SelectedValue;
-            DropDownList ddlEstado = (DropDownList)grvUsuario.Rows[e.RowIndex].FindControl("ddlEIEstado");
-            int estado = Convert.ToInt32(ddlEstado.SelectedValue);
 
-            Usuario userMod = Usuario.ModificarUsuario(id, nombre, contrasenia, rol, estado);
+            Usuario userMod = Usuario.ModificarUsuario(id, nombre, contrasenia, rol);
             negocioUsuario.ModificarUsuario(userMod);
 
             grvUsuario.EditIndex = -1;
@@ -741,6 +762,19 @@ namespace Vistas
             panelRegistrarUsuario.Visible = false;
             txtName.Text = "";
             txtPassword.Text = "";
+        }
+
+        protected void grvUsuario_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "DarDeBajaUsuario")
+            {
+                int idUsuario = Convert.ToInt32(e.CommandArgument);
+
+                Usuario eliminarUsuario = Usuario.EliminarUsuario(idUsuario);
+                negocioUsuario.EliminarUsuario(eliminarUsuario);
+
+                getDataUser();
+            }
         }
 
         protected void grvUsuario_PageIndexChanging(object sender, GridViewPageEventArgs e)
@@ -792,6 +826,19 @@ namespace Vistas
             getDataMetodoPago();
         }
 
+        protected void grvMetodoPago_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "DarDeBajaMetodoPago")
+            {
+                int idMetodoPago = Convert.ToInt32(e.CommandArgument);
+
+                MetodoPago eliminarMetodoPago = MetodoPago.EliminarMetodoPago(idMetodoPago);
+                negocioMetodoPago.EliminarMetodoPago(eliminarMetodoPago);
+
+                getDataMetodoPago();
+            }
+        }
+
         protected void grvMetodoPago_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow && grvMetodoPago.EditIndex == e.Row.RowIndex)
@@ -823,10 +870,8 @@ namespace Vistas
         {
             int id = Convert.ToInt32(grvMetodoPago.DataKeys[e.RowIndex].Value);
             string nombre = ((TextBox)grvMetodoPago.Rows[e.RowIndex].FindControl("txtEINombrePago")).Text;
-            DropDownList ddlEstado = (DropDownList)grvMetodoPago.Rows[e.RowIndex].FindControl("ddlEIEstadoPago");
-            int estado = Convert.ToInt32(ddlEstado.SelectedValue);
 
-            MetodoPago metodoPago = MetodoPago.ModificarMetodoPago(id, nombre, estado);
+            MetodoPago metodoPago = MetodoPago.ModificarMetodoPago(id, nombre);
             negocioMetodoPago.ModificarMetodoPago(metodoPago);
 
             grvMetodoPago.EditIndex = -1;
@@ -935,14 +980,25 @@ namespace Vistas
             string nombre = ((TextBox)grvServicio.Rows[e.RowIndex].FindControl("txtEINombreServicio")).Text;
             string precioTexto = ((TextBox)grvServicio.Rows[e.RowIndex].FindControl("txtEIPrecio")).Text.Trim();
             decimal precio = Convert.ToDecimal(precioTexto);
-            DropDownList ddlEstado = (DropDownList)grvServicio.Rows[e.RowIndex].FindControl("ddlEIEstadoServicio");
-            int estado = Convert.ToInt32(ddlEstado.SelectedValue);
 
-            Servicios servicio = Servicios.ModificarServicio(id, nombre, precio, estado);
+            Servicios servicio = Servicios.ModificarServicio(id, nombre, precio);
             negocioServicio.ModificarServicio(servicio);
 
             grvServicio.EditIndex = -1;
             getDataServicio();
+        }
+
+        protected void grvServicio_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "DarDeBajaServicio")
+            {
+                int idServicio = Convert.ToInt32(e.CommandArgument);
+
+                Servicios eliminarServicio = Servicios.EliminarServicio(idServicio);
+                negocioServicio.EliminarServicio(eliminarServicio);
+
+                getDataServicio();
+            }
         }
 
         protected void grvServicio_PageIndexChanging(object sender, GridViewPageEventArgs e)
@@ -1038,7 +1094,7 @@ namespace Vistas
 
                 getDataReservas();
             }
-            else if (e.CommandName == "DarDeBaja")
+            else if (e.CommandName == "DarDeBajaReserva")
             {
                 int idReserva = Convert.ToInt32(e.CommandArgument);
 
@@ -1062,6 +1118,7 @@ namespace Vistas
             gvDetalles.Columns.Add(new BoundField { HeaderText = "Check-In", DataField = "CheckIn", DataFormatString = "{0:dd/MM/yyyy}" });
             gvDetalles.Columns.Add(new BoundField { HeaderText = "Check-Out", DataField = "CheckOut", DataFormatString = "{0:dd/MM/yyyy}" });
             gvDetalles.Columns.Add(new BoundField { HeaderText = "Precio", DataField = "PrecioDetalle", DataFormatString = "{0:C}" });
+            gvDetalles.Columns.Add(new BoundField { HeaderText = "Capacidad", DataField = "Capacidad" });
 
             gvDetalles.DataSource = dtDetalles;
             gvDetalles.DataBind();
@@ -1105,7 +1162,7 @@ namespace Vistas
 
         private void getDataReservas()
         {
-            DataTable reservas = negocioReserva.GetReservas();
+            DataTable reservas = negocioReserva.GetReservasActualesYFuturas();
             grvReservas.DataSource = reservas;
             grvReservas.DataBind();
         }
@@ -1391,7 +1448,6 @@ namespace Vistas
             reserva.CantidadHuespedes = int.Parse(txtCantidadDeHuespedes.Text.Trim());
             reserva.CheckIn = DateTime.Parse(txtFechaDesde.Text.Trim());
             reserva.CheckOut = DateTime.Parse(txtFechaHasta.Text.Trim());
-            reserva.FechaReserva = DateTime.Now;
 
             Session["reservaEnProceso"] = reserva;
 
@@ -1450,7 +1506,7 @@ namespace Vistas
 
         private void getDataServiciosReserva()
         {
-            DataTable Servicio = negocioServicio.GetServiciosActivos();
+            DataTable Servicio = negocioServicio.GetServicios();
             grvCrearReservaEtapa3.DataSource = Servicio;
             grvCrearReservaEtapa3.DataBind();
 
@@ -1548,7 +1604,7 @@ namespace Vistas
 
         private void getDataMetodoPagoReserva()
         {
-            DataTable MetodoPagos = negocioMetodoPago.GetMetodoPagosReserva();
+            DataTable MetodoPagos = negocioMetodoPago.GetMetodoPagos();
             grvCrearReservaEtapa4.DataSource = MetodoPagos;
             grvCrearReservaEtapa4.DataBind();
         }
@@ -1608,10 +1664,9 @@ namespace Vistas
         }
         protected void btnRegistrarReserva_Click(object sender, EventArgs e)
         {
+            lblErrorMetodoPago.Text = ""; // Limpiar errores previos
             string nroTarjeta = txtNumeroTarjeta.Text.Trim();
             string vencimiento = txtVencimiento.Text.Trim();
-
-            lblErrorMetodoPago.Text = ""; // Limpiar error
 
             if (string.IsNullOrEmpty(nroTarjeta) || !long.TryParse(nroTarjeta, out _))
             {
@@ -1628,10 +1683,11 @@ namespace Vistas
             }
 
             ReservaEnProceso reserva = Session["reservaEnProceso"] as ReservaEnProceso;
+
             if (reserva != null)
             {
                 reserva.NroTarjeta = nroTarjeta;
-                reserva.VenTarjeta = vencimiento;
+                reserva.VtoTarjeta = vencimiento;
                 Session["reservaEnProceso"] = reserva;
 
                 NegocioReserva negocio = new NegocioReserva();
@@ -1639,8 +1695,14 @@ namespace Vistas
 
                 if (exito)
                 {
+                    reserva = new ReservaEnProceso();
+                    Session["reservaEnProceso"] = reserva;
+
+                    LimpiarControlesReserva();
+
                     OcultarTodosLosPanelesReserva();
                     getDataReservas();
+                    ResaltarBotonSeleccionado(btnReserva);
                     panelReservas.Visible = true;
                 }
                 else
@@ -1649,6 +1711,44 @@ namespace Vistas
                     lblErrorMetodoPago.ForeColor = System.Drawing.Color.Red;
                 }
             }
+        }
+
+        private void LimpiarControlesReserva()
+        {
+            // Limpiar TextBox
+            txtCantidadDeHuespedes.Text = "";
+            txtFechaDesde.Text = "";
+            txtFechaHasta.Text = "";
+            txtNumeroTarjeta.Text = "";
+            txtVencimiento.Text = "";
+
+            // Resetear reserva
+            Session["reservaEnProceso"] = new ReservaEnProceso();
+
+            // Limpiar ViewState usados para pintar
+            ViewState["IdHuespedSeleccionado"] = null;
+            ViewState["IdMetodoPagoSeleccionado"] = null;
+
+            // Rebind de GridViews para que se actualicen sin clases
+            grvCrearReservaEtapa1.DataSource = new List<object>();
+            grvCrearReservaEtapa1.DataBind();
+
+            ActualizarEstadoBotonSiguienteEtapa1();
+
+            grvCrearReservaEtapa2.DataSource = new List<object>();
+            grvCrearReservaEtapa2.DataBind();
+
+            ActualizarEstadoBotonSiguienteEtapa2();
+
+            grvCrearReservaEtapa3.DataSource = new List<object>();
+            grvCrearReservaEtapa3.DataBind();
+
+            grvCrearReservaEtapa4.DataSource = new List<object>();
+            grvCrearReservaEtapa4.DataBind();
+
+            ActualizarEstadoBotonSiguienteEtapa4();
+
+            lblErrorMetodoPago.Text = "";
         }
 
 

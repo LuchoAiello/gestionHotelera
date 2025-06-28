@@ -10,19 +10,23 @@ namespace Dao
 
         public DataTable GetUser()
         {
-            string query = "SELECT * FROM Usuarios";
+            string query = "SELECT * FROM Usuarios WHERE Estado = 1";
             DataTable tabla = ds.ObtenerTabla("Usuarios", query);
             return tabla;
+        }
+        public bool CrearUsuario(Usuario user)
+        {
+            return ds.GestionarUsuarioConSP(user, "CREATE");
         }
 
         public bool ModificarUsuario(Usuario user)
         {
-            return ds.ModificarUsuarioConSP(user);
+            return ds.GestionarUsuarioConSP(user, "UPDATE");
         }
 
-        public bool CrearUsuario(Usuario user)
+        public bool EliminarUsuario(Usuario user)
         {
-            return ds.CrearUsuarioConSP(user);
+            return ds.GestionarUsuarioConSP(user, "DELETE");
         }
     }
 }

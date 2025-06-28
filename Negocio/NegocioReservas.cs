@@ -8,9 +8,14 @@ namespace Negocio
     public class NegocioReserva
     {
         DaoReserva dao = new DaoReserva();
-        public DataTable GetReservas()
+        public DataTable GetReservasActualesYFuturas()
         {
-            return dao.GetReservas();
+            return dao.GetReservasActualesYFuturas();
+        }
+
+        public DataTable GetHistorialDeReservas()
+        {
+            return dao.GetHistorialDeReservas();
         }
 
         public bool EliminarReserva(int idReserva)

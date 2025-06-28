@@ -24,7 +24,7 @@
             };
         }
 
-        public static Usuario ModificarUsuario(int id, string nombre, string contrasenia, string rol, int estado)
+        public static Usuario ModificarUsuario(int id, string nombre, string contrasenia, string rol)
         {
             return new Usuario
             {
@@ -32,7 +32,14 @@
                 Nombre = nombre,
                 Contrasenia = contrasenia,
                 Rol = rol,
-                Estado = estado
+            };
+        }
+
+        public static Usuario EliminarUsuario(int id)
+        {
+            return new Usuario
+            {
+                IdUsuario = id,
             };
         }
     }

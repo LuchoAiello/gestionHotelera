@@ -4,7 +4,6 @@
     {
         public int IdMetodoPago { get; set; }
         public string Nombre { get; set; }
-        public int Estado { get; set; }
 
         public static MetodoPago CrearMetodoPago(string nombre)
         {
@@ -14,13 +13,20 @@
             };
         }
 
-        public static MetodoPago ModificarMetodoPago(int id, string nombre, int estado)
+        public static MetodoPago ModificarMetodoPago(int id, string nombre)
         {
             return new MetodoPago
             {
                 IdMetodoPago = id,
                 Nombre = nombre,
-                Estado = estado
+            };
+        }
+
+        public static MetodoPago EliminarMetodoPago(int id)
+        {
+            return new MetodoPago
+            {
+                IdMetodoPago = id,
             };
         }
     }

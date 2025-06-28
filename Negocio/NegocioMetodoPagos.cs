@@ -12,17 +12,18 @@ namespace Negocio
             return dao.GetMetodoPagos();
         }
 
-        public DataTable GetMetodoPagosReserva()
+        public void CrearMetodoPago(MetodoPago pago)
         {
-            return dao.GetMetodoPagosReserva();
+            dao.CrearMetodoPago(pago);
         }
         public void ModificarMetodoPago(MetodoPago pago)
         {
             dao.ModificarMetodoPago(pago);
         }
-        public void CrearMetodoPago(MetodoPago pago)
+   
+        public void EliminarMetodoPago(MetodoPago pago)
         {
-            dao.CrearMetodoPago(pago);
+            dao.EliminarMetodoPago(pago);
         }
     }
 }

@@ -163,7 +163,7 @@ namespace Dao
             }
         }
 
-        public DataTable SPHabitacionesDisponibles(string nombreSP,string fechaLlegada,string fechaSalida)
+        public DataTable SPHabitacionesDisponibles(string nombreSP, string fechaLlegada, string fechaSalida)
         {
             using (SqlConnection conexion = ObtenerConexion())
             using (SqlCommand cmd = new SqlCommand(nombreSP, conexion))
@@ -236,32 +236,95 @@ namespace Dao
             }
         }
 
-        public bool ModificarUsuarioConSP(Usuario user)
+        public bool GestionarUsuarioConSP(Usuario usuario, string accion)
         {
             using (SqlConnection conexion = ObtenerConexion())
-            using (SqlCommand comando = new SqlCommand("SP_ModificarUsuario", conexion))
+            using (SqlCommand comando = new SqlCommand("sp_GestionarUsuario", conexion))
             {
                 comando.CommandType = CommandType.StoredProcedure;
 
-                comando.Parameters.AddWithValue("@Nombre", user.Nombre);
-                comando.Parameters.AddWithValue("@Contrasenia", user.Contrasenia);
-                comando.Parameters.AddWithValue("@Rol", user.Rol);
-                comando.Parameters.AddWithValue("@Estado", user.Estado);
-                comando.Parameters.AddWithValue("@Id_usuario", user.IdUsuario);
+                comando.Parameters.AddWithValue("@Accion", accion);
+
+                if (accion == "UPDATE" || accion == "DELETE")
+                    comando.Parameters.AddWithValue("@Id_usuario", usuario.IdUsuario);
+
+                if (accion != "DELETE")
+                {
+                    comando.Parameters.AddWithValue("@Nombre", usuario.Nombre);
+                    comando.Parameters.AddWithValue("@Contrasenia", usuario.Contrasenia);
+                    comando.Parameters.AddWithValue("@Rol", usuario.Rol);
+                }
 
                 int filasAfectadas = comando.ExecuteNonQuery();
                 return filasAfectadas > 0;
             }
         }
-        public bool CrearUsuarioConSP(Usuario usuario)
+
+        public bool GestionarMetodoPagoConSP(MetodoPago metodoPago, string accion)
         {
             using (SqlConnection conexion = ObtenerConexion())
-            using (SqlCommand comando = new SqlCommand("SP_CrearUsuario", conexion))
+            using (SqlCommand comando = new SqlCommand("sp_GestionarMetodoPago", conexion))
             {
                 comando.CommandType = CommandType.StoredProcedure;
-                comando.Parameters.AddWithValue("@Nombre", usuario.Nombre);
-                comando.Parameters.AddWithValue("@Contrasenia", usuario.Contrasenia);
-                comando.Parameters.AddWithValue("@Rol", usuario.Rol);
+
+                comando.Parameters.AddWithValue("@Accion", accion);
+
+                if (accion == "UPDATE" || accion == "DELETE")
+                    comando.Parameters.AddWithValue("@Id_metodoPago", metodoPago.IdMetodoPago);
+
+                if (accion != "DELETE")
+                    comando.Parameters.AddWithValue("@Nombre", metodoPago.Nombre);
+
+                int filasAfectadas = comando.ExecuteNonQuery();
+                return filasAfectadas > 0;
+            }
+        }
+
+        public bool GestionarServicioAdicionalConSP(Servicios servicio, string accion)
+        {
+            using (SqlConnection conexion = ObtenerConexion())
+            using (SqlCommand comando = new SqlCommand("sp_GestionarServicioAdicional", conexion))
+            {
+                comando.CommandType = CommandType.StoredProcedure;
+
+                comando.Parameters.AddWithValue("@Accion", accion);
+
+                if (accion == "UPDATE" || accion == "DELETE")
+                    comando.Parameters.AddWithValue("@Id_servicioAdicional", servicio.IdServicio);
+
+                if (accion != "DELETE")
+                {
+                    comando.Parameters.AddWithValue("@NombreServicio", servicio.NombreServicio);
+                    comando.Parameters.AddWithValue("@Precio", servicio.Precio);
+                }
+
+                int filasAfectadas = comando.ExecuteNonQuery();
+                return filasAfectadas > 0;
+            }
+        }
+
+        public bool GestionarHuespedConSP(Huespedes huesped, string accion)
+        {
+            using (SqlConnection conexion = ObtenerConexion())
+            using (SqlCommand comando = new SqlCommand("sp_GestionarHuesped", conexion))
+            {
+                comando.CommandType = CommandType.StoredProcedure;
+
+                comando.Parameters.AddWithValue("@Accion", accion);
+
+                if (accion == "UPDATE" || accion == "DELETE")
+                    comando.Parameters.AddWithValue("@Id_huesped", huesped.IdHuesped);
+
+                if (accion != "DELETE")
+                {
+                    comando.Parameters.AddWithValue("@Nombre", huesped.Nombre);
+                    comando.Parameters.AddWithValue("@Apellido", huesped.Apellido);
+                    comando.Parameters.AddWithValue("@Documento", huesped.Documento);
+                    comando.Parameters.AddWithValue("@TipoDocumento", huesped.TipoDocumento);
+                    comando.Parameters.AddWithValue("@Email", huesped.Email ?? (object)DBNull.Value);
+                    comando.Parameters.AddWithValue("@Telefono", huesped.Telefono);
+                    comando.Parameters.AddWithValue("@FechaNacimiento", huesped.FechaNacimiento);
+                }
 
                 int filasAfectadas = comando.ExecuteNonQuery();
                 return filasAfectadas > 0;
@@ -292,8 +355,7 @@ namespace Dao
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddRange(parametros);
-                conexion.Open();
-                return cmd.ExecuteNonQuery();
+                return cmd.ExecuteNonQuery(); 
             }
         }
     }

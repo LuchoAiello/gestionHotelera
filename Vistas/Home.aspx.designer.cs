@@ -33,6 +33,15 @@ namespace Vistas
         protected global::System.Web.UI.WebControls.LinkButton btnPanelAdministrativo;
 
         /// <summary>
+        /// Control btnReservas.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton btnReservas;
+
+        /// <summary>
         /// Control btnRegisterHuesped.
         /// </summary>
         /// <remarks>
@@ -49,15 +58,6 @@ namespace Vistas
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton btnRooms;
-
-        /// <summary>
-        /// Control btnReservas.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnReservas;
 
         /// <summary>
         /// Control lblNameLogin.
@@ -1111,6 +1111,15 @@ namespace Vistas
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblMontoTotal;
+
+        /// <summary>
+        /// Control lblErrorMetodoPago1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblErrorMetodoPago1;
 
         /// <summary>
         /// Control lblData.

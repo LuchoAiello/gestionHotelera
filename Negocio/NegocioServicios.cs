@@ -12,18 +12,19 @@ namespace Negocio
             return dao.GetServicios();
         }
 
-        public DataTable GetServiciosActivos()
+        public void CrearServicio(Servicios servicio)
         {
-            return dao.GetServiciosActivos();
+            dao.CrearServicio(servicio);
         }
 
-        public void ModificarServicio(Servicios servicios)
+        public void ModificarServicio(Servicios servicio)
         {
-            dao.ModificarServicio(servicios);
+            dao.ModificarServicio(servicio);
         }
-        public void CrearServicio(Servicios servicios)
+
+        public void EliminarServicio(Servicios servicio)
         {
-            dao.CrearServicio(servicios);
+            dao.EliminarServicio(servicio);
         }
     }
 }
