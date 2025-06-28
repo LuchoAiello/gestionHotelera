@@ -13,12 +13,12 @@ namespace Dao
         public SqlConnection ObtenerConexion()
         {
             //CADENA DE CONEXION PARA LUCHO
-            //string rutaGestionHotelera =
-            //    "Data Source=localhost\\sqlexpress;" + "Initial Catalog=GestionHotelera;" + "Integrated Security=True;" + "Encrypt=True;" + "TrustServerCertificate=True";
+            string rutaGestionHotelera =
+              "Data Source=localhost\\sqlexpress;" + "Initial Catalog=GestionHotelera;" + "Integrated Security=True;" + "Encrypt=True;" + "TrustServerCertificate=True";
 
             //CADENA DE CONEXION PARA CAMI
-            string rutaGestionHotelera =
-                "Data Source=CAMI;Initial Catalog=GestionHotelera;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
+            //string rutaGestionHotelera =
+             //   "Data Source=CAMI;Initial Catalog=GestionHotelera;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
 
             try
             {
@@ -198,43 +198,6 @@ namespace Dao
                 return tabla;
             }
         }
-        public bool SPCrearHabitacion(string nombreSP, Habitacion h)
-        {
-            using (SqlConnection conexion = ObtenerConexion())
-            using (SqlCommand cmd = new SqlCommand(nombreSP, conexion))
-            {
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.AddWithValue("@NumeroHabitacion", h.NumeroHabitacion);
-                cmd.Parameters.AddWithValue("@Tipo", string.IsNullOrWhiteSpace(h.Tipo) ? (object)DBNull.Value : h.Tipo);
-                cmd.Parameters.AddWithValue("@Capacidad", h.Capacidad);
-                cmd.Parameters.AddWithValue("@Estado", h.Estado);
-                cmd.Parameters.AddWithValue("@Precio", h.Precio);
-                cmd.Parameters.AddWithValue("@Descripcion", string.IsNullOrWhiteSpace(h.Descripcion) ? (object)DBNull.Value : h.Descripcion);
-
-                int filasAfectadas = cmd.ExecuteNonQuery();
-                return filasAfectadas > 0;
-            }
-        }
-        public bool SPActualizarHabitaciones(string nombreSP, Habitacion h)
-        {
-            using (SqlConnection conexion = ObtenerConexion())
-            using (SqlCommand cmd = new SqlCommand(nombreSP, conexion))
-            {
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.AddWithValue("@Id_habitacion", h.Id_habitacion);
-                cmd.Parameters.AddWithValue("@NumeroHabitacion", h.NumeroHabitacion);
-                cmd.Parameters.AddWithValue("@Tipo", string.IsNullOrWhiteSpace(h.Tipo) ? (object)DBNull.Value : h.Tipo);
-                cmd.Parameters.AddWithValue("@Capacidad", h.Capacidad);
-                cmd.Parameters.AddWithValue("@Estado", h.Estado);
-                cmd.Parameters.AddWithValue("@Precio", h.Precio);
-                cmd.Parameters.AddWithValue("@Descripcion", string.IsNullOrWhiteSpace(h.Descripcion) ? (object)DBNull.Value : h.Descripcion);
-
-                int filasAfectadas = cmd.ExecuteNonQuery();
-                return filasAfectadas > 0;
-            }
-        }
 
         public bool GestionarUsuarioConSP(Usuario usuario, string accion)
         {
@@ -330,6 +293,34 @@ namespace Dao
                 return filasAfectadas > 0;
             }
         }
+
+        public bool GestionarHabitacionConSP(Habitaciones habitacion, string accion)
+        {
+            using (SqlConnection conexion = ObtenerConexion())
+            using (SqlCommand comando = new SqlCommand("sp_GestionarHabitacion", conexion))
+            {
+                comando.CommandType = CommandType.StoredProcedure;
+
+                comando.Parameters.AddWithValue("@Accion", accion);
+
+                if (accion == "UPDATE" || accion == "DELETE")
+                    comando.Parameters.AddWithValue("@Id_habitacion", habitacion.Id_habitacion);
+
+                if (accion != "DELETE")
+                {
+                    comando.Parameters.AddWithValue("@NumeroHabitacion", habitacion.NumeroHabitacion);
+                    comando.Parameters.AddWithValue("@Tipo", habitacion.Tipo);
+                    comando.Parameters.AddWithValue("@Capacidad", habitacion.Capacidad);
+                    comando.Parameters.AddWithValue("@Estado", habitacion.Estado);
+                    comando.Parameters.AddWithValue("@Precio", habitacion.Precio);
+                    comando.Parameters.AddWithValue("@Descripcion", (object)habitacion.Descripcion ?? DBNull.Value);
+                }
+
+                int filasAfectadas = comando.ExecuteNonQuery();
+                return filasAfectadas > 0;
+            }
+        }
+
 
         public DataTable SPFiltroHuespedPorDocumento(string nombreSP, string documento)
         {

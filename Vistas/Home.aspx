@@ -460,7 +460,7 @@
                     <%--Panel para Habitaciones--%>
                     <asp:Panel ID="panelHabitaciones" runat="server" Visible="false">
                         <!-- Botón para iniciar registro -->
-                        <div class="col text-end">
+                        <div class="col text-start">
                             <asp:Button ID="btnMostrarFormulario" runat="server" Text="Registrar habitación" CssClass="btn btn-primary mb-3" OnClick="btnMostrarFormularioHabitaciones_Click" />
                         </div>
                         <!-- Panel de formulario de registro -->
@@ -580,18 +580,11 @@
                                             <asp:Label ID="lblEstadoHab" runat="server" Text='<%# Bind("Estado") %>'></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
+
                                     <asp:TemplateField HeaderText="Aciones">
                                         <ItemTemplate>
                                             <!-- Se muestra cuando la fila NO está en edición -->
-                                            <asp:LinkButton ID="btnEditar" runat="server" CssClass="btn btn-sm btn-outline-primary me-1"
-                                                CommandName="Edit" CommandArgument='<%# Eval("Id_habitacion") %>' ToolTip="Editar">
-                                                <i class="bi bi-pencil"></i>
-                                            </asp:LinkButton>
-                                            <%--<asp:LinkButton ID="btnEliminar" runat="server"  CssClass="btn btn-sm btn-outline-danger"
-                                                CommandName="Desactivar" CommandArgument='<%# Eval("Id_habitacion") %>' ToolTip="Eliminar"
-                                                OnClientClick="return confirm('¿Estás seguro que querés eliminar esta reserva?');">
-                                                <i class="bi bi-trash"></i>
-                                            </asp:LinkButton>--%>
+                                            <asp:LinkButton ID="btnEditar" runat="server" CommandName="Edit" CssClass="btn btn-sm btn-outline-primary me-1"><i class="bi bi-pencil"></i></asp:LinkButton>
                                         </ItemTemplate>
                                         <EditItemTemplate>
                                             <!-- Se muestra cuando la fila ESTÁ en edición -->

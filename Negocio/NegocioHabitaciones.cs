@@ -5,11 +5,13 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Entidades;
 
 namespace Negocio
 {
     public class NegocioHabitaciones
     {
+        DaoHabitaciones dao = new DaoHabitaciones();
         public DataTable GetAll()
         {
             var repo = new Dao.DaoHabitaciones();
@@ -21,20 +23,14 @@ namespace Negocio
             var listaFiltrada = repo.GetByFilter(filtro);
             return listaFiltrada;
         }
-        public bool Crear(Entidades.Habitacion h)
+        public void CrearHabitacion(Habitaciones habitacion)
         {
-            Dao.DaoHabitaciones repo = new Dao.DaoHabitaciones();
-            return repo.Crear(h);
+            dao.CrearHabitacion(habitacion);
         }
-        public bool Update(Entidades.Habitacion h)
+
+        public void ModificarHabitacion(Habitaciones habitacion)
         {
-            Dao.DaoHabitaciones repo = new Dao.DaoHabitaciones();
-            return repo.Update(h);
-        }
-        public bool Delete(int id)
-        {
-            Dao.DaoHabitaciones repo = new Dao.DaoHabitaciones();
-            return repo.Delete(id);
+            dao.ModificarHabitacion(habitacion);
         }
 
         public DataTable FiltarHabitacionesPorFecha(string fechaLlegada, string fechaSalida)
