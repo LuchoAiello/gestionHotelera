@@ -10,6 +10,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Xml.Linq;
 using static Entidades.Reserva;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace Vistas
 {
@@ -505,18 +506,17 @@ namespace Vistas
         {
             GridViewRow row = gvHabitaciones.Rows[e.RowIndex];
 
-            var habitacion = new Habitacion
-            {
-                Id_habitacion = Convert.ToInt32(gvHabitaciones.DataKeys[e.RowIndex].Value.ToString()),
-                NumeroHabitacion = int.Parse(((TextBox)row.FindControl("txtNumeroHab")).Text),
-                Tipo = ((TextBox)row.FindControl("txtTipoHab")).Text,
-                Capacidad = int.Parse(((TextBox)row.FindControl("txtCapacidad")).Text),
-                Estado = ((DropDownList)row.FindControl("ddlEIEstado")).SelectedValue,
-                Precio = decimal.Parse(((TextBox)row.FindControl("txtPrecioHab")).Text),
-                Descripcion = ((TextBox)row.FindControl("txtDescripcionHab")).Text
-            };
-            var negocio = new NegocioHabitaciones();
-            negocio.Update(habitacion);
+            int id = Convert.ToInt32(gvHabitaciones.DataKeys[e.RowIndex].Value);
+
+            int numero = int.Parse(((TextBox)row.FindControl("txtNumeroHab")).Text);
+            string tipo = ((TextBox)row.FindControl("txtTipoHab")).Text;
+            int capacidad = int.Parse(((TextBox)row.FindControl("txtCapacidad")).Text);
+            string estado = ((DropDownList)row.FindControl("ddlEIEstado")).SelectedValue;
+            decimal precio = decimal.Parse(((TextBox)row.FindControl("txtPrecioHab")).Text);
+            string descripcion = ((TextBox)row.FindControl("txtDescripcionHab")).Text;
+
+            Habitaciones habitacion = Habitaciones.ModificarHabitacion(id, numero, tipo, capacidad, estado, precio, descripcion);
+            negocioHabitaciones.ModificarHabitacion(habitacion);
 
             gvHabitaciones.EditIndex = -1;
             CargarHabitaciones();
@@ -524,32 +524,44 @@ namespace Vistas
 
         protected void btnRegistrarHabitacion_Click(object sender, EventArgs e)
         {
-            string numero = txtNumeroHab.Text.Trim();
+            string numeroTexto = txtNumeroHab.Text.Trim();
             string tipo = txtTipoHab.Text.Trim();
-            string capacidad = txtCapacidad.Text.Trim();
-            string precio = txtPrecioHab.Text.Trim();
-            string descripcion = txtDescripcionHab.Text.Trim();
+            string capacidadTexto = txtCapacidad.Text.Trim();
             string estado = ddlEstadoHab.SelectedValue;
+            string precioTexto = txtPrecioHab.Text.Trim();
+            string descripcion = txtDescripcionHab.Text.Trim();
 
-            if (string.IsNullOrEmpty(numero) || string.IsNullOrEmpty(tipo) || string.IsNullOrEmpty(capacidad) || string.IsNullOrEmpty(precio))
+            if (string.IsNullOrEmpty(numeroTexto) || string.IsNullOrEmpty(tipo) ||
+                string.IsNullOrEmpty(capacidadTexto) || string.IsNullOrEmpty(precioTexto))
             {
                 lblMensajeRegistro.Visible = true;
                 lblMensajeRegistro.Text = "Por favor, completá todos los campos obligatorios.";
                 return;
             }
-            //me falta agregar validaciones para los tipos de datos
-            Habitacion nueva = new Habitacion
-            {
-                NumeroHabitacion = int.Parse(numero),
-                Tipo = tipo,
-                Capacidad = int.Parse(capacidad),
-                Precio = decimal.Parse(precio),
-                Descripcion = descripcion,
-                Estado = estado
-            };
 
-            NegocioHabitaciones service = new NegocioHabitaciones();
-            service.Crear(nueva);
+            if (!int.TryParse(numeroTexto, out int numero))
+            {
+                lblMensajeRegistro.Visible = true;
+                lblMensajeRegistro.Text = "Número de habitación inválido.";
+                return;
+            }
+
+            if (!int.TryParse(capacidadTexto, out int capacidad))
+            {
+                lblMensajeRegistro.Visible = true;
+                lblMensajeRegistro.Text = "Capacidad inválida.";
+                return;
+            }
+
+            if (!decimal.TryParse(precioTexto, out decimal precio))
+            {
+                lblMensajeRegistro.Visible = true;
+                lblMensajeRegistro.Text = "Precio inválido.";
+                return;
+            }
+
+            Habitaciones habitacion = Habitaciones.CrearHabitacion(numero, tipo, capacidad, estado, precio, descripcion);
+            negocioHabitaciones.CrearHabitacion(habitacion);
 
             LimpiarFormularioHabitacion();
             panelFormularioRegistro.Visible = false;
@@ -589,30 +601,6 @@ namespace Vistas
         protected void btnLimpiarFormularioHabitacion_Click(object sender, EventArgs e)
         {
             LimpiarFormularioHabitacion();
-        }
-
-        protected void grvHabitaciones_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-
-            //HabitacionesService service = new HabitacionesService();
-
-            //if (e.CommandName == "Desactivar")
-            //{
-            //    int index = Convert.ToInt32(e.CommandArgument);
-            //    GridViewRow row = gvHabitaciones.Rows[index];
-            //    int id = Convert.ToInt32(gvHabitaciones.DataKeys[index].Value);
-            //    bool resultado = service.Delete(id);
-
-            //    if (resultado)
-            //    {  
-            //        lblMensaje.Text = $"Habitación con ID {id} desactivada.";
-            //    }
-            //    else
-            //    {
-            //        lblMensaje.Text = "No se pudo desactivar la habitación.";
-            //    }
-            //    CargarHabitaciones();
-            //}
         }
 
         protected void grvHabitaciones_RowDataBound(object sender, GridViewRowEventArgs e)

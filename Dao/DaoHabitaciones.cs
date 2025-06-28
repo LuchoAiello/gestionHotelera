@@ -19,22 +19,19 @@ namespace Dao
             return datos.SPFiltrarHabitaciones("sp_FiltrarHabitaciones", filtro);
         }
 
-        public bool Crear(Habitacion h)
+        public bool CrearHabitacion(Habitaciones habitacion)
         {
-            return datos.SPCrearHabitacion("SP_CrearHabitacion", h);
+            return datos.GestionarHabitacionConSP(habitacion, "CREATE");
         }
 
-        public bool Update(Habitacion h)
+        public bool ModificarHabitacion(Habitaciones habitacion)
         {
-            return datos.SPActualizarHabitaciones("SP_ActualizarHabitacion", h);
+            return datos.GestionarHabitacionConSP(habitacion, "UPDATE");
         }
 
-        public bool Delete(int id)
+        public bool EliminarHabitacion(Habitaciones habitacion)
         {
-            string consulta = "Update Habitaciones Set Estado = 'Inactiva' WHERE Id_habitacion = @Id";
-            SqlCommand cmd = new SqlCommand();
-            cmd.Parameters.AddWithValue("@Id", id);
-            return datos.EjecutarConsulta(consulta, cmd);
+            return datos.GestionarHabitacionConSP(habitacion, "DELETE");
         }
 
         public DataTable FiltarHabitacionesPorFecha(string fechaLlegada, string fechaSalida)

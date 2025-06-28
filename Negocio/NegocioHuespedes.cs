@@ -20,7 +20,6 @@ namespace Negocio
                 return dao.GetHuespedes();
             }
 
-
             public void CrearHuesped(Huespedes huesped)
             {
                 dao.CrearHuesped(huesped);
