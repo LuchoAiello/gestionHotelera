@@ -1,5 +1,6 @@
 ﻿using Entidades;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -49,11 +50,11 @@ namespace Dao
 
         public int ObtenerIdReservaDesdeDetalle(int idDetalleReserva)
         {
-            string consulta = "SELECT Id_reserva FROM DetalleReservas WHERE Id_detalleReserva = @Id_detalleReserva";
+            string consulta = "SELECT Id_reserva FROM Vista_DetallesReserva WHERE Id_detalleReserva = @Id_detalleReserva";
 
             SqlParameter[] parametros = new SqlParameter[]
             {
-        new SqlParameter("@Id_detalleReserva", idDetalleReserva)
+                new SqlParameter("@Id_detalleReserva", idDetalleReserva)
             };
 
             object resultado = ds.EjecutarScalarConParametros(consulta, parametros);
@@ -62,6 +63,19 @@ namespace Dao
                 return Convert.ToInt32(resultado);
 
             return -1;
+        }
+
+        public DataTable ObtenerReservaPorId(int IdReserva)
+        {
+            string consulta = "SELECT * FROM Vista_ReservasActualesYFuturas WHERE Id_Reserva = @Id_reserva";
+
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+                new SqlParameter("@Id_reserva", IdReserva)
+            };
+            parametros[0] = new SqlParameter("@Id_reserva", IdReserva);
+
+            return ds.ObtenerTablaReservas("Vista_ReservasActualesYFuturas", consulta, parametros);
         }
 
         public bool GuardarReserva(ReservaEnProceso reserva)

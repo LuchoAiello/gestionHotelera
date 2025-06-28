@@ -82,6 +82,7 @@ namespace Vistas
             panelRegistrarHuesped.Visible = false;
             panelUsuario.Visible = false;
             panelRegistrarUsuario.Visible = false;
+            panelHistorialReservaDetalle.Visible = false;
             OcultarTodosLosPanelesAdmin();
             OcultarTodosLosPanelesReserva();
             // Agregá más paneles si sumás nuevas secciones
@@ -101,11 +102,12 @@ namespace Vistas
         {
             panelHistorialReservas.Visible = false;
             panelReservas.Visible = false;
+            panelDetalleReserva.Visible = false;
             panelCrearReservaEtapa1.Visible = false;
             panelCrearReservaEtapa2.Visible = false;
             panelCrearReservaEtapa3.Visible = false;
             panelCrearReservaEtapa4.Visible = false;
-            panelCheckInOut.Visible = false;
+            //panelCheckInOut.Visible = false;
         }
 
         private void ResaltarBotonPrincipal(LinkButton botonSeleccionado)
@@ -420,53 +422,25 @@ namespace Vistas
         #endregion
 
         #region Panel Historial de Reservas
-        // PANEL HISTORIAL DE RESERVAS 
         protected void grvHistorialReservas_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName == "MostrarDetalle")
             {
-                if (int.TryParse(e.CommandArgument.ToString(), out int idReserva))
-                {
+                int idReserva = Convert.ToInt32(e.CommandArgument);
+                ViewState["IdReservaDetalle"] = idReserva;
 
-                    if (ViewState["IdHistorialDetalle"] != null && (int)ViewState["IdHistorialDetalle"] == idReserva)
-                    {
-                        ViewState["IdHistorialDetalle"] = null;
-                    }
-                    else
-                    {
-                        ViewState["IdHistorialDetalle"] = idReserva;
-                    }
-
-                    getDataHistorialReservas();
-                }
+                MostrarDetalleReservaFijo(idReserva);
             }
         }
-
+        protected void grvHistorialDetalleReserva_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+        
+        }
         protected string GetButtonTextReservaHistorial(int idReserva)
         {
             return (ViewState["IdHistorialDetalle"] != null && (int)ViewState["IdHistorialDetalle"] == idReserva) ? "Ocultar Detalle" : "Ver Detalle";
         }
 
-        protected void grvHistorialReservas_RowDataBound(object sender, GridViewRowEventArgs e)
-        {
-            if (e.Row.RowType == DataControlRowType.DataRow)
-            {
-                int idReserva = (int)grvHistorialReservas.DataKeys[e.Row.RowIndex].Value;
-
-                if (ViewState["IdHistorialDetalle"] != null && (int)ViewState["IdHistorialDetalle"] == idReserva)
-                {
-                    GridViewRow detalleRow = new GridViewRow(-1, -1, DataControlRowType.DataRow, DataControlRowState.Insert);
-                    TableCell celda = new TableCell();
-                    celda.ColumnSpan = grvHistorialReservas.Columns.Count;
-                    celda.Controls.Add(CrearGrillaDetalles(idReserva));
-                    detalleRow.Cells.Add(celda);
-
-                    Table tabla = (Table)grvHistorialReservas.Controls[0];
-                    int rowIndex = tabla.Rows.GetRowIndex(e.Row);
-                    tabla.Rows.AddAt(rowIndex + 1, detalleRow);
-                }
-            }
-        }
 
         protected void grvHistorialReservas_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
@@ -489,7 +463,10 @@ namespace Vistas
             getDataHistorialReservas();
             panelHistorialReservas.Visible = true;
         }
+        protected void grvHistorialDetalleReservaFijo_RowDataBound(object sender, EventArgs e)
+        {
 
+        }
 
         #endregion
 
@@ -1081,8 +1058,82 @@ namespace Vistas
             OcultarTodosLosPanelesReserva();
             ResaltarBotonSeleccionado(btnReserva);
             panelReservas.Visible = true;
+            panelDetalleReserva.Visible = false;
 
             getDataReservas();
+        }
+        protected void btnVolverAReservas_Click(object sender, EventArgs e)
+        {
+            panelDetalleReserva.Visible = false;
+            panelReservas.Visible = true;
+
+            getDataReservas();
+        }
+
+        protected void grvDetalleReservaFijo_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                DataRowView rowView = (DataRowView)e.Row.DataItem;
+
+                Button btnCheckIn = (Button)e.Row.FindControl("btnCheckIn");
+                Button btnCheckOut = (Button)e.Row.FindControl("btnCheckOut");
+                Label lblFinalizada = (Label)e.Row.FindControl("lblFinalizada");
+
+                DateTime? checkIn = rowView["CheckIn"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(rowView["CheckIn"]);
+                DateTime? checkOut = rowView["CheckOut"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(rowView["CheckOut"]);
+
+                if (checkIn == null)
+                {
+                    btnCheckIn.Visible = true;
+                    btnCheckOut.Visible = false;
+                    lblFinalizada.Visible = false;
+                }
+                else if (checkOut == null)
+                {
+                    btnCheckIn.Visible = false;
+                    btnCheckOut.Visible = true;
+                    lblFinalizada.Visible = false;
+                }
+                else
+                {
+                    btnCheckIn.Visible = false;
+                    btnCheckOut.Visible = false;
+                    lblFinalizada.Visible = true;
+                }
+            }
+        }
+
+        private void MostrarDetalleReservaFijo(int idReserva)
+        {
+            panelReservas.Visible = false;
+            panelDetalleReserva.Visible = true;
+
+            DataTable dtReserva = negocioReserva.ObtenerReservaPorId(idReserva);
+            grvReservaById.DataSource = dtReserva;
+            grvReservaById.DataBind();
+
+            DataTable detalles = negocioReserva.ObtenerDetallesPorReserva(idReserva);
+            grvDetalleReservaFijo.DataSource = detalles;
+            grvDetalleReservaFijo.DataBind();
+        }
+
+        protected void grvDetalleReservaFijo_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "HacerCheckIn" || e.CommandName == "HacerCheckOut")
+            {
+                int index = Convert.ToInt32(e.CommandArgument);
+                int idDetalle = index;
+
+                if (e.CommandName == "HacerCheckIn")
+                    negocioReserva.RegistrarCheckIn(idDetalle);
+                else
+                    negocioReserva.RegistrarCheckOut(idDetalle);
+
+                int idReserva = negocioReserva.ObtenerIdReservaDesdeDetalle(idDetalle);
+                ViewState["IdReservaDetalle"] = idReserva;
+                MostrarDetalleReservaFijo(idReserva);
+            }
         }
 
         protected void grvReservas_RowCommand(object sender, GridViewCommandEventArgs e)
@@ -1090,16 +1141,9 @@ namespace Vistas
             if (e.CommandName == "MostrarDetalle")
             {
                 int idReserva = Convert.ToInt32(e.CommandArgument);
-                if (ViewState["IdReservaDetalle"] != null && (int)ViewState["IdReservaDetalle"] == idReserva)
-                {
-                    ViewState["IdReservaDetalle"] = null;
-                }
-                else
-                {
-                    ViewState["IdReservaDetalle"] = idReserva;
-                }
+                ViewState["IdReservaDetalle"] = idReserva;
 
-                getDataReservas();
+                MostrarDetalleReservaFijo(idReserva);
             }
             else if (e.CommandName == "DarDeBajaReserva")
             {
@@ -1109,68 +1153,13 @@ namespace Vistas
 
                 getDataReservas();
             }
-            else if (e.CommandName == "HacerCheckInOut")
-            {
-                panelCheckInOut.Visible = true;
-                panelReservas.Visible = false;
-
-                int idReserva = Convert.ToInt32(e.CommandArgument);
-
-                var negocioDetalle = new NegocioReserva();
-                DataTable dtDetalles = negocioDetalle.ObtenerDetallesPorReserva(idReserva);
-
-                if (dtDetalles != null && dtDetalles.Rows.Count > 0)
-                {
-                    var row = dtDetalles.Rows[0];
-
-                    hfIdDetalleReserva.Value = row["Id_detalleReserva"].ToString();
-
-                    // ---- CheckIn ----
-                    if (row["CheckIn"] != DBNull.Value && DateTime.TryParse(row["CheckIn"].ToString(), out DateTime checkIn))
-                    {
-                        lblFechaCheckIn.Text = checkIn.ToString("yyyy-MM-dd");
-                        lblFechaCheckIn.Visible = true;
-                        btnHacerCheckIn.Visible = false;
-
-                        // Activar CheckOut
-                        txtCheckOut.Enabled = true;
-                        txtCheckOut.Attributes["min"] = checkIn.ToString("yyyy-MM-dd");
-                    }
-                    else
-                    {
-                        lblFechaCheckIn.Text = "";
-                        lblFechaCheckIn.Visible = false;
-                        btnHacerCheckIn.Visible = true;
-
-                        // Desactivar CheckOut
-                        txtCheckOut.Text = "";
-                        txtCheckOut.Enabled = false;
-                    }
-
-                    // ---- CheckOut ----
-                    if (row["CheckOut"] != DBNull.Value && DateTime.TryParse(row["CheckOut"].ToString(), out DateTime checkOut))
-                    {
-                        txtCheckOut.Text = checkOut.ToString("yyyy-MM-dd");
-                        txtCheckOut.Enabled = false;
-                    }
-                    else
-                    {
-                        txtCheckOut.Text = "";
-                        // Se habilita solo si ya hay CheckIn (lo controla el bloque de arriba)
-                    }
-                }
-
-            }
         }
 
         protected void grvDetalleReserva_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            GridView gv = (GridView)sender;
-            int index = Convert.ToInt32(e.CommandArgument);
-            int idDetalleReserva = Convert.ToInt32(gv.DataKeys[index].Value); 
-            //int idDetalleReserva = Convert.ToInt32(gv.DataKeys[gv.Rows.Cast<GridViewRow>()
-            //    .ToList().FindIndex(r => r.Cells[0].Text == gv.Rows[index].Cells[0].Text)].Value);
+            int idDetalleReserva = Convert.ToInt32(e.CommandArgument);
             NegocioReserva negocioReserva = new NegocioReserva();
+
             if (e.CommandName == "HacerCheckIn")
             {
                 negocioReserva.RegistrarCheckIn(idDetalleReserva);
@@ -1179,57 +1168,31 @@ namespace Vistas
             {
                 negocioReserva.RegistrarCheckOut(idDetalleReserva);
             }
+
+            // Obtener la fila actual para actualizar los controles si querés
+            GridViewRow row = ((Control)e.CommandSource).NamingContainer as GridViewRow;
+            if (row != null)
+            {
+                Label lblFinalizada = row.FindControl("lblFinalizada") as Label;
+                Button btnCheckIn = row.FindControl("btnCheckIn") as Button;
+                Button btnCheckOut = row.FindControl("btnCheckOut") as Button;
+
+                if (lblFinalizada != null)
+                    lblFinalizada.Visible = true;
+
+                if (btnCheckIn != null)
+                    btnCheckIn.Visible = false;
+
+                if (btnCheckOut != null)
+                    btnCheckOut.Visible = false;
+            }
+
+  
             int idReserva = negocioReserva.ObtenerIdReservaDesdeDetalle(idDetalleReserva);
-            
-            ViewState["IdReservaDetalle"] = idReserva;
-            getDataReservas(); 
-        }
-        private GridViewRow FindReservaRowById(int idReserva)
-        {
-            foreach (GridViewRow row in grvReservas.Rows)
-            {
-                int currentId = (int)grvReservas.DataKeys[row.RowIndex].Value;
-                if (currentId == idReserva)
-                {
-                    return row;
-                }
-            }
-            return null;
-        }
-        protected void btnHacerCheckIn_Click(object sender, EventArgs e)
-        {
-            int idDetalle = Convert.ToInt32(hfIdDetalleReserva.Value);
-            var negocio = new NegocioReserva();
-            negocio.RegistrarCheckIn(idDetalle);
 
-            // Actualizar el panel visualmente
-            DateTime fecha = DateTime.Today;
-            lblFechaCheckIn.Text = fecha.ToString("yyyy-MM-dd");
-            lblFechaCheckIn.Visible = true;
-            btnHacerCheckIn.Visible = false;
-
-            // Activar CheckOut
-            txtCheckOut.Enabled = true;
-            txtCheckOut.Attributes["min"] = fecha.ToString("yyyy-MM-dd");
-        }
-
-
-        protected void btnRegistrarCheckInOut_Click(object sender, EventArgs e)
-        {
-            int idDetalleReserva = Convert.ToInt32(hfIdDetalleReserva.Value);
-            var negocio = new NegocioReserva();
-
-            // Solo registrar CheckOut (CheckIn ya se maneja con botón aparte)
-            if (string.IsNullOrEmpty(txtCheckOut.Text))
-            {
-                negocio.RegistrarCheckOut(idDetalleReserva);
-            }
-
-            // Refrescar UI
-            OcultarTodosLosPanelesReserva();
-            ResaltarBotonSeleccionado(btnReserva);
-            panelReservas.Visible = true;
             getDataReservas();
+            MostrarDetalleReservaFijo(idReserva);
+            
         }
 
         protected void btnCancelarCheckInOut_Click(object sender, EventArgs e)
@@ -1241,67 +1204,12 @@ namespace Vistas
             getDataReservas();
         }
 
-        private GridView CrearGrillaDetalles(int idReserva)
-        {
-            var negocioDetalle = new NegocioReserva();
-            DataTable dtDetalles = negocioDetalle.ObtenerDetallesPorReserva(idReserva);
-            GridView gvDetalles = new GridView();
-            gvDetalles.CssClass = "table table-sm";
-            gvDetalles.AutoGenerateColumns = false;
-            gvDetalles.DataKeyNames = new string[] { "Id_detalleReserva" };
-
-            gvDetalles.Columns.Add(new BoundField { HeaderText = "N° Habitación", DataField = "NumeroHabitacion" });
-            gvDetalles.Columns.Add(new BoundField { HeaderText = "Tipo", DataField = "Tipo" });
-            gvDetalles.Columns.Add(new BoundField { HeaderText = "Check-In", DataField = "CheckIn", DataFormatString = "{0:dd/MM/yyyy}" });
-            gvDetalles.Columns.Add(new BoundField { HeaderText = "Check-Out", DataField = "CheckOut", DataFormatString = "{0:dd/MM/yyyy}" });
-            gvDetalles.Columns.Add(new BoundField { HeaderText = "Precio", DataField = "PrecioDetalle", DataFormatString = "{0:C}" });
-            gvDetalles.Columns.Add(new BoundField { HeaderText = "Capacidad", DataField = "Capacidad" });
-
-            TemplateField acciones = new TemplateField { HeaderText = "Acciones" };
-            acciones.ItemTemplate = new BotonCheckTemplate(); 
-            gvDetalles.Columns.Add(acciones);
-
-            gvDetalles.RowCommand += grvDetalleReserva_RowCommand;
-
-            gvDetalles.DataSource = dtDetalles;
-            gvDetalles.DataBind();
-
-            return gvDetalles;
-        }
-
-        protected string GetButtonTextReserva(int idReserva)
-        {
-            return (ViewState["IdReservaDetalle"] != null && (int)ViewState["IdReservaDetalle"] == idReserva) ? "Ocultar Detalle" : "Ver Detalle";
-        }
-
-        protected void grvReservas_RowDataBound(object sender, GridViewRowEventArgs e)
-        {
-            if (e.Row.RowType == DataControlRowType.DataRow)
-            {
-                int idReserva = (int)grvReservas.DataKeys[e.Row.RowIndex].Value;
-
-                if (ViewState["IdReservaDetalle"] != null && (int)ViewState["IdReservaDetalle"] == idReserva)
-                {
-                    GridViewRow detalleRow = new GridViewRow(-1, -1, DataControlRowType.DataRow, DataControlRowState.Insert);
-                    TableCell celda = new TableCell();
-                    celda.ColumnSpan = grvReservas.Columns.Count;
-                    celda.Controls.Add(CrearGrillaDetalles(idReserva));
-                    detalleRow.Cells.Add(celda);
-
-                    Table tabla = (Table)grvReservas.Controls[0];
-                    int rowIndex = tabla.Rows.GetRowIndex(e.Row);
-                    tabla.Rows.AddAt(rowIndex + 1, detalleRow);
-                }
-            }
-        }
-
         protected void grvReservas_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
             grvReservas.PageIndex = e.NewPageIndex;
 
             getDataReservas();
         }
-
 
         private void getDataReservas()
         {

@@ -807,85 +807,49 @@ namespace Vistas
         protected global::System.Web.UI.WebControls.GridView grvReservas;
 
         /// <summary>
-        /// Control panelCheckInOut.
+        /// Control panelDetalleReserva.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel panelCheckInOut;
+        protected global::System.Web.UI.WebControls.Panel panelDetalleReserva;
 
         /// <summary>
-        /// Control hfIdDetalleReserva.
+        /// Control panel1.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hfIdDetalleReserva;
+        protected global::System.Web.UI.WebControls.Panel panel1;
 
         /// <summary>
-        /// Control lblCheckin.
+        /// Control grvReservaById.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblCheckin;
+        protected global::System.Web.UI.WebControls.GridView grvReservaById;
 
         /// <summary>
-        /// Control btnHacerCheckIn.
+        /// Control grvDetalleReservaFijo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnHacerCheckIn;
+        protected global::System.Web.UI.WebControls.GridView grvDetalleReservaFijo;
 
         /// <summary>
-        /// Control lblFechaCheckIn.
+        /// Control btnVolverAReservas.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblFechaCheckIn;
-
-        /// <summary>
-        /// Control lblCheckOut.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblCheckOut;
-
-        /// <summary>
-        /// Control txtCheckOut.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCheckOut;
-
-        /// <summary>
-        /// Control btnRegistrarCheckInOut.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnRegistrarCheckInOut;
-
-        /// <summary>
-        /// Control btnCancelarCheckInOut.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnCancelarCheckInOut;
+        protected global::System.Web.UI.WebControls.Button btnVolverAReservas;
 
         /// <summary>
         /// Control panelCrearReservaEtapa1.
@@ -1255,5 +1219,50 @@ namespace Vistas
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView grvHistorialReservas;
+
+        /// <summary>
+        /// Control panelHistorialReservaDetalle.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel panelHistorialReservaDetalle;
+
+        /// <summary>
+        /// Control panel3.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel panel3;
+
+        /// <summary>
+        /// Control gvHistorialReservaById.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvHistorialReservaById;
+
+        /// <summary>
+        /// Control grvHistorialReservaDetalle.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView grvHistorialReservaDetalle;
+
+        /// <summary>
+        /// Control Button1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Button1;
     }
 }
