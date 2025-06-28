@@ -358,5 +358,21 @@ namespace Dao
                 return cmd.ExecuteNonQuery(); 
             }
         }
+        public object EjecutarScalarConParametros(string consulta, SqlParameter[] parametros)
+        {
+            object resultado = null;
+
+            using (SqlConnection conexion = ObtenerConexion())
+            {
+                using (SqlCommand comando = new SqlCommand(consulta, conexion))
+                {
+                    comando.Parameters.AddRange(parametros);
+                    conexion.Open();
+                    resultado = comando.ExecuteScalar();
+                }
+            }
+
+            return resultado;
+        }
     }
 }

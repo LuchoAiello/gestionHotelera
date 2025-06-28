@@ -47,6 +47,23 @@ namespace Dao
             return ds.ObtenerTablaReservas("Vista_DetallesReserva", query, parametros);
         }
 
+        public int ObtenerIdReservaDesdeDetalle(int idDetalleReserva)
+        {
+            string consulta = "SELECT Id_reserva FROM DetalleReservas WHERE Id_detalleReserva = @Id_detalleReserva";
+
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+        new SqlParameter("@Id_detalleReserva", idDetalleReserva)
+            };
+
+            object resultado = ds.EjecutarScalarConParametros(consulta, parametros);
+
+            if (resultado != null && resultado != DBNull.Value)
+                return Convert.ToInt32(resultado);
+
+            return -1;
+        }
+
         public bool GuardarReserva(ReservaEnProceso reserva)
         {
             try

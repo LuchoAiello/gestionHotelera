@@ -524,7 +524,6 @@
                                 OnRowEditing="grvHabitaciones_RowEditing"
                                 OnRowUpdating="grvHabitaciones_RowUpdating"
                                 OnRowDataBound="grvHabitaciones_RowDataBound"
-                                OnRowCommand="grvHabitaciones_RowCommand"
                                 OnPageIndexChanging="gvHabitaciones_PageIndexChanging">
 
                                 <Columns>
@@ -640,14 +639,6 @@
                                                 CommandName="MostrarDetalle"
                                                 CommandArgument='<%# Eval("Id_reserva") %>'
                                                 CssClass="btn btn-outline-success btn-sm" />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Acciones">
-                                        <ItemTemplate>
-                                            <asp:Button ID="btnHacerCheckInOut" runat="server" Text="CheckIn/Out"
-                                                CommandName="HacerCheckInOut"
-                                                CommandArgument='<%# Eval("Id_reserva") %>'
-                                                CssClass="btn btn-outline-primary btn-sm" />
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="">

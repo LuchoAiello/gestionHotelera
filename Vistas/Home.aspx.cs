@@ -591,30 +591,6 @@ namespace Vistas
             LimpiarFormularioHabitacion();
         }
 
-        protected void grvHabitaciones_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-
-            //HabitacionesService service = new HabitacionesService();
-
-            //if (e.CommandName == "Desactivar")
-            //{
-            //    int index = Convert.ToInt32(e.CommandArgument);
-            //    GridViewRow row = gvHabitaciones.Rows[index];
-            //    int id = Convert.ToInt32(gvHabitaciones.DataKeys[index].Value);
-            //    bool resultado = service.Delete(id);
-
-            //    if (resultado)
-            //    {  
-            //        lblMensaje.Text = $"Habitación con ID {id} desactivada.";
-            //    }
-            //    else
-            //    {
-            //        lblMensaje.Text = "No se pudo desactivar la habitación.";
-            //    }
-            //    CargarHabitaciones();
-            //}
-        }
-
         protected void grvHabitaciones_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow && gvHabitaciones.EditIndex == e.Row.RowIndex)
@@ -1087,7 +1063,7 @@ namespace Vistas
         #endregion
 
         #region Reservas
-        // PANEL RESERVAS
+ 
         protected void btnReserva_Click(object sender, EventArgs e)
         {
             OcultarTodosLosPanelesReserva();
@@ -1171,9 +1147,43 @@ namespace Vistas
                         // Se habilita solo si ya hay CheckIn (lo controla el bloque de arriba)
                     }
                 }
+
             }
         }
 
+        protected void grvDetalleReserva_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            GridView gv = (GridView)sender;
+            int index = Convert.ToInt32(e.CommandArgument);
+            int idDetalleReserva = Convert.ToInt32(gv.DataKeys[index].Value); 
+            //int idDetalleReserva = Convert.ToInt32(gv.DataKeys[gv.Rows.Cast<GridViewRow>()
+            //    .ToList().FindIndex(r => r.Cells[0].Text == gv.Rows[index].Cells[0].Text)].Value);
+            NegocioReserva negocioReserva = new NegocioReserva();
+            if (e.CommandName == "HacerCheckIn")
+            {
+                negocioReserva.RegistrarCheckIn(idDetalleReserva);
+            }
+            else if (e.CommandName == "HacerCheckOut")
+            {
+                negocioReserva.RegistrarCheckOut(idDetalleReserva);
+            }
+            int idReserva = negocioReserva.ObtenerIdReservaDesdeDetalle(idDetalleReserva);
+            
+            ViewState["IdReservaDetalle"] = idReserva;
+            getDataReservas(); 
+        }
+        private GridViewRow FindReservaRowById(int idReserva)
+        {
+            foreach (GridViewRow row in grvReservas.Rows)
+            {
+                int currentId = (int)grvReservas.DataKeys[row.RowIndex].Value;
+                if (currentId == idReserva)
+                {
+                    return row;
+                }
+            }
+            return null;
+        }
         protected void btnHacerCheckIn_Click(object sender, EventArgs e)
         {
             int idDetalle = Convert.ToInt32(hfIdDetalleReserva.Value);
@@ -1223,10 +1233,10 @@ namespace Vistas
         {
             var negocioDetalle = new NegocioReserva();
             DataTable dtDetalles = negocioDetalle.ObtenerDetallesPorReserva(idReserva);
-
             GridView gvDetalles = new GridView();
             gvDetalles.CssClass = "table table-sm";
             gvDetalles.AutoGenerateColumns = false;
+            gvDetalles.DataKeyNames = new string[] { "Id_detalleReserva" };
 
             gvDetalles.Columns.Add(new BoundField { HeaderText = "N° Habitación", DataField = "NumeroHabitacion" });
             gvDetalles.Columns.Add(new BoundField { HeaderText = "Tipo", DataField = "Tipo" });
@@ -1234,6 +1244,12 @@ namespace Vistas
             gvDetalles.Columns.Add(new BoundField { HeaderText = "Check-Out", DataField = "CheckOut", DataFormatString = "{0:dd/MM/yyyy}" });
             gvDetalles.Columns.Add(new BoundField { HeaderText = "Precio", DataField = "PrecioDetalle", DataFormatString = "{0:C}" });
             gvDetalles.Columns.Add(new BoundField { HeaderText = "Capacidad", DataField = "Capacidad" });
+
+            TemplateField acciones = new TemplateField { HeaderText = "Acciones" };
+            acciones.ItemTemplate = new BotonCheckTemplate(); 
+            gvDetalles.Columns.Add(acciones);
+
+            gvDetalles.RowCommand += grvDetalleReserva_RowCommand;
 
             gvDetalles.DataSource = dtDetalles;
             gvDetalles.DataBind();

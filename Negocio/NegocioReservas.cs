@@ -24,6 +24,11 @@ namespace Negocio
             return dao.EliminarReserva(idReserva);
         }
 
+        public int ObtenerIdReservaDesdeDetalle(int idReserva)
+        {
+            return dao.ObtenerIdReservaDesdeDetalle(idReserva);
+        }
+
         public DataTable ObtenerDetallesPorReserva(int idReserva)
         {
             return dao.ObtenerDetallesPorReserva(idReserva);
@@ -42,7 +47,5 @@ namespace Negocio
         {
             dao.RegistrarCheckOut(idDetalleReserva);
         }
-
     }
-
 }
