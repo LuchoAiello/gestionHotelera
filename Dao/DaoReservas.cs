@@ -55,8 +55,8 @@ namespace Dao
                 {
                  new SqlParameter("@Id_huesped", reserva.IdHuesped),
                  new SqlParameter("@Id_metodoPago", reserva.IdMetodoPago),
-                 new SqlParameter("@FechaLlegada", reserva.CheckIn),
-                 new SqlParameter("@FechaSalida", reserva.CheckOut),
+                 new SqlParameter("@FechaLlegada", reserva.FechaLlegada),
+                 new SqlParameter("@FechaSalida", reserva.FechaSalida),
                  new SqlParameter("@CantidadHuespedes", reserva.CantidadHuespedes),
                  new SqlParameter("@MontoTotal", reserva.PrecioFinal),
                  new SqlParameter("@NroTarjeta", (object)reserva.NroTarjeta ?? DBNull.Value),
@@ -91,13 +91,10 @@ namespace Dao
         {
             DataTable dt = new DataTable();
             dt.Columns.Add("Id_habitacion", typeof(int));
-            dt.Columns.Add("PrecioDetalle", typeof(decimal));
-            dt.Columns.Add("CheckIn", typeof(DateTime));
-            dt.Columns.Add("CheckOut", typeof(DateTime));
 
             foreach (int id in reserva.IdHabitaciones)
             {
-                dt.Rows.Add(id, reserva.PrecioFinal, reserva.CheckIn, reserva.CheckOut);
+                dt.Rows.Add(id, reserva.PrecioFinal);
             }
 
             return dt;

@@ -51,6 +51,7 @@ namespace Vistas
                     ResaltarBotonPrincipal(btnReservas);
                     ResaltarBotonSeleccionado(btnReserva);
                     panelReservas.Visible = true;
+                    panelAdministarReservas.Visible = true;
                     lblSeccionTitulo.Text = "Panel de Reservas";
 
                     getDataReservas();
@@ -66,7 +67,7 @@ namespace Vistas
             }
             else
             {
-                Response.Redirect("Login.aspx");
+                //Response.Redirect("Login.aspx");
             }
         }
 
@@ -103,6 +104,7 @@ namespace Vistas
             panelCrearReservaEtapa2.Visible = false;
             panelCrearReservaEtapa3.Visible = false;
             panelCrearReservaEtapa4.Visible = false;
+            panelCheckInOut.Visible = false;
         }
 
         private void ResaltarBotonPrincipal(LinkButton botonSeleccionado)
@@ -370,7 +372,21 @@ namespace Vistas
             }
             else
             {
-                lblFechaNacimientoHuesped.Text = "";
+                // Validar que tenga al menos 18 años
+                int edad = DateTime.Now.Year - fechaNacimiento.Year;
+                if (DateTime.Now < fechaNacimiento.AddYears(edad))
+                    edad--;
+
+                if (edad < 18)
+                {
+                    lblFechaNacimientoHuesped.Text = "El huésped debe tener al menos 18 años.";
+                    lblFechaNacimientoHuesped.CssClass = "text-danger";
+                    return;
+                }
+                else
+                {
+                    lblFechaNacimientoHuesped.Text = "";
+                }
             }
 
             Huespedes huesped = Huespedes.CrearHuesped(nombre, apellido, documento, tipoDocumento, email, telefono, fechaNacimiento);
@@ -408,17 +424,20 @@ namespace Vistas
         {
             if (e.CommandName == "MostrarDetalle")
             {
-                int idReserva = Convert.ToInt32(e.CommandArgument);
-                if (ViewState["IdHistorialDetalle"] != null && (int)ViewState["IdHistorialDetalle"] == idReserva)
+                if (int.TryParse(e.CommandArgument.ToString(), out int idReserva))
                 {
-                    ViewState["IdHistorialDetalle"] = null;
-                }
-                else
-                {
-                    ViewState["IdHistorialDetalle"] = idReserva;
-                }
 
-                getDataHistorialReservas();
+                    if (ViewState["IdHistorialDetalle"] != null && (int)ViewState["IdHistorialDetalle"] == idReserva)
+                    {
+                        ViewState["IdHistorialDetalle"] = null;
+                    }
+                    else
+                    {
+                        ViewState["IdHistorialDetalle"] = idReserva;
+                    }
+
+                    getDataHistorialReservas();
+                }
             }
         }
 
@@ -1082,6 +1101,7 @@ namespace Vistas
         {
             if (e.CommandName == "MostrarDetalle")
             {
+
                 int idReserva = Convert.ToInt32(e.CommandArgument);
                 if (ViewState["IdReservaDetalle"] != null && (int)ViewState["IdReservaDetalle"] == idReserva)
                 {
@@ -1102,6 +1122,68 @@ namespace Vistas
 
                 getDataReservas();
             }
+            else if (e.CommandName == "HacerCheckInOut")
+            {
+                panelCheckInOut.Visible = true;
+                panelReservas.Visible = false;
+
+                int idReserva = Convert.ToInt32(e.CommandArgument);
+
+                // 2. Obtenemos el resto de los detalles desde la base
+                var negocioDetalle = new NegocioReserva();
+                DataTable dtDetalles = negocioDetalle.ObtenerDetallesPorReserva(idReserva);
+
+                if (dtDetalles != null && dtDetalles.Rows.Count > 0)
+                {
+                    var row = dtDetalles.Rows[0];
+
+                    // ---- CheckIn ----
+                    DateTime checkIn = DateTime.MinValue;
+                    if (row["CheckIn"] != DBNull.Value && DateTime.TryParse(row["CheckIn"].ToString(), out checkIn))
+                    {
+                        txtCheckIn.Text = checkIn.ToString("yyyy-MM-dd");
+                        txtCheckIn.Enabled = false;
+                    }
+                    else
+                    {
+                        txtCheckIn.Text = "";
+                        txtCheckIn.Enabled = true;
+                    }
+
+                    // ---- CheckOut ----
+                    if (row["CheckOut"] != DBNull.Value && DateTime.TryParse(row["CheckOut"].ToString(), out DateTime checkOut))
+                    {
+                        txtCheckOut.Text = checkOut.ToString("yyyy-MM-dd");
+                        txtCheckOut.Enabled = false;
+                    }
+                    else
+                    {
+                        txtCheckOut.Text = "";
+                        txtCheckOut.Enabled = true;
+                    }
+
+                    if (checkIn != DateTime.MinValue)
+                    {
+                        txtCheckOut.Attributes["min"] = checkIn.ToString("yyyy-MM-dd");
+                    }
+
+                }
+            }
+        }
+
+        protected void btnRegistrarCheckInOut_Click(object sender, EventArgs e)
+        {
+           
+
+        }
+
+        protected void btnCancelarCheckInOut_Click(object sender, EventArgs e)
+        {
+            OcultarTodosLosPanelesReserva();
+            ResaltarBotonSeleccionado(btnReserva);
+            panelReservas.Visible = true;
+
+            getDataReservas();
         }
 
         private GridView CrearGrillaDetalles(int idReserva)
@@ -1446,8 +1528,8 @@ namespace Vistas
             ReservaEnProceso reserva = Session["reservaEnProceso"] as ReservaEnProceso ?? new ReservaEnProceso();
 
             reserva.CantidadHuespedes = int.Parse(txtCantidadDeHuespedes.Text.Trim());
-            reserva.CheckIn = DateTime.Parse(txtFechaDesde.Text.Trim());
-            reserva.CheckOut = DateTime.Parse(txtFechaHasta.Text.Trim());
+            reserva.FechaLlegada = DateTime.Parse(txtFechaDesde.Text.Trim());
+            reserva.FechaSalida = DateTime.Parse(txtFechaHasta.Text.Trim());
 
             Session["reservaEnProceso"] = reserva;
 
@@ -1470,7 +1552,7 @@ namespace Vistas
 
             if (preciosHabitaciones == null) return;
 
-            int dias = (reserva.CheckOut - reserva.CheckIn).Days;
+            int dias = (reserva.FechaSalida - reserva.FechaLlegada).Days;
             if (dias <= 0) dias = 1;
 
             int cantidadHabitaciones = reserva.IdHabitaciones.Count;
@@ -1495,7 +1577,7 @@ namespace Vistas
 
             totalServicios *= cantidadHabitaciones;
 
-            reserva.PrecioFinal = totalHabitaciones + totalServicios;
+            Session["PrecioFinal"] = totalHabitaciones + totalServicios;
         }
 
 
@@ -1584,7 +1666,8 @@ namespace Vistas
                 CalcularMontoTotalReserva(reserva);
                 Session["reservaEnProceso"] = reserva;
 
-                lblMontoTotal.Text = "Monto Total: " + reserva.PrecioFinal.ToString("C2");
+                decimal precioFinal = Convert.ToDecimal(Session["PrecioFinal"]);
+                lblMontoTotal.Text = "Monto Total: " + precioFinal.ToString("C2");
             }
 
             OcultarTodosLosPanelesReserva();

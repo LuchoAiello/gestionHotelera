@@ -35,8 +35,8 @@ namespace Entidades
         {
             public int IdHuesped { get; set; }
             public List<int> IdHabitaciones { get; set; } = new List<int>();
-            public DateTime CheckIn { get; set; }
-            public DateTime CheckOut { get; set; }
+            public DateTime FechaLlegada { get; set; }
+            public DateTime FechaSalida { get; set; }
             public int CantidadHuespedes { get; set; }
             public List<int> ServiciosAdicionales { get; set; } = new List<int>();
             public int IdMetodoPago { get; set; }

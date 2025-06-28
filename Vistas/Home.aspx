@@ -627,7 +627,9 @@
                                     <asp:BoundField HeaderText="Documento" DataField="Documento" />
                                     <asp:BoundField HeaderText="Email" DataField="Email" />
                                     <asp:BoundField HeaderText="Teléfono" DataField="Telefono" />
-                                    <asp:BoundField HeaderText="Fecha Reserva" DataField="FechaReserva" DataFormatString="{0:dd/MM/yyyy}" />      
+                                    <asp:BoundField HeaderText="Fecha Reserva" DataField="FechaReserva" DataFormatString="{0:dd/MM/yyyy}" />
+                                    <asp:BoundField HeaderText="Fecha Llegada" DataField="FechaLlegada" DataFormatString="{0:dd/MM/yyyy}" />
+                                    <asp:BoundField HeaderText="Fecha Salida" DataField="FechaSalida" DataFormatString="{0:dd/MM/yyyy}" />
                                     <asp:BoundField HeaderText="Fecha de Pago" DataField="FechaPago" DataFormatString="{0:dd/MM/yyyy}" />
                                     <asp:BoundField HeaderText="Huéspedes" DataField="CantidadHuespedes" />
                                     <asp:BoundField HeaderText="Monto Total" DataField="MontoTotal" DataFormatString="{0:C}" />
@@ -642,6 +644,14 @@
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Acciones">
                                         <ItemTemplate>
+                                            <asp:Button ID="btnHacerCheckInOut" runat="server" Text="CheckIn/Out"
+                                                CommandName="HacerCheckInOut"
+                                                CommandArgument='<%# Eval("Id_reserva") %>'
+                                                CssClass="btn btn-outline-primary btn-sm" />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="">
+                                        <ItemTemplate>
                                             <asp:Button ID="btnDarDeBajaReserva" runat="server" Text="Dar de baja"
                                                 CommandName="DarDeBajaReserva"
                                                 CommandArgument='<%# Eval("Id_reserva") %>'
@@ -650,6 +660,27 @@
                                     </asp:TemplateField>
                                 </Columns>
                             </asp:GridView>
+                        </div>
+                    </asp:Panel>
+
+                    <asp:Panel ID="panelCheckInOut" runat="server" Visible="false">
+                        <div class="container" style="margin: 10px">
+                            <div class="row mb-3 align-items-end">
+                                <div class="col-md-3">
+                                    <asp:Label ID="lblCheckin" runat="server" Text="CheckIn" CssClass="form-label" />
+                                    <asp:TextBox ID="txtCheckIn" runat="server" CssClass="form-control" TextMode="Date" />
+                                </div>
+                                <div class="col-md-3">
+                                    <asp:Label ID="lblCheckOut" runat="server" Text="CheckOut" CssClass="form-label" />
+                                    <asp:TextBox ID="txtCheckOut" runat="server" CssClass="form-control" TextMode="Date" />
+                                </div>
+                                <asp:Label ID="Label10" runat="server" Text="" CssClass="form-label" />
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <asp:Button ID="btnRegistrarCheckInOut" runat="server" Text="Registrar" CssClass="btn btn-success" OnClick="btnRegistrarCheckInOut_Click" />
+                                <asp:Button ID="btnCancelarCheckInOut" runat="server" Text="Cancelar" CssClass="btn btn-secondary" OnClick="btnCancelarCheckInOut_Click" />
+                            </div>
                         </div>
                     </asp:Panel>
 
@@ -942,13 +973,15 @@
                                     <asp:BoundField HeaderText="Email" DataField="Email" />
                                     <asp:BoundField HeaderText="Teléfono" DataField="Telefono" />
                                     <asp:BoundField HeaderText="Fecha Reserva" DataField="FechaReserva" DataFormatString="{0:dd/MM/yyyy}" />
+                                    <asp:BoundField HeaderText="Fecha Llegada" DataField="FechaLlegada" DataFormatString="{0:dd/MM/yyyy}" />
+                                    <asp:BoundField HeaderText="Fecha Salida" DataField="FechaSalida" DataFormatString="{0:dd/MM/yyyy}" />
                                     <asp:BoundField HeaderText="Fecha de Pago" DataField="FechaPago" DataFormatString="{0:dd/MM/yyyy}" />
                                     <asp:BoundField HeaderText="Huéspedes" DataField="CantidadHuespedes" />
                                     <asp:BoundField HeaderText="Monto Total" DataField="MontoTotal" DataFormatString="{0:C}" />
                                     <asp:TemplateField HeaderText="Detalles">
                                         <ItemTemplate>
                                             <asp:Button ID="btnVerDetalle" runat="server"
-                                                Text='<%# GetButtonTextReservaHistorial((int)Eval("Id_reserva")) %>'
+                                                Text='<%# GetButtonTextReservaHistorial(Convert.ToInt32(Eval("Id_reserva"))) %>'
                                                 CommandName="MostrarDetalle"
                                                 CommandArgument='<%# Eval("Id_reserva") %>'
                                                 CssClass="btn btn-outline-success btn-sm" />
